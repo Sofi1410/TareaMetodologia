@@ -33,6 +33,7 @@ public class Player {
    * @param def
    *     the base defense of the character.
    * @param evd
+   *
    *     the base evasion of the character.
    */
   public Player(final String name, final int hp, final int atk, final int def,

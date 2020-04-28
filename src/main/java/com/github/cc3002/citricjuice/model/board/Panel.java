@@ -14,10 +14,9 @@ import java.util.Set;
  * @version 1.0.6-rc.2
  * @since 1.0
  */
-public class Panel {
+public abstract class Panel {
   private final PanelType type;
   private final Set<Panel> nextPanels = new HashSet<>();
-
   /**
    * Creates a new panel.
    *
@@ -28,27 +27,7 @@ public class Panel {
     this.type = type;
   }
 
-  /**
-   * Restores a player's HP in 1.
-   */
-  private static void applyHealTo(final @NotNull Player player) {
-    player.setCurrentHP(player.getCurrentHP() + 1);
-  }
 
-  /**
-   * Reduces the player's star count by the D6 roll multiplied by the player's norma level.
-   */
-  private static void applyDropTo(final @NotNull Player player) {
-    player.reduceStarsBy(player.roll() * player.getNormaLevel());
-  }
-
-  /**
-   * Reduces the player's star count by the D6 roll multiplied by the maximum between the player's
-   * norma level and three.
-   */
-  private static void applyBonusTo(final @NotNull Player player) {
-    player.increaseStarsBy(player.roll() * Math.min(player.getNormaLevel(), 3));
-  }
 
   /**
    * Returns the type of this panel
