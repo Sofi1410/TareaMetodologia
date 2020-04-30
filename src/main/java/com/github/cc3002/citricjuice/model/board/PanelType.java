@@ -7,6 +7,11 @@ package com.github.cc3002.citricjuice.model.board;
  * @version 1.0.6-rc.1
  * @since 1.0
  */
-public enum PanelType {
-  BONUS, BOSS, DROP, ENCOUNTER, HOME, NEUTRAL
-}
+public class DrawPanel extends Panel{
+  private final PanelType type ;
+
+
+
+  public DrawPanel(PanelType type){
+    this.type= DRAW;
+  }
