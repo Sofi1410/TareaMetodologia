@@ -1,5 +1,5 @@
-package com.github.cc3002.citricjuice.model;
-
+package test.java.com.github.cc3002.citricjuice.model;
+import main.java.com.github.cc3002.citricjuice.model.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;

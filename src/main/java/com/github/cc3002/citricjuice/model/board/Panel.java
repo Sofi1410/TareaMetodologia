@@ -38,14 +38,14 @@ public class Panel {
 <<<<<<< Updated upstream
    * Restores a player's HP in 1.
    */
-  private static void applyHealTo(final @NotNull Player player) {
+  public static void applyHealTo(final @NotNull Player player) {
     player.setCurrentHP(player.getCurrentHP() + 1);
   }
 
   /**
    * Reduces the player's star count by the D6 roll multiplied by the player's norma level.
    */
-  private static void applyDropTo(final @NotNull Player player) {
+  public static void applyDropTo(final @NotNull Player player) {
     player.reduceStarsBy(player.roll() * player.getNormaLevel());
   }
 
@@ -53,7 +53,7 @@ public class Panel {
    * Reduces the player's star count by the D6 roll multiplied by the maximum between the player's
    * norma level and three.
    */
-  private static void applyBonusTo(final @NotNull Player player) {
+  public static void applyBonusTo(final @NotNull Player player) {
     player.increaseStarsBy(player.roll() * Math.min(player.getNormaLevel(), 3));
   }
 
