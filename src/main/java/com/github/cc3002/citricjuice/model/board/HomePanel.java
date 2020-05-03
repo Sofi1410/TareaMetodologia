@@ -1,13 +1,15 @@
-package com.github.cc3002.citricjuice.model.board;
+package main.java.com.github.cc3002.citricjuice.model.board;
+
+import main.java.com.github.cc3002.citricjuice.model.Player;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Subclass of Panel
  */
 public class HomePanel extends Panel{
-    private final PanelType type ;
 
-    public HomePanel(PanelType type){
-        this.type= HOME;
+    public HomePanel(final int c, final int d) {
+        super(c,d);
     }
     /**
      * Restores a player's HP in 1.

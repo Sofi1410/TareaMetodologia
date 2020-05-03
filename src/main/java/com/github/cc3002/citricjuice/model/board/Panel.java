@@ -1,6 +1,9 @@
-package com.github.cc3002.citricjuice.model.board;
-
+package main.java.com.github.cc3002.citricjuice.model.board;
+/**
 import com.github.cc3002.citricjuice.model.Player;
+import org.jetbrains.annotations.NotNull;
+i*/
+import main.java.com.github.cc3002.citricjuice.model.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -15,17 +18,20 @@ import java.util.Set;
  * @since 1.0
  */
 public class Panel {
-  private final PanelType type;
+  private final int a;
+  private final int b;
   private final Set<Panel> nextPanels = new HashSet<>();
 
   /**
    * Creates a new panel.
    *
-   * @param type
-   *     the type of the panel.
+   * @param c
+   * @param d
+   *     the coordinates of the panel.
    */
-  public Panel(final PanelType type) {
-    this.type = type;
+  public Panel( int c, int d) {
+    this.a = c;
+    this.b = d;
   }
 
   /**
@@ -50,28 +56,10 @@ public class Panel {
   private static void applyBonusTo(final @NotNull Player player) {
     player.increaseStarsBy(player.roll() * Math.min(player.getNormaLevel(), 3));
   }
-=======
-   * Reduces the player's star count by the D6 roll multiplied by the maximum between the player's
-   * norma level and three.
-   */
-  private static void applyBonusTo(final @NotNull Player player) {
-    player.increaseStarsBy(player.roll() * Math.min(player.getNormaLevel(), 3));
-  }
-  /**
-   * Reduces the player's star count by the D6 roll multiplied by the player's norma level.
-   */
-
-  private static void applyDropTo(final @NotNull Player player) {
-    player.reduceStarsBy(player.roll() * player.getNormaLevel());
-  }
->>>>>>> Stashed changes
 
   /**
-   * Returns the type of this panel
-   */
-  public PanelType getType() {
-    return type;
-  }
+>>>>>>> Stashed changes;
+
 
   /**
    * Returns a copy of this panel's next ones.
@@ -92,7 +80,7 @@ public class Panel {
 
   /**
    * Executes the appropriate action to the player according to this panel's type.
-   */
+
   public void activatedBy(final Player player) {
     switch (type) {
       case BONUS:
@@ -108,4 +96,5 @@ public class Panel {
         break;
     }
   }
+   */
 }

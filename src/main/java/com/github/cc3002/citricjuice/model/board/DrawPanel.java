@@ -1,4 +1,4 @@
-package com.github.cc3002.citricjuice.model.board;
+package main.java.com.github.cc3002.citricjuice.model.board;
 
 /**
  * Enum for the types of panels of the game.
@@ -8,10 +8,7 @@ package com.github.cc3002.citricjuice.model.board;
  * @since 1.0
  */
 public class DrawPanel extends Panel{
-  private final PanelType type ;
-
-
-
-  public DrawPanel(PanelType type){
-    this.type= DRAW;
+  public DrawPanel(final int c, final int d) {
+    super(c,d);
+  }
   }

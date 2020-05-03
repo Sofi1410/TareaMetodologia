@@ -1,4 +1,4 @@
-package com.github.cc3002.citricjuice.model;
+package main.java.com.github.cc3002.citricjuice.model;
 
 import java.util.Random;
 

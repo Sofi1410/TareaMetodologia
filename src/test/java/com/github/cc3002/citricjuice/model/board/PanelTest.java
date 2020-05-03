@@ -1,6 +1,7 @@
-package com.github.cc3002.citricjuice.model.board;
-
-import com.github.cc3002.citricjuice.model.Player;
+package test.java.com.github.cc3002.citricjuice.model.board;
+import main.java.com.github.cc3002.citricjuice.model.Player;
+import main.java.com.github.cc3002.citricjuice.model.board.*;
+import main.java.com.github.cc3002.citricjuice.model.board.BonusPanel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -33,20 +34,20 @@ class PanelTest {
 
   @BeforeEach
   public void setUp() {
-    testBonusPanel = new Panel(PanelType.BONUS);
-    testBossPanel = new Panel(PanelType.BOSS);
-    testDropPanel = new Panel(PanelType.DROP);
-    testEncounterPanel = new Panel(PanelType.ENCOUNTER);
-    testHomePanel = new Panel(PanelType.HOME);
-    testNeutralPanel = new Panel(PanelType.NEUTRAL);
+    testBonusPanel = new BonusPanel(1,2);
+    testBossPanel = new BossPanel(3,3);
+    testDropPanel = new DropPanel(1,3);
+    testEncounterPanel = new EncounterPanel(2,3);
+    testHomePanel = new HomePanel(3,2);
+    testNeutralPanel = new NeutralPanel(3,1);
     testSeed = new Random().nextLong();
     suguri = new Player(PLAYER_NAME, BASE_HP, BASE_ATK, BASE_DEF, BASE_EVD);
   }
 
   @Test
   public void constructorTest() {
-    assertEquals(PanelType.BONUS, testBonusPanel.getType());
-    assertEquals(PanelType.BOSS, testBossPanel.getType());
+    assertEquals(BonusPanel.class, testBonusPanel.getClass());
+    assertEquals(BossPanel,class, testBossPanel.getClass();
     assertEquals(PanelType.DROP, testDropPanel.getType());
     assertEquals(PanelType.ENCOUNTER, testEncounterPanel.getType());
     assertEquals(PanelType.HOME, testHomePanel.getType());
