@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 /**
 
  */
-public class BonusPanel extends Panel{
+public class BonusPanel extends AbstractPanel{
 
   public BonusPanel(final int c, final int d) {
     super(c,d);

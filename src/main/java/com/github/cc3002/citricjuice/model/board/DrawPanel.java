@@ -7,7 +7,7 @@ package main.java.com.github.cc3002.citricjuice.model.board;
  * @version 1.0.6-rc.1
  * @since 1.0
  */
-public class DrawPanel extends Panel{
+public class DrawPanel extends AbstractPanel{
   public DrawPanel(final int c, final int d) {
     super(c,d);
   }
