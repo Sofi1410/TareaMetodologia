@@ -36,12 +36,13 @@ public class Player {
    *     the base evasion of the character.
    */
   public Player(final String name, final int hp, final int atk, final int def,
-                final int evd) {
+                final int evd ) {
     this.name = name;
     this.maxHP = currentHP = hp;
     this.atk = atk;
     this.def = def;
     this.evd = evd;
+    stars=0;
     normaLevel = 1;
     random = new Random();
   }

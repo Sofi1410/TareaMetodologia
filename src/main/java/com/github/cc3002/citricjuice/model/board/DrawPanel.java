@@ -1,5 +1,6 @@
 package main.java.com.github.cc3002.citricjuice.model.board;
 
+<<<<<<< Updated upstream
 /**
  * Enum for the types of panels of the game.
  *
@@ -12,3 +13,25 @@ public class DrawPanel extends AbstractPanel{
     super(c,d);
   }
   }
+=======
+import com.github.cc3002.citricjuice.model.Player;
+import org.jetbrains.annotations.NotNull;
+
+public class DrawPanel extends AbstractPanel{
+
+    /**
+     * Creates a new panel.
+     *
+     * @param a
+     * @param b the coordinates of the panel.
+     */
+    public DrawPanel(int a, int b) {
+        super(a, b);
+    }
+
+    @Override
+    public void activateBy(@NotNull Player player) {
+
+    }
+}
+>>>>>>> Stashed changes

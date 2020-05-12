@@ -3,18 +3,36 @@ package main.java.com.github.cc3002.citricjuice.model.board;
 import main.java.com.github.cc3002.citricjuice.model.Player;
 import org.jetbrains.annotations.NotNull;
 
+import com.github.cc3002.citricjuice.model.Player;
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Subclass of Panel
  */
+<<<<<<< Updated upstream
 public class HomePanel extends Panel{
 
     public HomePanel(final int c, final int d) {
         super(c,d);
     }
+=======
+public class HomePanel extends AbstractPanel  {
+    /**
+     * Creates a new panel.
+     *
+     * @param a
+     * @param b the coordinates of the panel.
+     */
+    public HomePanel(int a, int b) {
+        super(a, b);
+    }
+
+>>>>>>> Stashed changes
     /**
      * Restores a player's HP in 1.
      */
-    private static void applyHealTo(final @NotNull Player player) {
+    @Override
+    public void activateBy(final @NotNull Player player) {
         player.setCurrentHP(player.getCurrentHP() + 1);
     }
 }
