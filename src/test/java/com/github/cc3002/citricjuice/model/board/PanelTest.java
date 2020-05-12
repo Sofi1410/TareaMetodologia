@@ -1,7 +1,6 @@
-package test.java.com.github.cc3002.citricjuice.model.board;
-import main.java.com.github.cc3002.citricjuice.model.Player;
-import main.java.com.github.cc3002.citricjuice.model.board.*;
-import main.java.com.github.cc3002.citricjuice.model.board.BonusPanel;
+package com.github.cc3002.citricjuice.model.board;
+
+import com.github.cc3002.citricjuice.model.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -75,19 +74,11 @@ class PanelTest {
   @Test
   public void homePanelTest() {
     assertEquals(Suguri.getMaxHP(), Suguri.getCurrentHP());
-<<<<<<< Updated upstream
-    testHomePanel.applyHealTo(Suguri);
-    assertEquals(Suguri.getMaxHP(), Suguri.getCurrentHP());
-
-    Suguri.setCurrentHP(1);
-    testHomePanel.applyHealTo(Suguri);
-=======
     testHomePanel.activateBy(Suguri);
     assertEquals(Suguri.getMaxHP(), Suguri.getCurrentHP());
 
     Suguri.setCurrentHP(1);
     testHomePanel.activateBy(Suguri);
->>>>>>> Stashed changes
     assertEquals(2, Suguri.getCurrentHP());
   }
 
@@ -106,17 +97,10 @@ class PanelTest {
     Suguri.setSeed(testSeed);
     for (int normaLvl = 1; normaLvl <= 6; normaLvl++) {
       final int roll = testRandom.nextInt(6) + 1;
-<<<<<<< Updated upstream
-      testBonusPanel.applyBonusTo(Suguri);
-      expectedStars += roll * Math.min(3, normaLvl);
-      assertEquals(expectedStars, Suguri.getStars(),
-                   "Test failed with seed: " + testSeed);
-=======
       testBonusPanel.activateBy(Suguri);
       expectedStars += roll * Math.min(3, normaLvl);
       assertEquals(expectedStars, Suguri.getStars(),
               "Test failed with seed: " + testSeed);
->>>>>>> Stashed changes
       Suguri.normaClear();
     }
   }
@@ -130,17 +114,10 @@ class PanelTest {
     Suguri.setSeed(testSeed);
     for (int normaLvl = 1; normaLvl <= 6; normaLvl++) {
       final int roll = testRandom.nextInt(6) + 1;
-<<<<<<< Updated upstream
-      testDropPanel.applyDropTo(Suguri);
-      expectedStars = Math.max(expectedStars - roll * normaLvl, 0);
-      assertEquals(expectedStars, Suguri.getStars(),
-                   "Test failed with seed: " + testSeed);
-=======
       testDropPanel.activateBy(Suguri);
       expectedStars = Math.max(expectedStars - roll * normaLvl, 0);
       assertEquals(expectedStars, Suguri.getStars(),
               "Test failed with seed: " + testSeed);
->>>>>>> Stashed changes
       Suguri.normaClear();
     }
   }

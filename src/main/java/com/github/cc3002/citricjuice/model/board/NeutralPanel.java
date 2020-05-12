@@ -1,4 +1,4 @@
-package main.java.com.github.cc3002.citricjuice.model.board;
+package com.github.cc3002.citricjuice.model.board;
 
 import com.github.cc3002.citricjuice.model.Player;
 import org.jetbrains.annotations.NotNull;
@@ -6,12 +6,6 @@ import org.jetbrains.annotations.NotNull;
 /**
 
  */
-<<<<<<< Updated upstream
-public class NeutralPanel extends Panel {
-
-  public NeutralPanel(final int c, final int d) {
-    super(c,d);
-=======
 public class NeutralPanel extends AbstractPanel {
   /**
    * Creates a new panel.
@@ -26,6 +20,5 @@ public class NeutralPanel extends AbstractPanel {
   @Override
   public void activateBy(@NotNull Player player) {
 
->>>>>>> Stashed changes
   }
 }

@@ -1,11 +1,3 @@
-<<<<<<< Updated upstream
-package main.java.com.github.cc3002.citricjuice.model.board;
-
-public class BossPanel extends AbstractPanel {
-
-    public BossPanel(final int c, final int d) {
-        super(c,d);
-=======
 package com.github.cc3002.citricjuice.model.board;
 
 import com.github.cc3002.citricjuice.model.Player;
@@ -25,6 +17,5 @@ public class BossPanel extends AbstractPanel{
     @Override
     public void activateBy(@NotNull Player player) {
 
->>>>>>> Stashed changes
     }
 }

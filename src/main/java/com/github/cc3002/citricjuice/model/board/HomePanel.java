@@ -1,7 +1,4 @@
-package main.java.com.github.cc3002.citricjuice.model.board;
-
-import main.java.com.github.cc3002.citricjuice.model.Player;
-import org.jetbrains.annotations.NotNull;
+package com.github.cc3002.citricjuice.model.board;
 
 import com.github.cc3002.citricjuice.model.Player;
 import org.jetbrains.annotations.NotNull;
@@ -9,13 +6,6 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Subclass of Panel
  */
-<<<<<<< Updated upstream
-public class HomePanel extends Panel{
-
-    public HomePanel(final int c, final int d) {
-        super(c,d);
-    }
-=======
 public class HomePanel extends AbstractPanel  {
     /**
      * Creates a new panel.
@@ -27,7 +17,6 @@ public class HomePanel extends AbstractPanel  {
         super(a, b);
     }
 
->>>>>>> Stashed changes
     /**
      * Restores a player's HP in 1.
      */
