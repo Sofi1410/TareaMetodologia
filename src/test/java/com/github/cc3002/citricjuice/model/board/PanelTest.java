@@ -1,5 +1,6 @@
 package com.github.cc3002.citricjuice.model.board;
 
+import com.github.cc3002.citricjuice.model.AbstractUnit;
 import com.github.cc3002.citricjuice.model.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;

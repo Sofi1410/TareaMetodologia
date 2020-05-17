@@ -1,5 +1,6 @@
 package com.github.cc3002.citricjuice.model.board;
 
+import com.github.cc3002.citricjuice.model.AbstractUnit;
 import com.github.cc3002.citricjuice.model.Player;
 
 import java.util.Set;
@@ -9,5 +10,5 @@ public interface Panel {
 
     void addNextPanel(Panel expectedPanel1);
 
-    void activateBy(Player player);
+    void activateBy(Player  player);
 }
