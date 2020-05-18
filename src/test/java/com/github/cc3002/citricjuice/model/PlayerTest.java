@@ -37,6 +37,8 @@ public class PlayerTest {
 
 
   @RepeatedTest(100)
+  // Assert that the int attack return by Player.attack()
+  //equals the expected
   public void attackTest(){
     long seed= new Random().nextLong();
     int r= new Random(seed).nextInt(6)+1;
@@ -44,7 +46,10 @@ public class PlayerTest {
     int expectedattack= suguri.getAtk()+r;
     assertEquals(expectedattack,suguri.attack());
   }
+
   @RepeatedTest(100)
+  // Assert the HP in a Player after being attack and
+  // decided to avoid
   public void avoidTest(){
     long seed= new Random().nextLong();
     long seed2= new Random().nextLong();
@@ -64,7 +69,10 @@ public class PlayerTest {
     }
 
   }
+
   @RepeatedTest(100)
+  //Assert the HP in a Player after being attack and
+  //decided to defend
   public void defendTest(){
     long seed= new Random().nextLong();
     int r= new Random(seed).nextInt(6)+1;
@@ -79,6 +87,8 @@ public class PlayerTest {
   }
 
   @Test
+  //Test that assert the correct stars in a Unit when
+  // a Unit wins a battle against a Player
   public void increaseStartsByTest(){
     shifuRobot.increaseStarsBy(10);
     suguri.increaseStarsBy(7);
@@ -113,6 +123,8 @@ public class PlayerTest {
     assertEquals(expectedsuguriStars3,suguri.getStars());
   }
   @Test
+  //Test that assert the correct victories in a Unit when
+  // a Unit wins a battle against a Player
   public void increaseVictoriesByTest(){
     //case when a Wild Unit wins a battle against a Player
     int chickenVictories = chicken.getVictories();
@@ -153,11 +165,16 @@ public class PlayerTest {
     assertNotSame(expectedSuguri, actualSuguri);
   }
   @Test
+
   public void normaClearTest() {
     suguri.normaClear();
     assertEquals(2, suguri.getNormaLevel());
   }
   @Test
+  /*
+   *This test assert that you can change the parameters
+   * atk,edv,def in a PLayer
+   */
   public void parametersTest(){
     final var expectedAtk= 4;
     final var expectedEvd=3;
@@ -169,8 +186,8 @@ public class PlayerTest {
     assertEquals(expectedDef,suguri.getDef());
     assertEquals(expectedEvd,suguri.getEvd());
   }
-  // region : consistency tests
 
+  // region : consistency tests
   @RepeatedTest(100)
   public void normaClearConsistencyTest() {
     final long testSeed = new Random().nextLong();
@@ -181,7 +198,7 @@ public class PlayerTest {
       suguri.normaClear();
     }
     assertEquals(expectedNorma, suguri.getNormaLevel(),
-                 "Test failed with random seed: " + testSeed);
+            "Test failed with random seed: " + testSeed);
   }
   //end region
 

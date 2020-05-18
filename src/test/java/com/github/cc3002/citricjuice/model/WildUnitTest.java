@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+/**
+ * Test suite for the wildunits of the game.
+ */
 public class WildUnitTest {
     private final static String PLAYER_NAME = "Suguri";
     private Player suguri;
@@ -26,6 +28,8 @@ public class WildUnitTest {
         pardo = new WildUnit(WILD_2_NAME, 5, 3, -1, 1);
     }
     @RepeatedTest(100)
+    // Assert that the int attack return by WilUnit.attack()
+    //equals the expected
     public void attackTest(){
         long seed= new Random().nextLong();
         int r= new Random(seed).nextInt(6)+1;
@@ -34,8 +38,10 @@ public class WildUnitTest {
         assertEquals(expectedattack,chicken.attack());
     }
     @RepeatedTest(100)
+    // Assert the HP in a WildUnit after being attack and
+    // decided to avoid
     public void avoidTest(){
-        //Test with the case is : Player attacks, Wild Unit
+        //Test with the case  : Player attacks, Wild Unit
         //decided to avoid
         long seed= new Random().nextLong();
         int r= new Random(seed).nextInt(6)+1;
@@ -54,6 +60,8 @@ public class WildUnitTest {
     }
 
     @RepeatedTest(100)
+    //Assert the HP in a WildUnit after being attack and
+    //decided to defend
     public void defendTest(){
         long seed= new Random().nextLong();
         int r= new Random(seed).nextInt(6)+1;
@@ -67,6 +75,8 @@ public class WildUnitTest {
 
     }
     @Test
+    //Test that assert the correct stars in a Unit when
+    // a Unit wins a battle against a WildUnit
     public void increaseStartsByTest(){
         shifuRobot.increaseStarsBy(11);
         suguri.increaseStarsBy(15);
@@ -101,6 +111,8 @@ public class WildUnitTest {
         assertEquals(expectedsuguriStars3,suguri.getStars());
     }
     @Test
+    //Test that assert the correct victories in a Unit when
+    // a Unit wins a battle against a WildUnit
     public void increaseVictoriesByTest(){
         //case when a Wild Unit wins a battle against a Wild Unit
         int chickenVic = chicken.getVictories();
@@ -140,6 +152,22 @@ public class WildUnitTest {
         // Checks that the copied player doesn't reference the same object
         assertNotSame(expectedChicken, actualChicken);
 
+    }
+    @Test
+    /*
+     *This test assert that you can´t change the parameters
+     * atk,edv,def in a PLayer
+     */
+    public void parametersTest(){
+        final var expectedAtk= chicken.getAtk();
+        final var expectedEvd=chicken.getEvd();
+        final var expectedDef=chicken.getDef();
+        chicken.setAtk(4);
+        chicken.setDef(3);
+        chicken.setEvd(20);
+        assertEquals(expectedAtk,chicken.getAtk());
+        assertEquals(expectedDef,chicken.getDef());
+        assertEquals(expectedEvd,chicken.getEvd());
     }
 
 

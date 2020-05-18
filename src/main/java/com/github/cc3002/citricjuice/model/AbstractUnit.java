@@ -3,7 +3,7 @@ package com.github.cc3002.citricjuice.model;
 import java.util.Random;
 
 /**
- * This class represents a player in the game 99.7% Citric Liquid.
+ * This class represents a abstract Unit in the game 99.7% Citric Liquid.
  *
  * @author <a href="mailto:ignacio.slater@ug.uchile.cl">Ignacio Slater
  *     Muñoz</a>.
@@ -54,28 +54,39 @@ public abstract class AbstractUnit implements Unit{
     return stars;
   }
 
-  /**
-   * Set's the seed for this player's random number generator.
-   * <p>
-   * The random number generator is used for taking non-deterministic decisions, this method is
-   * declared to avoid non-deterministic behaviour while testing the code.
-   */
-  public void setSeed(final long seed) {
+    /**
+    * Set's the seed for this player's random number generator.
+    * <p>
+    * The random number generator is used for taking non-deterministic decisions, this method is
+    * declared to avoid non-deterministic behaviour while testing the code.
+    */
+    public void setSeed(final long seed) {
     random.setSeed(seed);
-  }
+    }
 
+
+    /**
+     * set a new value for edv
+     * @param newEvd new edv
+     */
     public abstract void setEvd(final int newEvd);
-
+    /**
+     * set a new value for atk
+     * @param newAtk new atk
+     */
     public abstract void setAtk(final int newAtk);
-
+    /**
+     * set a new value for def
+     * @param newDef new def
+     */
     public abstract void setDef(final int newDef);
 
     /**
-   * Returns a uniformly distributed random value in [1, 6]
-   */
-  public int roll() {
+    * Returns a uniformly distributed random value in [1, 6]
+    */
+    public int roll() {
     return random.nextInt(6) + 1;
-  }
+    }
 
     /**
     * Returns the character's name.
@@ -107,44 +118,50 @@ public abstract class AbstractUnit implements Unit{
     }
 
 
-
-
-        /**
-        * Reduces this player's star count by a given amount.
-        * <p>
-        * The star count will must always be greater or equal to 0
-        */
+    /**
+    * Reduces this player's star count by a given amount.
+    * <p>
+    * The star count will must always be greater or equal to 0
+    */
     public void reduceStarsBy(final int amount) {
     stars = Math.max(0, stars - amount);
     }
 
     /**
-     * Returns the current hit points of the character.
-     */
+    * Returns the current hit points of the character.
+    */
     public int getCurrentHP() {
-        return currentHP;
+    return currentHP;
     }
 
+    /**
+     * Set a new value for currentHP
+     * @param newHP new Hp if >0
+     */
     public void setCurrentHP(final int newHP) {
-        this.currentHP = Math.max(Math.min(newHP, maxHP), 0);
+    this.currentHP = Math.max(Math.min(newHP, maxHP), 0);
     }
 
     /**
-     * Returns the character's max hit points.
-     */
+    * Returns the character's max hit points.
+    */
     public int getMaxHP() {
-        return maxHP;
+    return maxHP;
     }
 
     /**
-     * Returns the character's victories points.
-     */
+    * Returns the character's victories points.
+    */
     public int getVictories() {
-        return victories;
+    return victories;
     }
 
+    /**
+     * Set a new number of victories
+     * @param number new count of victories
+     */
     public void setVictories(int number){
-        this.victories= number;
+    this.victories= number;
     }
 
     @Override
@@ -171,14 +188,32 @@ public abstract class AbstractUnit implements Unit{
      */
     public abstract void   increaseVictoriesBy(Unit unit);
     /**
-     * Increases this player's star count by an amount.
+     * Increases this player's star in a battle.
      */
     public abstract void increaseStarsBy(Unit unit);
+    /**
+     * Increases this player's star count by an amount.
+     */
     public void increaseStarsBy(final int amount) {
         stars += amount;
     }
+
+    /**
+     * A Unit decides to attack
+     * @return attack
+     */
     public abstract int attack();
+
+    /**
+     * A Unit decide to defend
+     * @param attack made by the opponent
+     */
     public abstract void defend(int attack);
+
+    /**
+     * A Unit decide to avoid
+     * @param attack made by the opponent
+     */
     public abstract void avoid(int attack);
 
   /**

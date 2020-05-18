@@ -16,65 +16,105 @@ public class WildUnit extends AbstractUnit{
     }
 
     @Override
+    //Set region
+    //A BossUnit can´t change atk,evd or def
     public void setEvd(int newEvd) {
 
     }
 
-    @Override
     public void setAtk(int newAtk) {
 
     }
 
-    @Override
     public void setDef(int newDef) {
 
     }
+    //end region
 
-    @Override
+    /**
+     * Add victories to the winner in a battle
+     * @param unit loser
+     */
     public void increaseVictoriesBy(Unit unit) {
         unit.increaseVictoriesByWild(this);
 
     }
-
+    /**
+     * The loser (WildUnit) add the appropriate amount of victories to the winner
+     * @param wildUnit the winner
+     */
     public void increaseVictoriesByWild(WildUnit wildUnit){
         wildUnit.setVictories(wildUnit.getVictories()+1);
     }
+    /**
+     * The loser (WildUnit) add the appropriate amount of victories to the winner
+     * @param bossUnit the winner
+     */
     public void increaseVictoriesByBoss(BossUnit bossUnit){
         bossUnit.setVictories(bossUnit.getVictories()+1);
     }
-    @Override
+    /**
+     * The loser (WildUnit) add the appropriate amount of victories to the winner
+     * @param player the winner
+     */
     public void increaseVictoriesByPlayer(Player player){
         player.setVictories(player.getVictories()+1);
     }
 
 
-    @Override
+    /**
+     * Add stars to the winner an reduce the stars to a
+     * loser in a combat
+     * @param unit loser
+     */
     public void increaseStarsBy(Unit unit) {
         unit.increaseStarsByWild(this);
     }
+    /**
+     * The loser (wildUnit) add the appropriate amount of stars to the winner
+     * an reduce its starts appropriately
+     * @param wildUnit the winner
+     */
     public void increaseStarsByWild(WildUnit wildUnit){
         wildUnit.increaseStarsBy((int) Math.floor(this.getStars()*0.5));
         this.reduceStarsBy((int) Math.ceil(this.getStars() *0.5));
     }
+    /**
+     * The loser (wildUnit) add the appropriate amount of stars to the winner
+     * an reduce its starts appropriately
+     * @param bossUnit the winner
+     */
     public void increaseStarsByBoss(BossUnit bossUnit){
         bossUnit.increaseStarsBy((int) Math.floor(this.getStars()*0.5));
         this.reduceStarsBy((int) Math.ceil(this.getStars()*0.5));
     }
+    /**
+     * The loser (wildUnit) add the appropriate amount of stars to the winner
+     * an reduce its starts appropriately
+     * @param player the winner
+     */
     public void increaseStarsByPlayer(Player player) {
         player.increaseStarsBy(this.getStars());
         this.reduceStarsBy (this.getStars());
     }
 
-    @Override
     public int attack() {
         return (this.roll()+this.getAtk());
 
     }
-    @Override
+    /**
+     * The WildUnit decide to defend
+     * Always lose Hp ,at least 1
+     * @param attack made by the opponent
+     */
     public void defend(int attack) {
         this.setCurrentHP(this.getCurrentHP()-Math.max(1, attack - (this.roll() + this.getDef())));
     }
-    @Override
+    /**
+     * The WildUnit decide to avoid
+     * if the attack is bigger than evd reduce its HP
+     * @param attack made by the opponent
+     */
     public void avoid(int attack) {
         int evd=(this.getEvd() + this.roll());
         int a =Math.max(0,evd-attack);

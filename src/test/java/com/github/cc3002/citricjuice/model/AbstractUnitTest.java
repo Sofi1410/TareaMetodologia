@@ -55,7 +55,7 @@ public class AbstractUnitTest {
         assertEquals(expectedShifuRobot, shifuRobot);
 
         final var q = new Object();
-        assertNotEquals(chicken, o);
+        assertNotEquals(chicken, q);
         assertEquals(chicken, chicken);
         final var expectedchicken = new WildUnit(WILD_NAME, 5, 3, -1, 1);
         assertEquals(expectedchicken, chicken);

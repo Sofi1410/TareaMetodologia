@@ -1,11 +1,13 @@
 package com.github.cc3002.citricjuice.model.board;
 
-import com.github.cc3002.citricjuice.model.AbstractUnit;
 import com.github.cc3002.citricjuice.model.Player;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Subclass of Panel
+ * The Player in here reach a new level if
+ * meets the requirements
+ * also gets +1 HP
  */
 public class HomePanel extends AbstractPanel  {
     /**

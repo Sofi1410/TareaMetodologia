@@ -3,7 +3,8 @@ import com.github.cc3002.citricjuice.model.Player;
 import org.jetbrains.annotations.NotNull;
 
 /**
-
+Subclass of Abstract Panel
+ Nothing happens in here
  */
 public class NeutralPanel extends AbstractPanel {
   /**

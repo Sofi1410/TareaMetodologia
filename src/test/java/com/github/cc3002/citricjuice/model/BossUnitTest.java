@@ -24,6 +24,8 @@ public class BossUnitTest {
         polar = new BossUnit(BOSS_2_NAME, 5, 3, -1, 1);
     }
     @RepeatedTest(100)
+    // Assert that the int attack return by BossUnit.attack()
+    //equals the expected
     public void attackTest(){
         long seed= new Random().nextLong();
         int r= new Random(seed).nextInt(6)+1;
@@ -32,6 +34,8 @@ public class BossUnitTest {
         assertEquals(expectedattack,shifuRobot.attack());
     }
     @RepeatedTest(100)
+    //Assert the HP in a BossUnit after being attack and
+    //decided to defend
     public void defendTest(){
         long seed= new Random().nextLong();
         int r= new Random(seed).nextInt(6)+1;
@@ -45,6 +49,8 @@ public class BossUnitTest {
 
     }
     @RepeatedTest(100)
+    // Assert the HP in a BossUnit after being attack and
+    // decided to avoid
     public void avoidTest(){
         long seed= new Random().nextLong();
         long seed2= new Random().nextLong();
@@ -65,6 +71,8 @@ public class BossUnitTest {
 
     }
     @Test
+    //Test that assert the correct stars in a Unit when
+    // a Unit wins a battle against a BossUnit
     public void increaseStartsByTest(){
         shifuRobot.increaseStarsBy(11);
         suguri.increaseStarsBy(15);
@@ -99,6 +107,8 @@ public class BossUnitTest {
         assertEquals(expectedsuguriStars3,suguri.getStars());
     }
     @Test
+    //Test that assert the correct victories in a Unit when
+    // a Unit wins a battle against a Boss Unit
     public void increaseVictoriesByTest(){
         //case when a Wild Unit wins a battle against a Boss Unit
         int chickenVic = chicken.getVictories();
@@ -140,6 +150,10 @@ public class BossUnitTest {
 
     }
     @Test
+    /*
+     *This test assert that you can change the parameters
+     * atk,edv,def in a BossUnit
+     */
     public void parametersTest(){
         final var expectedAtk= shifuRobot.getAtk();
         final var expectedEvd=shifuRobot.getEvd();
