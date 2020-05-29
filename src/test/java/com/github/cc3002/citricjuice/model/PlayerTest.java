@@ -1,5 +1,4 @@
 package com.github.cc3002.citricjuice.model;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -18,42 +17,142 @@ import static org.junit.jupiter.api.Assertions.*;
 public class PlayerTest {
   private final static String PLAYER_NAME = "Suguri";
   private Player suguri;
+  private final static String BOSS_NAME = "Shifu Robot";
+  private BossUnit shifuRobot;
+  private final static String WILD_NAME = "Chicken";
+  private WildUnit chicken;
+  private long testSeed;
+  private final static String PLAYER_2_NAME = "Pando";
+  private Player pando;
 
   @BeforeEach
   public void setUp() {
     suguri = new Player(PLAYER_NAME, 4, 1, -1, 2);
+    shifuRobot = new BossUnit(BOSS_NAME, 6, 5, -2, 4);
+    chicken = new WildUnit(WILD_NAME, 5, 2, -1, 1);
+    testSeed = new Random().nextLong();
+    pando=new Player(PLAYER_2_NAME, 7, 4, 5, 3);
+  }
+
+
+
+  @RepeatedTest(100)
+  // Assert that the int attack return by Player.attack()
+  //equals the expected
+  public void attackTest(){
+    long seed= new Random().nextLong();
+    int r= new Random(seed).nextInt(6)+1;
+    suguri.setSeed(seed);
+    int expectedattack= suguri.getAtk()+r;
+    assertEquals(expectedattack,suguri.attack());
+  }
+
+  @RepeatedTest(100)
+  // Assert the HP in a Player after being attack and
+  // decided to avoid
+  public void avoidTest(){
+    long seed= new Random().nextLong();
+    long seed2= new Random().nextLong();
+    int r= new Random(seed).nextInt(6)+1;
+    suguri.setSeed(seed);
+    chicken.setSeed(seed2);
+    int suguriHP= suguri.getCurrentHP();
+    int atk=chicken.attack();
+    int evd=suguri.getEvd()+r;
+    suguri.avoid(atk);
+    if(atk >= evd){
+
+      int expectedHP=Math.max(0,(suguriHP-atk));
+      assertEquals(expectedHP,suguri.getCurrentHP());}
+    else {
+      assertEquals(suguriHP,suguri.getCurrentHP());
+    }
+
+  }
+
+  @RepeatedTest(100)
+  //Assert the HP in a Player after being attack and
+  //decided to defend
+  public void defendTest(){
+    long seed= new Random().nextLong();
+    int r= new Random(seed).nextInt(6)+1;
+    suguri.setSeed(seed);
+    shifuRobot.setSeed(seed);
+    int atk=shifuRobot.attack();
+    suguri.defend(atk);
+    int defend=Math.max(atk-suguri.getDef()-r,1);
+    int expectedHP=Math.max(0,suguri.getCurrentHP()-defend);
+    assertEquals(expectedHP,suguri.getCurrentHP());
+
   }
 
   @Test
-  public void constructorTest() {
-    final var expectedSuguri = new Player(PLAYER_NAME, 4, 1, -1, 2);
-    assertEquals(expectedSuguri, suguri);
-  }
+  //Test that assert the correct stars in a Unit when
+  // a Unit wins a battle against a Player
+  public void increaseStartsByTest(){
+    shifuRobot.increaseStarsBy(10);
+    suguri.increaseStarsBy(7);
+    chicken.increaseStarsBy(9);
+    pando.increaseStarsBy(2);
 
-  @Test
-  public void testEquals() {
-    final var o = new Object();
-    assertNotEquals(suguri, o);
-    assertEquals(suguri, suguri);
-    final var expectedSuguri = new Player(PLAYER_NAME, 4, 1, -1, 2);
-    assertEquals(expectedSuguri, suguri);
-  }
+    //case when a Wild Unit wins a battle against a Player
+    int chickenStars = chicken.getStars();
+    int suguriStars= suguri.getStars();
+    int expectedChickenStars= (int) (chickenStars+Math.floor(suguriStars*0.5));
+    int expectedsuguriStars= (int) (suguriStars-Math.ceil(suguriStars*0.5));
+    chicken.increaseStarsBy(suguri);
+    assertEquals(expectedChickenStars,chicken.getStars());
+    assertEquals(expectedsuguriStars,suguri.getStars());
 
-  @Test
-  public void hitPointsTest() {
-    assertEquals(suguri.getMaxHP(), suguri.getCurrentHP());
-    suguri.setCurrentHP(2);
-    assertEquals(2, suguri.getCurrentHP());
-    suguri.setCurrentHP(-1);
-    assertEquals(0, suguri.getCurrentHP());
-    suguri.setCurrentHP(5);
-    assertEquals(4, suguri.getCurrentHP());
-  }
+    //case when a Boss Unit wins a battle against a Player
+    int shifuRobotStars = shifuRobot.getStars();
+    int suguriStars2= suguri.getStars();
+    int expectedShifuRobotStars= (int) (shifuRobotStars+Math.floor(suguriStars2*0.5));
+    int expectedsuguriStars2= (int) (suguriStars2-Math.ceil(suguriStars2*0.5));
+    shifuRobot.increaseStarsBy(suguri);
+    assertEquals(expectedShifuRobotStars,shifuRobot.getStars());
+    assertEquals(expectedsuguriStars2,suguri.getStars());
 
+    //case when a Player wins a battle against a Player
+    int pandoStars = pando.getStars();
+    int suguriStars3= suguri.getStars();
+    pando.increaseStarsBy(suguri);
+    int expectedPandoStars= (int) (pandoStars+Math.floor(suguriStars3*0.5));
+    int expectedsuguriStars3= (int) (suguriStars3-Math.ceil(suguriStars3*0.5));
+    assertEquals(expectedPandoStars,pando.getStars());
+    assertEquals(expectedsuguriStars3,suguri.getStars());
+  }
   @Test
-  public void normaClearTest() {
-    suguri.normaClear();
-    assertEquals(2, suguri.getNormaLevel());
+  //Test that assert the correct victories in a Unit when
+  // a Unit wins a battle against a Player
+  public void increaseVictoriesByTest(){
+    //case when a Wild Unit wins a battle against a Player
+    int chickenVictories = chicken.getVictories();
+    int suguriVictories= suguri.getVictories();
+    int expectedChickenVic= chickenVictories+2;
+    int expectedSuguriVic= suguriVictories;
+    chicken.increaseVictoriesBy(suguri);
+    assertEquals(expectedChickenVic,chicken.getVictories());
+    assertEquals(expectedSuguriVic,suguri.getVictories());
+
+    //case when a Boss Unit wins a battle against a Player
+    int shifuVic = shifuRobot.getVictories();
+    int suguriVic= suguri.getVictories();
+    int expectedShifuVic= shifuVic+2;
+    int expectedSuguriVic2= suguriVic;
+    shifuRobot.increaseVictoriesBy(suguri);
+    assertEquals(expectedShifuVic,shifuRobot.getVictories());
+    assertEquals(expectedSuguriVic2,suguri.getVictories());
+
+    //case when a Player wins a battle against a Player
+    int pandoVic = pando.getVictories();
+    int suguriVic3= suguri.getVictories();
+    int expectedPandoVic= pandoVic+2;
+    int expectedSuguriVic3= suguriVic3;
+    pando.increaseVictoriesBy(suguri);
+    assertEquals(expectedPandoVic,pando.getVictories());
+    assertEquals(expectedSuguriVic3,suguri.getVictories());
+
   }
 
   @Test
@@ -65,22 +164,30 @@ public class PlayerTest {
     // Checks that the copied player doesn't reference the same object
     assertNotSame(expectedSuguri, actualSuguri);
   }
+  @Test
 
-  // region : consistency tests
-  @RepeatedTest(100)
-  public void hitPointsConsistencyTest() {
-    final long testSeed = new Random().nextLong();
-    // We're gonna try and set random hit points in [-maxHP * 2, maxHP * 2]
-    final int testHP = new Random(testSeed).nextInt(4 * suguri.getMaxHP() + 1)
-                       - 2 * suguri.getMaxHP();
-    suguri.setCurrentHP(testHP);
-    assertTrue(0 <= suguri.getCurrentHP()
-               && suguri.getCurrentHP() <= suguri.getMaxHP(),
-               suguri.getCurrentHP() + "is not a valid HP value"
-               + System.lineSeparator() + "Test failed with random seed: "
-               + testSeed);
+  public void normaClearTest() {
+    suguri.normaClear();
+    assertEquals(2, suguri.getNormaLevel());
+  }
+  @Test
+  /*
+   *This test assert that you can change the parameters
+   * atk,edv,def in a PLayer
+   */
+  public void parametersTest(){
+    final var expectedAtk= 4;
+    final var expectedEvd=3;
+    final var expectedDef=-20;
+    suguri.setAtk(expectedAtk);
+    suguri.setDef(expectedDef);
+    suguri.setEvd(expectedEvd);
+    assertEquals(expectedAtk,suguri.getAtk());
+    assertEquals(expectedDef,suguri.getDef());
+    assertEquals(expectedEvd,suguri.getEvd());
   }
 
+  // region : consistency tests
   @RepeatedTest(100)
   public void normaClearConsistencyTest() {
     final long testSeed = new Random().nextLong();
@@ -91,17 +198,9 @@ public class PlayerTest {
       suguri.normaClear();
     }
     assertEquals(expectedNorma, suguri.getNormaLevel(),
-                 "Test failed with random seed: " + testSeed);
+            "Test failed with random seed: " + testSeed);
   }
+  //end region
 
-  @RepeatedTest(100)
-  public void rollConsistencyTest() {
-    final long testSeed = new Random().nextLong();
-    suguri.setSeed(testSeed);
-    final int roll = suguri.roll();
-    assertTrue(roll >= 1 && roll <= 6,
-               roll + "is not in [1, 6]" + System.lineSeparator()
-               + "Test failed with random seed: " + testSeed);
-  }
-  // endregion
+
 }
