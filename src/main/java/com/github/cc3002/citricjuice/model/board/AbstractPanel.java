@@ -23,7 +23,7 @@ public abstract class AbstractPanel implements Panel {
   /**
    * Creates a new panel.
    *
-   * @param a
+   * @param a coordinate of the panel
    * @param b the coordinates of the panel.
    */
   public AbstractPanel(int a, int b) {

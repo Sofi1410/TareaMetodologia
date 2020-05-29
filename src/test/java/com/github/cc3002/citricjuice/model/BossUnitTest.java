@@ -108,11 +108,8 @@ public class BossUnitTest {
     }
     @Test
     //Test that assert the correct victories in a Unit when
-<<<<<<< HEAD
     // a Unit wins a battle against a BossUnit
-=======
     // a Unit wins a battle against a Boss Unit
->>>>>>> tarea1-entrega
     public void increaseVictoriesByTest(){
         //case when a Wild Unit wins a battle against a Boss Unit
         int chickenVic = chicken.getVictories();
@@ -141,10 +138,6 @@ public class BossUnitTest {
     }
 
     @Test
-<<<<<<< HEAD
-
-=======
->>>>>>> tarea1-entrega
     public void copyTest() {
         final var expectedShifuRobot =new BossUnit(BOSS_NAME, 6, 5, -2, 4);
         shifuRobot.increaseStarsBy(2);
@@ -159,11 +152,8 @@ public class BossUnitTest {
     }
     @Test
     /*
-<<<<<<< HEAD
      *This test assert that you can`t change the parameters
-=======
      *This test assert that you can change the parameters
->>>>>>> tarea1-entrega
      * atk,edv,def in a BossUnit
      */
     public void parametersTest(){

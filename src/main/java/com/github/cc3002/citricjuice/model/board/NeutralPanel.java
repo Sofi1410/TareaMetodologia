@@ -1,12 +1,5 @@
 package com.github.cc3002.citricjuice.model.board;
-<<<<<<< HEAD
 
-/**
-
- */
-public class NeutralPanel extends Panel {
-  BONUS, BOSS, DROP, ENCOUNTER, HOME, NEUTRAL
-=======
 import com.github.cc3002.citricjuice.model.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,5 +22,4 @@ public class NeutralPanel extends AbstractPanel {
   public void activateBy(@NotNull Player player) {
 
   }
->>>>>>> tarea1-entrega
 }

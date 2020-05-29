@@ -11,7 +11,7 @@ public class BossPanel extends AbstractPanel{
     /**
      * Creates a new panel.
      *
-     * @param a
+     * @param a coordinate of the panel
      * @param b the coordinates of the panel.
      */
     public BossPanel(int a, int b) {

@@ -1,16 +1,6 @@
 package com.github.cc3002.citricjuice.model.board;
 
-<<<<<<< HEAD
-/**
- */
- public class DropPanel extends Panel{
-  /**
-   * Reduces the player's star count by the D6 roll multiplied by the player's norma level.
-   */
-  private static void applyDropTo(final @NotNull Player player) {
-    player.reduceStarsBy(player.roll() * player.getNormaLevel());
-  }
-=======
+
 import com.github.cc3002.citricjuice.model.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,7 +30,4 @@ import static java.lang.Math.max;
 
     }
 
-
-
->>>>>>> tarea1-entrega
 }
