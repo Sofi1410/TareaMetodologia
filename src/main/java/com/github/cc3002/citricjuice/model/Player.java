@@ -1,7 +1,16 @@
 package com.github.cc3002.citricjuice.model;
 
-public class Player extends AbstractUnit implements Unit {
+import com.github.cc3002.citricjuice.model.board.IPanel;
+import com.github.cc3002.citricliquid.gui.NormaGoal;
+
+import java.util.List;
+
+public class Player extends AbstractUnit implements IUnit {
+    private IPanel actualPanel;
+    private NormaGoal normaGoal;
     private int normaLevel;
+    private IPanel homePanel;
+
 
     /**
      * Creates a new character.
@@ -13,11 +22,15 @@ public class Player extends AbstractUnit implements Unit {
      * @param evd
      */
 
-    public Player(String name, int hp, int atk, int def, int evd) {
+    public Player( String name, int hp, int atk, int def, int evd) {
         super(name,hp,atk, def, evd);
-
+        this.actualPanel =null;
         normaLevel = 1;
+        this.homePanel=null;
+        this.normaGoal=NormaGoal.STARS;
+
     }
+
 
     /**
      * Returns the current norma level
@@ -27,27 +40,99 @@ public class Player extends AbstractUnit implements Unit {
     }
 
     /**
+     *
+     */
+    public NormaGoal getNormaGoal(){
+        return normaGoal;
+
+    }
+    /**
+     *
+     */
+    public void setNormaGoal(NormaGoal newNorma){
+        normaGoal=newNorma;
+
+    }
+    /**
+     * Returns the current panel
+     * @return
+     */
+    public IPanel getPanel() {
+        return actualPanel;
+    }
+    /**
+     * updates de panel where the player is
+     * @param newPanel new panel
+     */
+    public void setActualPanel(IPanel newPanel){
+        actualPanel=newPanel;
+
+    }
+    /**
+     * updates the home panel
+     * for a player
+     * @param newHomePanel new Home panel
+     */
+    public void setHomePanel(IPanel newHomePanel){
+        homePanel=newHomePanel;
+
+    }
+    /**
+     * 
+     */
+    public IPanel getHomePanel(){
+        return homePanel;
+    }
+
+    /**
      * Performs a norma clear action; the {@code norma} counter increases in 1.
      */
     public void normaClear() {
         normaLevel++;
     }
 
-    @Override
-    //Set region
-    //A Player can change atk,evd or def
+    public void normaCheck(){
+        if(normaGoal==NormaGoal.STARS){
+            List<Integer> starGoal= List.of(10,30, 70, 120, 200);
+            int stars=this.getStars();
+            if(stars >= starGoal.get(normaLevel-1)){
+                normaClear();
+            }
+        }
+        if(normaGoal==NormaGoal.WINS){
+            List<Integer> winsGoal= List.of(0,2, 5, 9, 14);
+            int victories=getVictories();
+            if(victories>= winsGoal.get(normaLevel-1)){
+                normaClear();
+            }
+
+        }
+    }
+
+
+    /**
+     * updates the evasion points
+     * @param newEvd new Evd value
+     */
     public void setEvd(int newEvd) {
         evd=newEvd;
     }
 
+    /**
+     * updates the attack points
+     * @param newAtk new Atk value
+     */
     public void setAtk(int newAtk) {
         atk=newAtk;
     }
 
+    /**
+     * updates the defend points
+     * @param newDef new Def value
+     */
     public void setDef(int newDef) {
         def=newDef;
     }
-    //end region
 
 
     public boolean equals(final Object o) {
@@ -70,10 +155,10 @@ public class Player extends AbstractUnit implements Unit {
 
     /**
      * Add victories to the winner in a battle
-     * @param unit loser
+     * @param IUnit loser
      */
-    public void increaseVictoriesBy(Unit unit) {
-        unit.increaseVictoriesByPlayer(this);
+    public void increaseVictoriesBy(IUnit IUnit) {
+        IUnit.increaseVictoriesByPlayer(this);
     }
 
     /**
@@ -102,10 +187,10 @@ public class Player extends AbstractUnit implements Unit {
     /**
      * Add stars to the winner an reduce the stars to a
      * loser in a combat
-     * @param unit loser
+     * @param IUnit loser
      */
-    public void increaseStarsBy(Unit unit) {
-        unit.increaseStarsByPlayer(this);
+    public void increaseStarsBy(IUnit IUnit) {
+        IUnit.increaseStarsByPlayer(this);
     }
 
     /**
@@ -138,35 +223,6 @@ public class Player extends AbstractUnit implements Unit {
         this.reduceStarsBy((int) Math.ceil(this.getStars()*0.5));
     }
 
-
-
-    public int attack() {
-        assert this.getCurrentHP()!=0;
-        return this.roll()+this.getAtk();
-
-    }
-
-    /**
-     * The player decide to defend
-     * Always lose Hp ,at least 1
-     * @param attack made by the opponent
-     */
-    public void defend(int attack) {
-       int damage=Math.max(1, attack - (this.roll() + this.getDef()));
-       this.setCurrentHP(this.getCurrentHP()-damage);
-    }
-
-    /**
-     * The player decide to avoid
-     * if he attack is bigger than evd reduce its HP
-     * @param attack made by the opponent
-     */
-    public void avoid(int attack) {
-        int evd=(this.getEvd() + this.roll());
-        int HP=this.getCurrentHP();
-        int actual = Math.max(((evd > attack)? HP:HP-attack),0);
-        this.setCurrentHP(actual);
-    }
 
 
     public Player copy() {

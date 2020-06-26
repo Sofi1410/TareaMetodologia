@@ -71,8 +71,8 @@ public class BossUnitTest {
 
     }
     @Test
-    //Test that assert the correct stars in a Unit when
-    // a Unit wins a battle against a BossUnit
+    //Test that assert the correct stars in a IUnit when
+    // a IUnit wins a battle against a BossUnit
     public void increaseStartsByTest(){
         shifuRobot.increaseStarsBy(11);
         suguri.increaseStarsBy(15);
@@ -107,11 +107,11 @@ public class BossUnitTest {
         assertEquals(expectedsuguriStars3,suguri.getStars());
     }
     @Test
-    //Test that assert the correct victories in a Unit when
-    // a Unit wins a battle against a BossUnit
-    // a Unit wins a battle against a Boss Unit
+    //Test that assert the correct victories in a IUnit when
+    // a IUnit wins a battle against a BossUnit
+    // a IUnit wins a battle against a Boss IUnit
     public void increaseVictoriesByTest(){
-        //case when a Wild Unit wins a battle against a Boss Unit
+        //case when a Wild IUnit wins a battle against a Boss IUnit
         int chickenVic = chicken.getVictories();
         int expectedpolarVic= polar.getVictories();
         int expectedChickenVic= chickenVic+3;
@@ -119,7 +119,7 @@ public class BossUnitTest {
         assertEquals(expectedChickenVic,chicken.getVictories());
         assertEquals(expectedpolarVic,polar.getVictories());
 
-        //case when a Boss Unit wins a battle against a Boss Unit
+        //case when a Boss IUnit wins a battle against a Boss IUnit
         int shifuVic = shifuRobot.getVictories();
         int expectedpolarVic2= polar.getVictories();
         int expectedShifuVic= shifuVic+3;
@@ -127,7 +127,7 @@ public class BossUnitTest {
         assertEquals(expectedShifuVic,shifuRobot.getVictories());
         assertEquals(expectedpolarVic2,polar.getVictories());
 
-        //case when a Player wins a battle against a Boss Unit
+        //case when a Player wins a battle against a Boss IUnit
         int expectedpolarVic3 = polar.getVictories();
         int suguriVic= suguri.getVictories();
         int expectedSuguriVic= suguriVic+3;
@@ -150,23 +150,7 @@ public class BossUnitTest {
         assertNotSame(expectedShifuRobot, actualShifuRobot);
 
     }
-    @Test
-    /*
-     *This test assert that you can`t change the parameters
-     *This test assert that you can change the parameters
-     * atk,edv,def in a BossUnit
-     */
-    public void parametersTest(){
-        final var expectedAtk= shifuRobot.getAtk();
-        final var expectedEvd=shifuRobot.getEvd();
-        final var expectedDef=shifuRobot.getDef();
-        shifuRobot.setAtk(4);
-        shifuRobot.setDef(5);
-        shifuRobot.setEvd(-10);
-        assertEquals(expectedAtk,shifuRobot.getAtk());
-        assertEquals(expectedDef,shifuRobot.getDef());
-        assertEquals(expectedEvd,shifuRobot.getEvd());
-    }
+
 
 
 }

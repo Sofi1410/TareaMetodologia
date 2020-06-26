@@ -3,9 +3,7 @@ package com.github.cc3002.citricjuice.model.board;
 import com.github.cc3002.citricjuice.model.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Class that represents a panel in the board of the game.
@@ -15,20 +13,23 @@ import java.util.Set;
  * @version 1.0.6-rc.2
  * @since 1.0
  */
-public abstract class AbstractPanel implements Panel {
-  private final int a;
-  private final int b;
-  private final Set<Panel> nextPanels = new HashSet<>();
-
+public abstract class AbstractPanel implements IPanel {
+  private final int id;
+  private final Set<IPanel> nextPanels;
+  private final List<Player> Players;
   /**
    * Creates a new panel.
    *
-   * @param a coordinate of the panel
-   * @param b the coordinates of the panel.
+   * @param id the unique code for the panel
    */
-  public AbstractPanel(int a, int b) {
-    this.a = a;
-    this.b = b;
+  public AbstractPanel(int id) {
+    nextPanels = new HashSet<>();
+    Players = new ArrayList<>();
+    this.id = id;
+  }
+
+  public int getId() {
+    return id;
   }
 
   /**
@@ -38,9 +39,9 @@ public abstract class AbstractPanel implements Panel {
    * /**
    * Returns a copy of this panel's next ones.
    *
-   * @return
+   * @return Set<IPanel>
    */
-  public Set<Panel> getNextPanels() {
+  public Set<IPanel> getNextPanels() {
     return Set.copyOf(nextPanels);
   }
 
@@ -49,23 +50,68 @@ public abstract class AbstractPanel implements Panel {
    *
    * @param panel the panel to be added.
    */
-  public void addNextPanel(Panel panel) {
-    nextPanels.add(panel);
+  public void addNextPanel(IPanel panel) {
+    if (!this.equals(panel) ) {
+      nextPanels.add(panel);
+    }
+  }
+
+  /**
+   * Adds a new player in the panel
+   *
+   * @param player the player to be added.
+   */
+  public void addPlayer(Player player) {
+    Players.add(player);
+  }
+  /**
+   * Removes a player in the panel
+   *
+   * @param player the player to be remove.
+   */
+  public void removePlayer(Player player) {
+    Players.remove(player);
   }
 
   @Override
-  public  boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    AbstractPanel that = (AbstractPanel) o;
-    return a == that.a &&
-            b == that.b &&
-            Objects.equals(nextPanels, that.nextPanels);
+  public boolean equals(final Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof AbstractPanel)) {
+      return false;
+    }
+    final AbstractPanel that = (AbstractPanel) o;
+    boolean result = equalNextPanels(1);
+    result = result && id == that.id &&
+            Objects.equals(Players, that.Players);
+    return result;
+  }
+
+  @Override
+  public boolean equalNextPanels(final int i) {
+    boolean result = true;
+    for (IPanel panel :
+            nextPanels) {
+      result = result && panel.equalNextPanels(i - 1);
+    }
+    return result;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(a, b, nextPanels);
+    return 31 * Objects.hash(id, Players) + nextPanelsHash(1);
+  }
+
+
+  public int nextPanelsHash(int acc) {
+    int result = 1;
+    if (acc == 0) {
+      return result;
+    }
+    for (IPanel element : nextPanels)
+      result = 31 * result + (element == null ? 0 : element.nextPanelsHash(acc - 1));
+    return result;
   }
 
   /**
@@ -75,8 +121,9 @@ public abstract class AbstractPanel implements Panel {
   public abstract void activateBy(final @NotNull Player player);
 
 
-
-
+  public List<Player> getPlayers() {
+    return Players;
+  }
 
 }
 

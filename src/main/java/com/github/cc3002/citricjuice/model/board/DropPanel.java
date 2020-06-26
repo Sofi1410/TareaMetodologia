@@ -11,14 +11,15 @@ import static java.lang.Math.max;
  * The Player in here reduce his stars count
  */
  public class DropPanel extends AbstractPanel {
+
+
     /**
      * Creates a new panel.
      *
-     * @param a
-     * @param b the coordinates of the panel.
+     * @param id the unique code for the panel
      */
-    public DropPanel(int a, int b) {
-        super(a, b);
+    public DropPanel(int id) {
+        super(id);
     }
 
     @Override

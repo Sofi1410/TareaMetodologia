@@ -42,8 +42,8 @@ public class WildUnitTest {
     // Assert the HP in a WildUnit after being attack and
     // decided to avoid
     public void avoidTest(){
-        //Test with the case is : Player attacks, Wild Unit
-        //Test with the case  : Player attacks, Wild Unit
+        //Test with the case is : Player attacks, Wild IUnit
+        //Test with the case  : Player attacks, Wild IUnit
         //decided to avoid
         long seed= new Random().nextLong();
         int r= new Random(seed).nextInt(6)+1;
@@ -77,8 +77,8 @@ public class WildUnitTest {
 
     }
     @Test
-    //Test that assert the correct stars in a Unit when
-    // a Unit wins a battle against a WildUnit
+    //Test that assert the correct stars in a IUnit when
+    // a IUnit wins a battle against a WildUnit
     public void increaseStartsByTest(){
         shifuRobot.increaseStarsBy(11);
         suguri.increaseStarsBy(15);
@@ -94,7 +94,7 @@ public class WildUnitTest {
         assertEquals(expectedChickenStars,chicken.getStars());
         assertEquals(expectedPardoStars,pardo.getStars());
 
-        //case when a Boss Unit wins a battle against a WildUnit
+        //case when a Boss IUnit wins a battle against a WildUnit
         int shifuRobotStars = shifuRobot.getStars();
         int pardoStars2= pardo.getStars();
         int expectedShifuRobotStars= (int) (shifuRobotStars+Math.floor(pardoStars2*0.5));
@@ -113,10 +113,10 @@ public class WildUnitTest {
         assertEquals(expectedsuguriStars3,suguri.getStars());
     }
     @Test
-    //Test that assert the correct victories in a Unit when
-    // a Unit wins a battle against a WildUnit
+    //Test that assert the correct victories in a IUnit when
+    // a IUnit wins a battle against a WildUnit
     public void increaseVictoriesByTest(){
-        //case when a Wild Unit wins a battle against a Wild Unit
+        //case when a Wild IUnit wins a battle against a Wild IUnit
         int chickenVic = chicken.getVictories();
         int pardoVic= pardo.getVictories();
         int expectedChickenVic= chickenVic+1;
@@ -124,7 +124,7 @@ public class WildUnitTest {
         assertEquals(expectedChickenVic,chicken.getVictories());
         assertEquals(pardoVic,pardo.getVictories());
 
-        //case when a Boss Unit wins a battle against a Wild Unit
+        //case when a Boss IUnit wins a battle against a Wild IUnit
         int shifuVic = shifuRobot.getVictories();
         int pardoVic2= pardo.getVictories();
         int expectedShifuVic= shifuVic+1;
@@ -132,7 +132,7 @@ public class WildUnitTest {
         assertEquals(expectedShifuVic,shifuRobot.getVictories());
         assertEquals(pardoVic2,pardo.getVictories());
 
-        //case when a Player wins a battle against a Wild Unit
+        //case when a Player wins a battle against a Wild IUnit
         int pardoVic3 = pardo.getVictories();
         int suguriVic= suguri.getVictories();
         int expectedSuguriVic= suguriVic+1;
@@ -156,30 +156,7 @@ public class WildUnitTest {
 
     }
 
-    @Test
-    /*
-     *This test assert that you can`t change the parameters
-     * atk,edv,def in a WildUnit
-=======
-    @Test
-    /*
-     *This test assert that you can´t change the parameters
-     * atk,edv,def in a PLayer
->>>>>>> tarea1-entrega
-     */
-    public void parametersTest(){
-        final var expectedAtk= chicken.getAtk();
-        final var expectedEvd=chicken.getEvd();
-        final var expectedDef=chicken.getDef();
-        chicken.setAtk(4);
-        chicken.setDef(5);
-        chicken.setEvd(-10);
-        chicken.setDef(3);
-        chicken.setEvd(20);
-        assertEquals(expectedAtk,chicken.getAtk());
-        assertEquals(expectedDef,chicken.getDef());
-        assertEquals(expectedEvd,chicken.getEvd());
-    }
+
 
 
 }

@@ -87,15 +87,15 @@ public class PlayerTest {
   }
 
   @Test
-  //Test that assert the correct stars in a Unit when
-  // a Unit wins a battle against a Player
+  //Test that assert the correct stars in a IUnit when
+  // a IUnit wins a battle against a Player
   public void increaseStartsByTest(){
     shifuRobot.increaseStarsBy(10);
     suguri.increaseStarsBy(7);
     chicken.increaseStarsBy(9);
     pando.increaseStarsBy(2);
 
-    //case when a Wild Unit wins a battle against a Player
+    //case when a Wild IUnit wins a battle against a Player
     int chickenStars = chicken.getStars();
     int suguriStars= suguri.getStars();
     int expectedChickenStars= (int) (chickenStars+Math.floor(suguriStars*0.5));
@@ -104,7 +104,7 @@ public class PlayerTest {
     assertEquals(expectedChickenStars,chicken.getStars());
     assertEquals(expectedsuguriStars,suguri.getStars());
 
-    //case when a Boss Unit wins a battle against a Player
+    //case when a Boss IUnit wins a battle against a Player
     int shifuRobotStars = shifuRobot.getStars();
     int suguriStars2= suguri.getStars();
     int expectedShifuRobotStars= (int) (shifuRobotStars+Math.floor(suguriStars2*0.5));
@@ -123,10 +123,10 @@ public class PlayerTest {
     assertEquals(expectedsuguriStars3,suguri.getStars());
   }
   @Test
-  //Test that assert the correct victories in a Unit when
-  // a Unit wins a battle against a Player
+  //Test that assert the correct victories in a IUnit when
+  // a IUnit wins a battle against a Player
   public void increaseVictoriesByTest(){
-    //case when a Wild Unit wins a battle against a Player
+    //case when a Wild IUnit wins a battle against a Player
     int chickenVictories = chicken.getVictories();
     int suguriVictories= suguri.getVictories();
     int expectedChickenVic= chickenVictories+2;
@@ -135,7 +135,7 @@ public class PlayerTest {
     assertEquals(expectedChickenVic,chicken.getVictories());
     assertEquals(expectedSuguriVic,suguri.getVictories());
 
-    //case when a Boss Unit wins a battle against a Player
+    //case when a Boss IUnit wins a battle against a Player
     int shifuVic = shifuRobot.getVictories();
     int suguriVic= suguri.getVictories();
     int expectedShifuVic= shifuVic+2;

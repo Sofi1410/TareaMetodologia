@@ -5,17 +5,17 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Subclass of AbstractPanel
- * The Unit in this panel has to battle against a BossUnit
+ * The IUnit in this panel has to battle against a BossUnit
  */
 public class BossPanel extends AbstractPanel{
+
     /**
      * Creates a new panel.
      *
-     * @param a coordinate of the panel
-     * @param b the coordinates of the panel.
+     * @param id the unique code for the panel
      */
-    public BossPanel(int a, int b) {
-        super(a, b);
+    public BossPanel(int id) {
+        super(id);
     }
 
     @Override

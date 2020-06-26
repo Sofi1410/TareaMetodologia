@@ -4,14 +4,15 @@ import com.github.cc3002.citricjuice.model.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class DrawPanel extends AbstractPanel{
+
+
     /**
      * Creates a new panel.
      *
-     * @param a coordinate of the panel
-     * @param b the coordinates of the panel.
+     * @param id the unique code for the panel
      */
-    public DrawPanel(int a, int b) {
-        super(a, b);
+    public DrawPanel(int id) {
+        super(id);
     }
 
     @Override

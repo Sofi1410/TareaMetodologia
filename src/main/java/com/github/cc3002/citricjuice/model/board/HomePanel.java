@@ -3,20 +3,21 @@ import com.github.cc3002.citricjuice.model.Player;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Subclass of Panel
+ * Subclass of IPanel
  * The Player in here reach a new level if
  * meets the requirements
  * also gets +1 HP
  */
-class HomePanel extends AbstractPanel  {
+public class HomePanel extends AbstractPanel  {
+
+
     /**
      * Creates a new panel.
      *
-     * @param a
-     * @param b the coordinates of the panel.
+     * @param id the unique code for the panel
      */
-    public HomePanel(int a, int b) {
-        super(a, b);
+    public HomePanel(int id) {
+        super(id);
     }
 
     /**
@@ -24,6 +25,9 @@ class HomePanel extends AbstractPanel  {
      */
     @Override
     public void activateBy(final @NotNull Player player) {
-        player.setCurrentHP(player.getCurrentHP() + 1);
+        if (player.getHomePanel().equals(this)) {
+            player.setCurrentHP(player.getCurrentHP() + 1);
+            player.normaCheck();
+        }
     }
 }

@@ -3,14 +3,14 @@ package com.github.cc3002.citricjuice.model;
 import java.util.Random;
 
 /**
- * This class represents a abstract Unit in the game 99.7% Citric Liquid.
+ * This class represents a abstract IUnit in the game 99.7% Citric Liquid.
  *
  * @author <a href="mailto:ignacio.slater@ug.uchile.cl">Ignacio Slater
  *     Muñoz</a>.
  * @version 1.0.6-rc.3
  * @since 1.0
  */
-public abstract class AbstractUnit implements Unit{
+public abstract class AbstractUnit implements IUnit {
     private final Random random;
     private final String name;
     protected int atk;
@@ -46,7 +46,6 @@ public abstract class AbstractUnit implements Unit{
     }
 
 
-
   /**
    * Returns this player's star count.
    */
@@ -65,21 +64,6 @@ public abstract class AbstractUnit implements Unit{
     }
 
 
-    /**
-     * set a new value for edv
-     * @param newEvd new edv
-     */
-    public abstract void setEvd(final int newEvd);
-    /**
-     * set a new value for atk
-     * @param newAtk new atk
-     */
-    public abstract void setAtk(final int newAtk);
-    /**
-     * set a new value for def
-     * @param newDef new def
-     */
-    public abstract void setDef(final int newDef);
 
     /**
     * Returns a uniformly distributed random value in [1, 6]
@@ -186,39 +170,62 @@ public abstract class AbstractUnit implements Unit{
      * Increases this player's Victory´s count by an amount.
      * @return
      */
-    public abstract void   increaseVictoriesBy(Unit unit);
+    public abstract void   increaseVictoriesBy(IUnit IUnit);
     /**
      * Increases this player's star in a battle.
      */
-    public abstract void increaseStarsBy(Unit unit);
+    public abstract void increaseStarsBy(IUnit IUnit);
     /**
      * Increases this player's star count by an amount.
      */
     public void increaseStarsBy(final int amount) {
         stars += amount;
     }
+  /**
+   * The IUnit decide to attack
+   * the amount of the attack i decided by the
+   * roll number
+   */
+
+    public int attack() {
+      return (this.roll()+this.getAtk());
+
+    }
 
     /**
-     * A Unit decides to attack
-     * @return attack
-     */
-    public abstract int attack();
-
-    /**
-     * A Unit decide to defend
+     * The IUnit decide to defend
+     * Always lose Hp ,at least 1
      * @param attack made by the opponent
      */
-    public abstract void defend(int attack);
+    public void defend(int attack) {
+      this.setCurrentHP(this.getCurrentHP()-Math.max(1, attack - (this.roll() + this.getDef())));
+    }
 
     /**
-     * A Unit decide to avoid
-     * @param attack made by the opponent
-     */
-    public abstract void avoid(int attack);
+    * The IUnit decide to avoid
+    * if he attack is bigger than evd reduce its HP
+    * @param attack made by the opponent
+    */
+    public void avoid(int attack) {
+    int evd=(this.getEvd() + this.roll());
+    int HP=this.getCurrentHP();
+    int actual = Math.max(((evd > attack)? HP:HP-attack),0);
+    this.setCurrentHP(actual);
+    }
 
   /**
-   * Returns a copy of this character.
-   * @return
+   * method that advice if the Unit is KO
    */
-  public abstract Unit copy();
+  public boolean isK_O(){
+    if(getCurrentHP()==0){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+  /**
+   * Returns a copy of this character.
+   */
+  public abstract IUnit copy();
 }

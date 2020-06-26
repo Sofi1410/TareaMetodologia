@@ -1,7 +1,5 @@
 package com.github.cc3002.citricjuice.model;
 
-import java.util.Random;
-
 public class WildUnit extends AbstractUnit{
     /**
      * Creates a new character.
@@ -15,28 +13,14 @@ public class WildUnit extends AbstractUnit{
         super(name,hp,atk, def, evd);
     }
 
-    @Override
-    //Set region
-    //A BossUnit can´t change atk,evd or def
-    public void setEvd(int newEvd) {
 
-    }
-
-    public void setAtk(int newAtk) {
-
-    }
-
-    public void setDef(int newDef) {
-
-    }
-    //end region
 
     /**
      * Add victories to the winner in a battle
-     * @param unit loser
+     * @param IUnit loser
      */
-    public void increaseVictoriesBy(Unit unit) {
-        unit.increaseVictoriesByWild(this);
+    public void increaseVictoriesBy(IUnit IUnit) {
+        IUnit.increaseVictoriesByWild(this);
 
     }
     /**
@@ -65,10 +49,10 @@ public class WildUnit extends AbstractUnit{
     /**
      * Add stars to the winner an reduce the stars to a
      * loser in a combat
-     * @param unit loser
+     * @param IUnit loser
      */
-    public void increaseStarsBy(Unit unit) {
-        unit.increaseStarsByWild(this);
+    public void increaseStarsBy(IUnit IUnit) {
+        IUnit.increaseStarsByWild(this);
     }
     /**
      * The loser (wildUnit) add the appropriate amount of stars to the winner
@@ -98,30 +82,6 @@ public class WildUnit extends AbstractUnit{
         this.reduceStarsBy (this.getStars());
     }
 
-    public int attack() {
-        return (this.roll()+this.getAtk());
-
-    }
-    /**
-     * The WildUnit decide to defend
-     * Always lose Hp ,at least 1
-     * @param attack made by the opponent
-     */
-    public void defend(int attack) {
-        this.setCurrentHP(this.getCurrentHP()-Math.max(1, attack - (this.roll() + this.getDef())));
-    }
-    /**
-     * The WildUnit decide to avoid
-     * if the attack is bigger than evd reduce its HP
-     * @param attack made by the opponent
-     */
-    public void avoid(int attack) {
-        int evd=(this.getEvd() + this.roll());
-        int a =Math.max(0,evd-attack);
-        int b =Math.min(-attack,-evd);
-        int c=Math.max(a,b);
-        this.setCurrentHP(Math.max(this.getCurrentHP()+c,0));
-    }
 
 
 

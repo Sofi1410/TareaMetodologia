@@ -4,18 +4,18 @@ import com.github.cc3002.citricjuice.model.Player;
 import org.jetbrains.annotations.NotNull;
 
 /**
-Subclass of Abstract Panel
+Subclass of Abstract IPanel
  Nothing happens in here
  */
 public class NeutralPanel extends AbstractPanel {
+
   /**
    * Creates a new panel.
    *
-   * @param a
-   * @param b the coordinates of the panel.
+   * @param id the unique code for the panel
    */
-  public NeutralPanel(int a, int b) {
-    super(a, b);
+  public NeutralPanel(int id) {
+    super(id);
   }
 
   @Override

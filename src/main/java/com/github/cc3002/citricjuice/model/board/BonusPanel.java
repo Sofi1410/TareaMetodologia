@@ -6,18 +6,18 @@ import org.jetbrains.annotations.NotNull;
 
 /**
 SubClass of AbstractPanel
- The Unit inhere gets a bonus in its HP
+ The IUnit inhere gets a bonus in its HP
  */
 public class BonusPanel extends AbstractPanel {
+
+
   /**
    * Creates a new panel.
    *
-   * @param a
-   * @param b
-   * the coordinates of the panel.
+   * @param id the unique code for the panel
    */
-  public BonusPanel(int a, int b) {
-    super(a, b);
+  public BonusPanel(int id) {
+    super(id);
   }
 
   /**

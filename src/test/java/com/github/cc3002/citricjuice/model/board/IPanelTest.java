@@ -1,6 +1,5 @@
 package com.github.cc3002.citricjuice.model.board;
 
-import com.github.cc3002.citricjuice.model.AbstractUnit;
 import com.github.cc3002.citricjuice.model.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
@@ -17,29 +16,29 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @version 1.0.6-rc.1
  * @since 1.0
  */
-class PanelTest {
+class IPanelTest {
   private final static String PLAYER_NAME = "Suguri";
   private final static int BASE_HP = 4;
   private final static int BASE_ATK = 1;
   private final static int BASE_DEF = -1;
   private final static int BASE_EVD = 2;
-  private Panel testHomePanel;
-  private Panel testNeutralPanel;
-  private Panel testBonusPanel;
-  private Panel testDropPanel;
-  private Panel testEncounterPanel;
-  private Panel testBossPanel;
+  private IPanel testHomePanel;
+  private IPanel testNeutralPanel;
+  private IPanel testBonusPanel;
+  private IPanel testDropPanel;
+  private IPanel testEncounterPanel;
+  private IPanel testBossPanel;
   private Player Suguri;
   private long testSeed;
 
   @BeforeEach
   public void setUp() {
-    testBonusPanel = new BonusPanel(1,2);
-    testBossPanel = new BossPanel(3,3);
-    testDropPanel = new DropPanel(1,3);
-    testEncounterPanel = new EncounterPanel(2,3);
-    testHomePanel = new HomePanel(3,2);
-    testNeutralPanel = new NeutralPanel(3,1);
+    testBonusPanel = new BonusPanel(1);
+    testBossPanel = new BossPanel(3);
+    testDropPanel = new DropPanel(1);
+    testEncounterPanel = new EncounterPanel(2);
+    testHomePanel = new HomePanel(3);
+    testNeutralPanel = new NeutralPanel(1);
     testSeed = new Random().nextLong();
     Suguri = new Player(PLAYER_NAME, BASE_HP, BASE_ATK, BASE_DEF, BASE_EVD);
   }
@@ -57,8 +56,8 @@ class PanelTest {
   @Test
   public void nextPanelTest() {
     assertTrue(testNeutralPanel.getNextPanels().isEmpty());
-    final var expectedPanel1 = new NeutralPanel(3,0);
-    final var expectedPanel2 = new NeutralPanel(2,0);
+    final var expectedPanel1 = new NeutralPanel(30);
+    final var expectedPanel2 = new NeutralPanel(20);
 
     testNeutralPanel.addNextPanel(expectedPanel1);
     assertEquals(1, testNeutralPanel.getNextPanels().size());
