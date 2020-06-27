@@ -1,6 +1,6 @@
 package com.github.cc3002.citricjuice.model;
 
-public class BossUnit extends AbstractUnit {
+public class BossUnit extends AbstractUnit{
     /**
      * Creates a new character.
      *

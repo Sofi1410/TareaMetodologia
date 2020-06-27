@@ -25,7 +25,7 @@ public class HomePanel extends AbstractPanel  {
      */
     @Override
     public void activateBy(final @NotNull Player player) {
-        if (player.getHomePanel().equals(this)) {
+        if (player.getHomePanel().getId()==this.getId()) {
             player.setCurrentHP(player.getCurrentHP() + 1);
             player.normaCheck();
         }

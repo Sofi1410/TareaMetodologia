@@ -73,6 +73,7 @@ class IPanelTest {
 
   @Test
   public void homePanelTest() {
+    Suguri.setHomePanel(testHomePanel);
     assertEquals(Suguri.getMaxHP(), Suguri.getCurrentHP());
     testHomePanel.activateBy(Suguri);
     assertEquals(Suguri.getMaxHP(), Suguri.getCurrentHP());

@@ -3,6 +3,8 @@ package com.github.cc3002.citricjuice.model;
 import com.github.cc3002.citricjuice.model.board.IPanel;
 import com.github.cc3002.citricliquid.gui.NormaGoal;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.List;
 
 public class Player extends AbstractUnit implements IUnit {
@@ -10,6 +12,7 @@ public class Player extends AbstractUnit implements IUnit {
     private NormaGoal normaGoal;
     private int normaLevel;
     private IPanel homePanel;
+    private PropertyChangeSupport normaLevelnotification= new PropertyChangeSupport(this);
 
 
     /**
@@ -41,13 +44,14 @@ public class Player extends AbstractUnit implements IUnit {
 
     /**
      *
+     * @return the normaGoal choosen by the player
      */
     public NormaGoal getNormaGoal(){
         return normaGoal;
 
     }
     /**
-     *
+     *Sets the NormaGoal of the player
      */
     public void setNormaGoal(NormaGoal newNorma){
         normaGoal=newNorma;
@@ -78,7 +82,7 @@ public class Player extends AbstractUnit implements IUnit {
 
     }
     /**
-     * 
+     * Returns the player current HomePanel
      */
     public IPanel getHomePanel(){
         return homePanel;
@@ -86,11 +90,18 @@ public class Player extends AbstractUnit implements IUnit {
 
     /**
      * Performs a norma clear action; the {@code norma} counter increases in 1.
+     * has a listener that advice when normaLevel of the player change
      */
     public void normaClear() {
         normaLevel++;
+        normaLevelnotification.firePropertyChange("New_Normalevel",normaLevel-1,normaLevel);
     }
 
+
+    /**
+     * Decides if the goal selected by the player
+     * was achieve or not
+     */
     public void normaCheck(){
         if(normaGoal==NormaGoal.STARS){
             List<Integer> starGoal= List.of(10,30, 70, 120, 200);
@@ -223,8 +234,19 @@ public class Player extends AbstractUnit implements IUnit {
         this.reduceStarsBy((int) Math.ceil(this.getStars()*0.5));
     }
 
+    /**
+     * Method that adss a listener in the unit
+     * @param Listener new Listener
+     */
+    public void addNormaLevelListener(PropertyChangeListener Listener){
+        normaLevelnotification.addPropertyChangeListener(Listener);
+    }
 
 
+    /**
+     *
+     * @return a copy of the player
+     */
     public Player copy() {
         return new Player(this.getName(), this.getMaxHP(), this.getAtk(), this.getDef(), this.getEvd());
     }
