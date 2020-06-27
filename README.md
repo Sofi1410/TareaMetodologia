@@ -18,12 +18,18 @@ connected to the methods attack,avoid and defend, however the currentHp
 is connected with those methods,so you **_can simulate the combat like 
 the Test of Player,WildUnit and BossUnit does_**.
 
+All the panels has at least one NextPanel. 
+
+
 
 **To run the program:**
 
 Just select the test and run. In the Unit Tests are some default Units like shifuRobot
 ,chicken, suguri and others so if you want to ,you can adjust this default Units taking care 
 of the copyTest(), cause if you change these Units you have to change the expected copy.
+
+For the controllerTest you have to ve aware of the union between panels, if you run the test 
+all of them will pass but if you make changes you have to be very carefull.
 
 **Project explanation**
 
@@ -40,6 +46,14 @@ Because of this we created the class AbstractUnit. Also exists an Interface Unit
 allows to created methods that received a Unit in the abstract class,but we don`t 
 know for sure witch one is.     
   
+***Controller***
+The idea of the controller is to manage all the game so it use all the methods in 
+IPanel and IUnit , making fluid steps in the situacions of the panel.
+For example: When you create a panel you have to add it in the list of all the 
+panels in the game, is not a good practice to do that in the IPanel cause is not 
+respecting the singularityy function principle. Thats why when you create a panel 
+using the controller, this one adds it to the list.
+The last examples aplys for Players, Enemy Units, and all the clases in the game.
 
 **Logic**
 
@@ -55,3 +69,8 @@ is in one line in the method increaseStarsByPlayer(Player player) in the Player 
 Each functionality has its own method.
 
 All the methods in Abstract Unit and AbstractPanel apply to their subclasses.
+
+When you need to watch a event like, when you have to see who came first in a race
+and you can´t see it you ask someone to advice you, that is exactly what we do
+using Observer , when on of the players in the game raise his norma level , the observer notice
+and when one of them achieve normaLevel=6 that means that is the winner of the game.

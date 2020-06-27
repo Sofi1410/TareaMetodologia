@@ -1,9 +1,6 @@
 package com.github.cc3002.citricliquid.gui;
 
-import com.github.cc3002.citricjuice.model.BossUnit;
-import com.github.cc3002.citricjuice.model.IUnit;
-import com.github.cc3002.citricjuice.model.Player;
-import com.github.cc3002.citricjuice.model.WildUnit;
+import com.github.cc3002.citricjuice.model.*;
 import com.github.cc3002.citricjuice.model.board.HomePanel;
 import com.github.cc3002.citricjuice.model.board.IPanel;
 import org.jetbrains.annotations.Contract;
@@ -95,7 +92,7 @@ public class Mediator {
   public MediatorPanel<?> createNeutralPanel(int id) {
     // (!) Change the <Object> parameter with the actual class of the Panel
     // (!) Implement the body of this method
-    return  new MediatorPanel<>( controller.addNeutraLPanel(id));
+    return  new MediatorPanel<>( controller.addNeutralPanel(id));
   }
 
   /**

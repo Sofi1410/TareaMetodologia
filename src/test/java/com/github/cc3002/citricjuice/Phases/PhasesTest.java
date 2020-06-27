@@ -52,11 +52,10 @@ public class PhasesTest {
         testDropPanel.addPlayer(shifuRobot);
         listOfPlayers.add(suguri);
         listOfPlayers.add(shifuRobot);
-        //Phases(listOfPlayers,owner);
-
-
-
-
 
     }
+
+    //Phases(listOfPlayers,owner);
+    //HERE I SUPOUSSED TO  make an enviroment in order to test the phases
+    // conect the aproppiate panels, and make situaciones so we cant wait the players response
 }

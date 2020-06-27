@@ -1,14 +1,13 @@
-package com.github.cc3002.citricliquid.gui;
+package com.github.cc3002.citricjuice.model;
 
-import com.github.cc3002.citricjuice.model.BossUnit;
-import com.github.cc3002.citricjuice.model.Player;
-import com.github.cc3002.citricjuice.model.WildUnit;
 import com.github.cc3002.citricjuice.model.board.*;
+import com.github.cc3002.citricliquid.gui.NormaGoal;
+import com.github.cc3002.citricliquid.gui.NormaLevelObserver;
 import org.jetbrains.annotations.NotNull;
+
 import java.util.Random;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class GameController {
     private final List<Player> listOfPlayers;
@@ -17,13 +16,22 @@ public class GameController {
     private int turn;
     int chapter;
     private Random random;
-    private final Player winner = new Player("paloblanco", 2, 4, 5, 6);
+    private NormaLevelObserver notification = new NormaLevelObserver(this);
+    private Player winner= null;
 
+    /**
+     * Constructor for the controller
+     * It has a list with all the players created in the controller
+     * a list with all the panels created in the controller
+     * var turn that represents the turn of the players
+     * chapter it means how many rounds had been
+     */
     public GameController() {
         listOfPlayers = new ArrayList<>();
         Panels = new ArrayList();
         turn = 1;
         chapter = 1;
+
     }
 
 
@@ -50,6 +58,12 @@ public class GameController {
 
         return player;
     }
+
+    /**
+     * Mthod that sets the HomePanel in a player
+     * @param player the player
+     * @param newHome new HomePanel
+     */
     public void setHomePanel(Player player, HomePanel newHome) {
         player.setHomePanel(newHome);
     }
@@ -63,7 +77,7 @@ public class GameController {
      * @param panel  the new panel
      */
     public void setPlayerPanel(Player player, IPanel panel) {
-        player.getPanel().removePlayer(player);
+        player.getPanel().getPlayers().remove(player);
         player.setActualPanel(panel);
         panel.addPlayer(player);
     }
@@ -106,7 +120,7 @@ public class GameController {
         return listOfPlayers;
     }
 
-    //Creating new Panels with their own coordinates
+
 
     /**
      * Method that create a new Bonus Panel
@@ -134,18 +148,7 @@ public class GameController {
         return NP;
     }
 
-    /**
-     * Method that create a new Draw Panel
-     * and add it to the list of All the Panel
-     *
-     * @param id the id of the new Panel
-     * @return new Draw Panel
-     */
-    public DrawPanel addDrawPanel(int id) {
-        DrawPanel NP = new DrawPanel(id);
-        Panels.add(NP);
-        return NP;
-    }
+
 
     /**
      * Method that create a new Drop Panel
@@ -193,7 +196,7 @@ public class GameController {
      * @param id the id of the new Panel
      * @return new Neutral Panel
      */
-    public NeutralPanel addNeutraLPanel(int id) {
+    public NeutralPanel addNeutralPanel(int id) {
         NeutralPanel NP = new NeutralPanel(id);
         Panels.add(NP);
         return NP;
@@ -218,23 +221,16 @@ public class GameController {
      * @param actual   actual panel
      * @param newpanel panel next to actual
      */
-    public void setNextPanel(IPanel actual, IPanel newpanel) {
+    public void setNextPanel(@NotNull IPanel actual, IPanel newpanel) {
         actual.addNextPanel(newpanel);
     }
 
 
-    public void activadedBy() {
-
-    }
 
 
     /**
-     *
-     */
-    private void changeTurn() {
-    }
-
-    /**
+     * Method that returns a list with all the panels created in
+     * the controller
      * @return
      */
     public Set<IPanel> getPanels() {
@@ -244,50 +240,93 @@ public class GameController {
     /**
      * @return
      */
+
+    /**
+     * These method is use when the observer advices that a player
+     * has NormaLevel=6
+     * in that case this player will be the owner of the turn , thats why returns
+     * the owner
+     * @return
+     */
     public Player getWinner() {
-        return winner;
+        return getOwner();
     }
 
+    /**
+     * Acording to the var turn in the class
+     * this method will extract the current player(owner
+     * of the turn) from the list of Players
+     * @return player owner of the turn
+     */
     public Player getOwner() {
         owner = listOfPlayers.get((turn - 1) % 4);
+
         return owner;
     }
 
 
     /**
-     *
+     *When a player cant do anithing alse
+     * finishturn() sets the value of turn
+     * in order to change the ower of the turn
      */
     public void finishTurn() {
         if (turn % 4 == 0) {
             chapter++;
         }
+        owner.addNormaLevelListener(notification);
         setTurn(turn + 1);
+
     }
 
+    /**
+     * when is no longer the turn of  player
+     * we use this method to change the value of turn
+     * @param turn new value
+     */
     public void setTurn(int turn) {
         this.turn = turn;
 
     }
 
-    public int getNormaLevel() {
 
-        return getOwner().getNormaLevel();
-    }
-
+    /**
+     *
+     * @return the current chapter
+     */
     public int getChapter() {
         return chapter;
     }
 
+    /**
+     * When we want to change the NormaGoal for the owner
+     * we use setNormaGoal
+     * @param goal new NormaGoal
+     */
     public void setNormaGoal(NormaGoal goal) {
         getOwner().setNormaGoal(goal);
     }
 
+    /**
+     * Method that
+     * @return the value of the dice
+     * play by the owner
+     */
     public int dice() {
         int dice = getOwner().roll();
         return dice;
     }
+
+    /**
+     * method that represent the move of
+     * a Player
+     * steps is the number of moves according to the dice
+     * at the end the if the player did not had to stop
+     * activates the power of the panel where it is.
+     */
     public void movePlayer(){
         int steps = dice();
+        getOwner().increaseStarsBy((int) (Math.floor(getChapter()/5)+1));
         while (steps>0) {
             if (step(getOwner(), getOwner().getPanel())) {
                 break;
@@ -299,13 +338,26 @@ public class GameController {
         }
         getOwner().getPanel().activateBy(getOwner());
     }
+
+    /**
+     * method that gets the owner of the turn
+     * an the panel where the owner is
+     * an move it one step acording to the rules
+     * if the next panel is his house return true
+     * if there is more than one player in the new panel return true
+     * if the panel where it is does not need to stop return false
+     *
+     * @param owner player in the move
+     * @param actualPanel panel where the owner is
+     * @return boolean true if stop, falsee if not
+     */
     public boolean step(Player owner,IPanel actualPanel){
         int size = actualPanel.getNextPanels().size();
         if (size > 1) {
             return true;
         }
         else {
-            IPanel nextPanel =  actualPanel.getNextPanels().iterator().next();
+            IPanel nextPanel = getNextPanels(actualPanel).iterator().next();
             setPlayerPanel(getOwner(),nextPanel);
             if(nextPanel.getId()==owner.getHomePanel().getId()){
                 return true;
@@ -318,9 +370,17 @@ public class GameController {
             }
         }
     }
-    public void uwu(){
-        
-    }
 
+    /**
+     * Method that decided what to do with the observer advice
+     * in this case when the norma check of the player sets NormaLevel=6
+     * this method advice that someone win the game
+     * @param newValue new normaLevel for the player playing
+     */
+    public void onNewNormaLevel(int newValue) {
+        if (newValue==6){
+            winner=getOwner();
+        }
+    }
 }
 

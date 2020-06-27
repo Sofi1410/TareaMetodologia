@@ -1,4 +1,4 @@
-package com.github.cc3002.citricjuice.model;
+package com.github.cc3002.citricjuice.mediator;
 
 import com.github.cc3002.citricliquid.gui.Mediator;
 import com.github.cc3002.citricliquid.gui.NormaGoal;
