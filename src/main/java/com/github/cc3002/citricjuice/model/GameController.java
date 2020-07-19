@@ -1,8 +1,10 @@
 package com.github.cc3002.citricjuice.model;
 
 import com.github.cc3002.citricjuice.model.board.*;
+import com.github.cc3002.citricliquid.gui.MovePlayerObserver;
 import com.github.cc3002.citricliquid.gui.NormaGoal;
 import com.github.cc3002.citricliquid.gui.NormaLevelObserver;
+import com.github.cc3002.citricliquid.gui.Phases.Phase;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
@@ -15,9 +17,10 @@ public class GameController {
     private Player owner;
     private int turn;
     int chapter;
-    private Random random;
     private NormaLevelObserver notification = new NormaLevelObserver(this);
+    private MovePlayerObserver movePlayernotification=  new MovePlayerObserver(this);
     private Player winner= null;
+    private Phase phase;
 
     /**
      * Constructor for the controller
@@ -31,6 +34,7 @@ public class GameController {
         Panels = new ArrayList();
         turn = 1;
         chapter = 1;
+        phase= new Phase();
 
     }
 
@@ -326,50 +330,19 @@ public class GameController {
      */
     public void movePlayer(){
         int steps = dice();
-        getOwner().increaseStarsBy((int) (Math.floor(getChapter()/5)+1));
-        while (steps>0) {
-            if (step(getOwner(), getOwner().getPanel())) {
-                break;
-            }
-            else {
-                steps = steps - 1;
-            }
-
+        //getOwner().increaseStarsBy((int) (Math.floor(getChapter()/5)+1));
+        owner.addMovePlayerListener(movePlayernotification);
+        while (steps>0 && getOwner().getCanImove()) {
+            IPanel nextPanel = getNextPanels(getOwner().getPanel()).iterator().next();
+            setPlayerPanel(getOwner(),nextPanel);
+            owner.addMovePlayerListener(movePlayernotification);
+            steps -=1;
         }
         getOwner().getPanel().activateBy(getOwner());
     }
 
-    /**
-     * method that gets the owner of the turn
-     * an the panel where the owner is
-     * an move it one step acording to the rules
-     * if the next panel is his house return true
-     * if there is more than one player in the new panel return true
-     * if the panel where it is does not need to stop return false
-     *
-     * @param owner player in the move
-     * @param actualPanel panel where the owner is
-     * @return boolean true if stop, falsee if not
-     */
-    public boolean step(Player owner,IPanel actualPanel){
-        int size = actualPanel.getNextPanels().size();
-        if (size > 1) {
-            return true;
-        }
-        else {
-            IPanel nextPanel = getNextPanels(actualPanel).iterator().next();
-            setPlayerPanel(getOwner(),nextPanel);
-            if(nextPanel.getId()==owner.getHomePanel().getId()){
-                return true;
-            }
-            else if(nextPanel.getPlayers().size()>1){
-                return true;
-            }
-            else{
-                return false;
-            }
-        }
-    }
+
+
 
     /**
      * Method that decided what to do with the observer advice
@@ -380,6 +353,17 @@ public class GameController {
     public void onNewNormaLevel(int newValue) {
         if (newValue==6){
             winner=getOwner();
+        }
+    }
+
+    public void setPhase(Phase phase) {
+        this.phase = phase;
+    }
+
+
+    public void onMovingEvent(boolean newValue) {
+        if (!newValue){
+            getOwner().setCanImove(false);
         }
     }
 }

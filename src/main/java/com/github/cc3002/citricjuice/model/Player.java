@@ -1,7 +1,9 @@
 package com.github.cc3002.citricjuice.model;
 
 import com.github.cc3002.citricjuice.model.board.IPanel;
+import com.github.cc3002.citricliquid.gui.MovePlayerObserver;
 import com.github.cc3002.citricliquid.gui.NormaGoal;
+import com.github.cc3002.citricliquid.gui.NormaLevelObserver;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -12,7 +14,10 @@ public class Player extends AbstractUnit implements IUnit {
     private NormaGoal normaGoal;
     private int normaLevel;
     private IPanel homePanel;
-    private PropertyChangeSupport normaLevelnotification= new PropertyChangeSupport(this);
+    private boolean canImove;
+    private final PropertyChangeSupport normaLevelnotification= new PropertyChangeSupport(this);
+    private final PropertyChangeSupport anotherplayernotification= new PropertyChangeSupport(this);
+
 
 
     /**
@@ -22,7 +27,7 @@ public class Player extends AbstractUnit implements IUnit {
      * @param hp   the initial (and max) hit points of the character.
      * @param atk  the base damage the character does.
      * @param def  the base defense of the character.
-     * @param evd
+     * @param evd the points to avoid the attack
      */
 
     public Player( String name, int hp, int atk, int def, int evd) {
@@ -31,6 +36,7 @@ public class Player extends AbstractUnit implements IUnit {
         normaLevel = 1;
         this.homePanel=null;
         this.normaGoal=NormaGoal.STARS;
+        this.canImove=true;
 
     }
 
@@ -70,6 +76,16 @@ public class Player extends AbstractUnit implements IUnit {
      */
     public void setActualPanel(IPanel newPanel){
         actualPanel=newPanel;
+        if(newPanel.getPlayers().size()>1 ){
+            anotherplayernotification.firePropertyChange("More_than_one_player",true,false);
+        }
+        if(newPanel.equals(homePanel)) {
+            anotherplayernotification.firePropertyChange("More_than_one_player",true,false);
+        }
+        if(newPanel.getNextPanels().size()!=1) {
+            anotherplayernotification.firePropertyChange("More_than_one_player",true,false);
+        }
+
 
     }
     /**
@@ -94,7 +110,8 @@ public class Player extends AbstractUnit implements IUnit {
      */
     public void normaClear() {
         normaLevel++;
-        normaLevelnotification.firePropertyChange("New_Normalevel",normaLevel-1,normaLevel);
+        normaLevelnotification.firePropertyChange("New_Normalevel",
+                normaLevel-1,normaLevel);
     }
 
 
@@ -238,8 +255,22 @@ public class Player extends AbstractUnit implements IUnit {
      * Method that adss a listener in the unit
      * @param Listener new Listener
      */
-    public void addNormaLevelListener(PropertyChangeListener Listener){
+    public void addNormaLevelListener(NormaLevelObserver Listener){
         normaLevelnotification.addPropertyChangeListener(Listener);
+    }
+    /**
+     * Method that adss a listener in the unit
+     * @param Listener new Listener
+     */
+    public void addMovePlayerListener(MovePlayerObserver Listener){
+        anotherplayernotification.addPropertyChangeListener(Listener);
+    }
+
+    public void setCanImove(boolean a){
+        this.canImove=a;
+    }
+    public boolean getCanImove(){
+        return canImove;
     }
 
 

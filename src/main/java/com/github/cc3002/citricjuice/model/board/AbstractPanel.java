@@ -56,6 +56,8 @@ public abstract class AbstractPanel implements IPanel {
     }
   }
 
+
+
   /**
    * Adds a new player in the panel
    *

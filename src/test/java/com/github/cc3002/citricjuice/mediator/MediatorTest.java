@@ -122,7 +122,7 @@ class MediatorTest {
     assertEquals(NormaGoal.STARS, player.getNormaGoal());
   }
 
-  @Test
+  @RepeatedTest(100)
   public void testStarsNorma() {
     var bonusPanel = panelSuppliers.get(0).apply(1);
     var homePanel = mediator.createHomePanel(2);

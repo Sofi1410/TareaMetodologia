@@ -197,7 +197,7 @@ public class controllerTest {
 
 
 
-    @Test
+    @RepeatedTest(100)
     public void winnerTest(){
         controller.setNextPanel(testHomePanel,testBonusPanel);
         controller.setNextPanel(testBonusPanel,testHomePanel);

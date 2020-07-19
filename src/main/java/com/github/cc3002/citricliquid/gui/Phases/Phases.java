@@ -8,10 +8,10 @@ import com.github.cc3002.citricjuice.model.board.IPanel;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-/**
+
 public class Phases {
-     * The player(owner of the turn) is in a panel with another player
-     * has to decided if it wants to attack or not
+     //* The player(owner of the turn) is in a panel with another player
+     //* has to decided if it wants to attack or not
     private boolean decision;
     private Player owner;
     private List<Player> listOfPlayers;
@@ -26,11 +26,14 @@ public class Phases {
 
     public void begintheTurnPhases() {
         int dice= owner.roll();
+
         /*
           tire los dados , eso e slo primero
           después si está en K.O llevarlo al recovery phase
           si los dados lo salva que se setea , ya no está K.O y
           vuelve acá
+          
+         */
         if(owner.isK_O()){
             recoveryPhase(dice,dice);
         }
@@ -146,4 +149,4 @@ public class Phases {
 
 
 }
-*/
+
