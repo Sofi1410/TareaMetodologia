@@ -3,10 +3,10 @@ import com.github.cc3002.citricjuice.model.GameController;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-public class MovePlayerObserver implements PropertyChangeListener{
+public class MoreThan1playerObserver implements PropertyChangeListener{
     private final GameController controller;
 
-    public MovePlayerObserver(GameController controler){
+    public MoreThan1playerObserver(GameController controler){
         this.controller=controler;
     }
 
@@ -18,6 +18,6 @@ public class MovePlayerObserver implements PropertyChangeListener{
      */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        controller.onMovingEvent((boolean) evt.getNewValue());
+        controller.onMoreThanOnePlayer((boolean) evt.getNewValue());
     }
 }

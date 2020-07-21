@@ -29,4 +29,6 @@ public class BonusPanel extends AbstractPanel {
     player.increaseStarsBy(player.roll() * Math.min(player.getNormaLevel(), 3));
   }
 
+
+
 }

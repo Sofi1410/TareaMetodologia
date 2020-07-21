@@ -25,4 +25,5 @@ public interface IPanel {
     int nextPanelsHash(int i);
 
     boolean equalNextPanels(int i);
-}
+
+    }

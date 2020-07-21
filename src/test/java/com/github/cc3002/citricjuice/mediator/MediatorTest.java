@@ -122,7 +122,7 @@ class MediatorTest {
     assertEquals(NormaGoal.STARS, player.getNormaGoal());
   }
 
-  @RepeatedTest(100)
+  @Test
   public void testStarsNorma() {
     var bonusPanel = panelSuppliers.get(0).apply(1);
     var homePanel = mediator.createHomePanel(2);
@@ -147,7 +147,7 @@ class MediatorTest {
     }
   }
 
-  @Test
+  @RepeatedTest(100)
   public void testMeetPlayer() {
     var panels = new Mediator.MediatorPanel<?>[]{
         panelSuppliers.get(random.nextInt(panelSuppliers.size())).apply(1),
@@ -167,7 +167,7 @@ class MediatorTest {
     assertTrue(panels[1].getPlayers().contains(players[1]));
   }
 
-  @Test
+  @RepeatedTest(100)
   public void testPlayerHome() {
     var homePanel = mediator.createHomePanel(0);
     var panel1 = panelSuppliers.get(random.nextInt(panelSuppliers.size())).apply(1);
@@ -180,7 +180,7 @@ class MediatorTest {
     assertTrue(homePanel.getPlayers().contains(player), "Player didn't stop at it's home panel");
   }
 
-  @Test
+  @RepeatedTest(100)
   public void testMultipleNextPanels() {
     var panel1 = panelSuppliers.get(random.nextInt(panelSuppliers.size())).apply(1);
     var panel2 = panelSuppliers.get(random.nextInt(panelSuppliers.size())).apply(2);

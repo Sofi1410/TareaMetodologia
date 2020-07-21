@@ -3,6 +3,8 @@ package com.github.cc3002.citricjuice.model.board;
 import com.github.cc3002.citricjuice.model.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.*;
 
 /**
@@ -17,6 +19,9 @@ public abstract class AbstractPanel implements IPanel {
   private final int id;
   private final Set<IPanel> nextPanels;
   private final List<Player> Players;
+
+
+
   /**
    * Creates a new panel.
    *
@@ -53,7 +58,10 @@ public abstract class AbstractPanel implements IPanel {
   public void addNextPanel(IPanel panel) {
     if (!this.equals(panel) ) {
       nextPanels.add(panel);
+
     }
+
+
   }
 
 
@@ -65,6 +73,7 @@ public abstract class AbstractPanel implements IPanel {
    */
   public void addPlayer(Player player) {
     Players.add(player);
+
   }
   /**
    * Removes a player in the panel
@@ -74,6 +83,10 @@ public abstract class AbstractPanel implements IPanel {
   public void removePlayer(Player player) {
     Players.remove(player);
   }
+
+
+
+
 
   @Override
   public boolean equals(final Object o) {
@@ -86,7 +99,7 @@ public abstract class AbstractPanel implements IPanel {
     final AbstractPanel that = (AbstractPanel) o;
     boolean result = equalNextPanels(1);
     result = result && id == that.id &&
-            Objects.equals(Players, that.Players);
+            Objects.equals(getPlayers(), that.getPlayers());
     return result;
   }
 
@@ -102,10 +115,10 @@ public abstract class AbstractPanel implements IPanel {
 
   @Override
   public int hashCode() {
-    return 31 * Objects.hash(id, Players) + nextPanelsHash(1);
+    return 31 * Objects.hash(id, getPlayers()) + nextPanelsHash(1);
   }
 
-
+  @Override
   public int nextPanelsHash(int acc) {
     int result = 1;
     if (acc == 0) {
@@ -121,6 +134,8 @@ public abstract class AbstractPanel implements IPanel {
    * norma level and three.
    */
   public abstract void activateBy(final @NotNull Player player);
+
+
 
 
   public List<Player> getPlayers() {

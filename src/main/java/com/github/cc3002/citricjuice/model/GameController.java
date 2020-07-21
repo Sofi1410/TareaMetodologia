@@ -1,14 +1,12 @@
 package com.github.cc3002.citricjuice.model;
 
 import com.github.cc3002.citricjuice.model.board.*;
-import com.github.cc3002.citricliquid.gui.MovePlayerObserver;
-import com.github.cc3002.citricliquid.gui.NormaGoal;
-import com.github.cc3002.citricliquid.gui.NormaLevelObserver;
+import com.github.cc3002.citricliquid.gui.*;
+import com.github.cc3002.citricliquid.gui.Phases.InvalidMovementException;
 import com.github.cc3002.citricliquid.gui.Phases.Phase;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Random;
-
+import java.beans.PropertyChangeListener;
 import java.util.*;
 
 public class GameController {
@@ -17,8 +15,11 @@ public class GameController {
     private Player owner;
     private int turn;
     int chapter;
-    private NormaLevelObserver notification = new NormaLevelObserver(this);
-    private MovePlayerObserver movePlayernotification=  new MovePlayerObserver(this);
+    private final NormaLevelObserver NormaLevelnotification = new NormaLevelObserver(this);
+    private final MoreThan1playerObserver moreTanOnePlayernotification=  new MoreThan1playerObserver(this);
+    private final MoreThanOnePathObserver moreTanOnePathnotification=  new MoreThanOnePathObserver(this);
+    private final AtHomePanelObserver atHomePanelNotification=  new AtHomePanelObserver(this);
+
     private Player winner= null;
     private Phase phase;
 
@@ -57,8 +58,9 @@ public class GameController {
         Player player = new Player(name, hp, atk, def, evd);
         listOfPlayers.add(player);
         panel.addPlayer(player);
-        player.setActualPanel(panel);
         player.setHomePanel(panel);
+        player.setActualPanel(panel);
+
 
         return player;
     }
@@ -82,8 +84,10 @@ public class GameController {
      */
     public void setPlayerPanel(Player player, IPanel panel) {
         player.getPanel().getPlayers().remove(player);
-        player.setActualPanel(panel);
         panel.addPlayer(player);
+        player.setActualPanel(panel);
+
+
     }
 
     /**
@@ -235,7 +239,7 @@ public class GameController {
     /**
      * Method that returns a list with all the panels created in
      * the controller
-     * @return
+     * @return todos los paneles en el juego
      */
     public Set<IPanel> getPanels() {
         return Set.copyOf(Panels);
@@ -250,7 +254,7 @@ public class GameController {
      * has NormaLevel=6
      * in that case this player will be the owner of the turn , thats why returns
      * the owner
-     * @return
+     * @return the winner of the game
      */
     public Player getWinner() {
         return getOwner();
@@ -278,7 +282,7 @@ public class GameController {
         if (turn % 4 == 0) {
             chapter++;
         }
-        owner.addNormaLevelListener(notification);
+        owner.addNormaLevelListener(NormaLevelnotification);
         setTurn(turn + 1);
 
     }
@@ -321,6 +325,18 @@ public class GameController {
         return dice;
     }
 
+    public void recover(){
+        int dice= dice();
+        if(dice>= chapter){
+            getOwner().setCurrentHP(getOwner().copy().getMaxHP());
+            phase.toStartPhase();
+
+        }
+        else {
+            finishTurn();
+        }
+    }
+
     /**
      * method that represent the move of
      * a Player
@@ -330,12 +346,16 @@ public class GameController {
      */
     public void movePlayer(){
         int steps = dice();
-        //getOwner().increaseStarsBy((int) (Math.floor(getChapter()/5)+1));
-        owner.addMovePlayerListener(movePlayernotification);
+        getOwner().increaseStarsBy((int) (Math.floor(getChapter()/5)+1));
+
+        //owner.addMovePlayerListener(movePlayernotification);
+        owner.addAtHomePanelnotification(atHomePanelNotification);
+        owner.addAmountOfPlayerListener(moreTanOnePlayernotification);
+        owner.addMoreTanOnePathnotification(moreTanOnePathnotification);
         while (steps>0 && getOwner().getCanImove()) {
             IPanel nextPanel = getNextPanels(getOwner().getPanel()).iterator().next();
             setPlayerPanel(getOwner(),nextPanel);
-            owner.addMovePlayerListener(movePlayernotification);
+
             steps -=1;
         }
         getOwner().getPanel().activateBy(getOwner());
@@ -358,12 +378,50 @@ public class GameController {
 
     public void setPhase(Phase phase) {
         this.phase = phase;
+        phase.setController(this);
+    }
+
+    public String getCurrentPhase(){
+        return phase.toString();
+    }
+    public Phase getPhase(){
+        return phase;
+    }
+
+    public void trytoMove(){
+        try {
+            phase.move();
+        } catch (InvalidMovementException e) {
+            e.printStackTrace();
+        }
+
+    }
+    public boolean itsK_O(){
+        return getOwner().isK_O();
     }
 
 
-    public void onMovingEvent(boolean newValue) {
-        if (!newValue){
+
+
+    public void onMoreThanOnePlayer(boolean newValue) {
+        if (newValue){
             getOwner().setCanImove(false);
+            phase.toWaithFigthPhase();
+        }
+
+    }
+
+    public void onMoreThanOnePath(boolean newValue) {
+        if (newValue){
+            getOwner().setCanImove(false);
+            phase.toWaithPathPhase();
+        }
+    }
+
+    public void onHomePanel(boolean atHome) {
+        if(atHome){
+            getOwner().setCanImove(false);
+            phase.toWaithHomePhase();
         }
     }
 }

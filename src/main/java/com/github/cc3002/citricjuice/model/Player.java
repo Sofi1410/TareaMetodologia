@@ -1,9 +1,7 @@
 package com.github.cc3002.citricjuice.model;
 
 import com.github.cc3002.citricjuice.model.board.IPanel;
-import com.github.cc3002.citricliquid.gui.MovePlayerObserver;
-import com.github.cc3002.citricliquid.gui.NormaGoal;
-import com.github.cc3002.citricliquid.gui.NormaLevelObserver;
+import com.github.cc3002.citricliquid.gui.*;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -16,8 +14,9 @@ public class Player extends AbstractUnit implements IUnit {
     private IPanel homePanel;
     private boolean canImove;
     private final PropertyChangeSupport normaLevelnotification= new PropertyChangeSupport(this);
-    private final PropertyChangeSupport anotherplayernotification= new PropertyChangeSupport(this);
-
+    private final PropertyChangeSupport atHomePanel= new PropertyChangeSupport(this);
+    private final PropertyChangeSupport moreThanOnePlayer= new PropertyChangeSupport(this);
+    private final PropertyChangeSupport moreThanOnePath= new PropertyChangeSupport(this);
 
 
     /**
@@ -76,15 +75,20 @@ public class Player extends AbstractUnit implements IUnit {
      */
     public void setActualPanel(IPanel newPanel){
         actualPanel=newPanel;
-        if(newPanel.getPlayers().size()>1 ){
-            anotherplayernotification.firePropertyChange("More_than_one_player",true,false);
+        if(this.getHomePanel().getId()==newPanel.getId()) {
+            atHomePanel.firePropertyChange("AM_I_at_Home", false, true);
         }
-        if(newPanel.equals(homePanel)) {
-            anotherplayernotification.firePropertyChange("More_than_one_player",true,false);
+
+
+        if(actualPanel.getNextPanels().size()>1) {
+            moreThanOnePath.firePropertyChange("More_than_one_path",false,true);
         }
-        if(newPanel.getNextPanels().size()!=1) {
-            anotherplayernotification.firePropertyChange("More_than_one_player",true,false);
+        if(newPanel.getPlayers().size()>1) {
+            moreThanOnePlayer.firePropertyChange("More_than_one_player",false,true);
         }
+
+
+
 
 
     }
@@ -255,15 +259,26 @@ public class Player extends AbstractUnit implements IUnit {
      * Method that adss a listener in the unit
      * @param Listener new Listener
      */
-    public void addNormaLevelListener(NormaLevelObserver Listener){
+    public void addNormaLevelListener(PropertyChangeListener Listener){
         normaLevelnotification.addPropertyChangeListener(Listener);
     }
     /**
      * Method that adss a listener in the unit
      * @param Listener new Listener
      */
-    public void addMovePlayerListener(MovePlayerObserver Listener){
-        anotherplayernotification.addPropertyChangeListener(Listener);
+
+    public void addAtHomePanelnotification(PropertyChangeListener Listener){
+        atHomePanel.addPropertyChangeListener(Listener);
+    }
+
+
+    public void addAmountOfPlayerListener(PropertyChangeListener Listener){
+        moreThanOnePlayer.addPropertyChangeListener(Listener);
+    }
+
+
+    public void addMoreTanOnePathnotification(PropertyChangeListener Listener){
+        moreThanOnePath.addPropertyChangeListener(Listener);
     }
 
     public void setCanImove(boolean a){
@@ -271,6 +286,15 @@ public class Player extends AbstractUnit implements IUnit {
     }
     public boolean getCanImove(){
         return canImove;
+    }
+    public boolean itsK_O(){
+        if(this.getCurrentHP()==0){
+            return true;
+        }
+        else{
+            return false;
+        }
+
     }
 
 
