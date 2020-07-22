@@ -1,6 +1,26 @@
 package com.github.cc3002.citricliquid.gui.Phases;
 
 public class WaitHome extends Phase{
+    public WaitHome(){
+        this.canIStart=false;
+        this.canIMove=false;
+        this.canFight=false;
+        this.canIStart=false;
+    }
+    @Override
+    public String toString() {
+        return "WaitHome_Phase";
+    }
+    @Override
+    public void stayAtHome() {
+        controller.setSteps(0);
+        toMovingPhase();
+    }
 
 
+    @Override
+    public void toMovingPhase() {
+        changePhase(new MovingPhase());
+
+    }
 }

@@ -245,6 +245,8 @@ public class Player extends AbstractUnit implements IUnit {
         this.reduceStarsBy((int) Math.ceil(this.getStars()*0.5));
     }
 
+
+
     /**
      * The loser (Player) add the appropriate amount of stars to the winner
      * an reduce it appropriately

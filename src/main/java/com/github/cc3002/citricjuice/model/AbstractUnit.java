@@ -206,7 +206,7 @@ public abstract class AbstractUnit implements IUnit {
     * if he attack is bigger than evd reduce its HP
     * @param attack made by the opponent
     */
-    public void avoid(int attack) {
+    public void evade(int attack) {
     int evd=(this.getEvd() + this.roll());
     int HP=this.getCurrentHP();
     int actual = Math.max(((evd > attack)? HP:HP-attack),0);

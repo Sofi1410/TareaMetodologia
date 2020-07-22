@@ -5,7 +5,7 @@ public interface IUnit {
 
     void increaseStarsByPlayer(Player player);
 
-    public IUnit copy();
+    IUnit copy();
 
     void increaseVictoriesByWild(WildUnit wildUnit);
 
@@ -24,4 +24,10 @@ public interface IUnit {
     int getDef();
 
     int getEvd();
+
+    int attack();
+
+    void evade(int attack);
+
+    boolean isK_O();
 }

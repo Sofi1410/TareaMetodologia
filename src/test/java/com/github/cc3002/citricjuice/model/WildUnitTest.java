@@ -51,7 +51,7 @@ public class WildUnitTest {
         suguri.setSeed(seed);
         int chickenHp= chicken.getCurrentHP();
         int atk=suguri.attack();
-        chicken.avoid(atk);
+        chicken.evade(atk);
         if(atk>(chicken.getEvd()+r)){
             int expectedHP=Math.max(0,chickenHp-atk);
             assertEquals(expectedHP,chicken.getCurrentHP());}

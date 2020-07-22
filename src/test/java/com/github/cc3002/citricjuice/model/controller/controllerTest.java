@@ -181,7 +181,7 @@ public class controllerTest {
         controller.getOwner().setActualPanel(testBonusPanel);
         controller.setNextPanel(testHomePanel,testBonusPanel);
         controller.setNextPanel(testBonusPanel,testHomePanel);
-        controller.movePlayer();
+        controller.move();
         assertTrue(testHomePanel.getPlayers().contains(controller.getOwner()));
         controller.finishTurn();
         //El jugador en turno polar está en su home panel
@@ -206,7 +206,7 @@ public class controllerTest {
         controller.setNextPanel(testHomePanel4,testBonusPanel4);
         controller.setNextPanel(testBonusPanel4,testHomePanel4);
         while (controller.getWinner()==null) {
-            controller.movePlayer();
+            controller.move();
             controller.finishTurn();
         }
         assertEquals(controller.getOwner(),controller.getWinner());

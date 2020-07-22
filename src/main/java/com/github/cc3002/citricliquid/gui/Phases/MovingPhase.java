@@ -5,13 +5,30 @@ public class MovingPhase extends Phase{
         this.canIStart=false;
         this.canIMove=true;
         this.canFight=false;
-        this.canIStart=false;
+        this.recover=false;
 
 
     }
 
+
+
     @Override
-    public void move() throws InvalidMovementException {
-        super.move();
+    public String toString() {
+        return "Moving_Phase";
+    }
+
+    @Override
+    public void toWaitPathPhase() {
+        changePhase(new WaitPath());
+    }
+
+    @Override
+    public void toWaitHomePhase() {
+        changePhase(new WaitHome());
+    }
+
+    @Override
+    public void toWaitFigthPhase() {
+        changePhase(new WaitFight());
     }
 }

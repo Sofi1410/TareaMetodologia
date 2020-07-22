@@ -60,7 +60,7 @@ public class BossUnitTest {
         int suguriHP= shifuRobot.getCurrentHP();
         int atk=chicken.attack();
         int evd=shifuRobot.getEvd()+r;
-        shifuRobot.avoid(atk);
+        shifuRobot.evade(atk);
         if(atk >= evd){
 
             int expectedHP=Math.max(0,(suguriHP-atk));

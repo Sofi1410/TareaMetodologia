@@ -4,17 +4,19 @@ import com.github.cc3002.citricjuice.model.board.*;
 import com.github.cc3002.citricliquid.gui.*;
 import com.github.cc3002.citricliquid.gui.Phases.InvalidMovementException;
 import com.github.cc3002.citricliquid.gui.Phases.Phase;
+import com.github.cc3002.citricliquid.gui.Phases.StartPhase;
 import org.jetbrains.annotations.NotNull;
 
-import java.beans.PropertyChangeListener;
 import java.util.*;
 
 public class GameController {
     private final List<Player> listOfPlayers;
     private final List<IPanel> Panels;
     private Player owner;
+    private Player oponnent;
     private int turn;
     int chapter;
+    int steps;
     private final NormaLevelObserver NormaLevelnotification = new NormaLevelObserver(this);
     private final MoreThan1playerObserver moreTanOnePlayernotification=  new MoreThan1playerObserver(this);
     private final MoreThanOnePathObserver moreTanOnePathnotification=  new MoreThanOnePathObserver(this);
@@ -36,6 +38,7 @@ public class GameController {
         turn = 1;
         chapter = 1;
         phase= new Phase();
+        setPhase(new StartPhase());
 
     }
 
@@ -336,6 +339,14 @@ public class GameController {
             finishTurn();
         }
     }
+    public void move(){
+        steps=dice();
+
+        owner.addAtHomePanelnotification(atHomePanelNotification);
+        owner.addAmountOfPlayerListener(moreTanOnePlayernotification);
+        owner.addMoreTanOnePathnotification(moreTanOnePathnotification);
+        movePlayer();
+    }
 
     /**
      * method that represent the move of
@@ -345,24 +356,30 @@ public class GameController {
      * activates the power of the panel where it is.
      */
     public void movePlayer(){
-        int steps = dice();
         getOwner().increaseStarsBy((int) (Math.floor(getChapter()/5)+1));
 
-        //owner.addMovePlayerListener(movePlayernotification);
-        owner.addAtHomePanelnotification(atHomePanelNotification);
-        owner.addAmountOfPlayerListener(moreTanOnePlayernotification);
-        owner.addMoreTanOnePathnotification(moreTanOnePathnotification);
         while (steps>0 && getOwner().getCanImove()) {
             IPanel nextPanel = getNextPanels(getOwner().getPanel()).iterator().next();
             setPlayerPanel(getOwner(),nextPanel);
+            owner.addAtHomePanelnotification(atHomePanelNotification);
+            owner.addAmountOfPlayerListener(moreTanOnePlayernotification);
+            owner.addMoreTanOnePathnotification(moreTanOnePathnotification);
 
             steps -=1;
         }
         getOwner().getPanel().activateBy(getOwner());
     }
 
+    public void setSteps(int newValue){
+        steps=newValue;
+    }
 
-
+    public void setOponnent(Player oponnent) {
+        this.oponnent = oponnent;
+    }
+    public Player getOponnent(){
+        return oponnent;
+    }
 
     /**
      * Method that decided what to do with the observer advice
@@ -390,7 +407,7 @@ public class GameController {
 
     public void trytoMove(){
         try {
-            phase.move();
+            phase.firstMove();
         } catch (InvalidMovementException e) {
             e.printStackTrace();
         }
@@ -400,29 +417,61 @@ public class GameController {
         return getOwner().isK_O();
     }
 
+    public int attack(IUnit unit){
+        return unit.attack();
+    }
+
+    public void battle(IUnit attacker, IUnit victim) {
+        phase.toOpponentChoicePhase(attacker,victim);
+
+    }
+    public void evade(IUnit attacker,IUnit victim){
+        int attack=attack(attacker);
+        victim.evade(attack);
+        if(!victim.isK_O()){
+            battle(victim,attacker);
+        }
+
+    }
+
+
+    public void setCanIMove(boolean newValue){
+        getOwner().setCanImove(newValue);
+    }
+
 
 
 
     public void onMoreThanOnePlayer(boolean newValue) {
-        if (newValue){
-            getOwner().setCanImove(false);
-            phase.toWaithFigthPhase();
+        setCanIMove(false);
+        phase.toWaitFigthPhase();
+        List<Player> opponents=getOwner().getPanel().getPlayers();
+        opponents.remove(getOwner());
+        for(Player player: opponents){
+            while (getOwner().itsK_O()) {
+                setOponnent(player);
+                phase.toWaitFigthPhase();
+            }
+
         }
 
     }
 
     public void onMoreThanOnePath(boolean newValue) {
         if (newValue){
-            getOwner().setCanImove(false);
-            phase.toWaithPathPhase();
+            setCanIMove(false);
+            phase.toWaitPathPhase();
         }
     }
 
     public void onHomePanel(boolean atHome) {
-        if(atHome){
-            getOwner().setCanImove(false);
-            phase.toWaithHomePhase();
-        }
+        setCanIMove(false);
+            phase.toWaitHomePhase();
+
+    }
+
+    public int getSteps() {
+        return steps;
     }
 }
 

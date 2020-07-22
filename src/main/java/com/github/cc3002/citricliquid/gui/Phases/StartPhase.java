@@ -6,6 +6,8 @@ public class StartPhase extends Phase{
     public StartPhase(){
         this.canIStart=true;
         this.canIMove=false;
+        this.canFight=false;
+        this.recover=false;
 
     }
 
@@ -25,4 +27,6 @@ public class StartPhase extends Phase{
     public String toString() {
         return "Start_Phase";
     }
+
+
 }

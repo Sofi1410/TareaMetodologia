@@ -59,7 +59,7 @@ public class PlayerTest {
     int suguriHP= suguri.getCurrentHP();
     int atk=chicken.attack();
     int evd=suguri.getEvd()+r;
-    suguri.avoid(atk);
+    suguri.evade(atk);
     if(atk >= evd){
 
       int expectedHP=Math.max(0,(suguriHP-atk));

@@ -171,7 +171,7 @@ public class Mediator {
    */
   public Pair<MediatorPlayer<?>, MediatorPanel<?>> movePlayer() {
     // (!) Implement this method
-    controller.movePlayer();
+    controller.move();
     MediatorPlayer player= new MediatorPlayer(controller.getOwner());
     MediatorPanel panel= new MediatorPanel(controller.getOwner().getPanel());
     Pair<MediatorPlayer<?>, MediatorPanel<?>> resultingPair = new Pair<>(player,panel);
