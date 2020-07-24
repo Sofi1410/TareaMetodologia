@@ -3,6 +3,7 @@ package com.github.cc3002.citricjuice.model;
 import com.github.cc3002.citricjuice.model.board.*;
 import com.github.cc3002.citricliquid.gui.*;
 import com.github.cc3002.citricliquid.gui.Phases.InvalidMovementException;
+import com.github.cc3002.citricliquid.gui.Phases.InvalidTransitionException;
 import com.github.cc3002.citricliquid.gui.Phases.Phase;
 import com.github.cc3002.citricliquid.gui.Phases.StartPhase;
 import org.jetbrains.annotations.NotNull;
@@ -13,8 +14,12 @@ public class GameController {
     private final List<Player> listOfPlayers;
     private final List<IPanel> Panels;
     private Player owner;
-    private Player oponnent;
+    private Player nullPLayer=new Player("No one yet",0,0,0,0);
+    private IUnit oponnent= nullPLayer;
+    private IUnit actualUnit=nullPLayer;
+    private int numberOfOpponents;
     private int turn;
+    private boolean iMakeADecision;
     int chapter;
     int steps;
     private final NormaLevelObserver NormaLevelnotification = new NormaLevelObserver(this);
@@ -22,7 +27,7 @@ public class GameController {
     private final MoreThanOnePathObserver moreTanOnePathnotification=  new MoreThanOnePathObserver(this);
     private final AtHomePanelObserver atHomePanelNotification=  new AtHomePanelObserver(this);
 
-    private Player winner= null;
+    private Player winner= nullPLayer;
     private Phase phase;
 
     /**
@@ -260,7 +265,7 @@ public class GameController {
      * @return the winner of the game
      */
     public Player getWinner() {
-        return getOwner();
+        return winner;
     }
 
     /**
@@ -270,7 +275,7 @@ public class GameController {
      * @return player owner of the turn
      */
     public Player getOwner() {
-        owner = listOfPlayers.get((turn - 1) % 4);
+        owner = listOfPlayers.get((turn - 1) % listOfPlayers.size());
 
         return owner;
     }
@@ -282,9 +287,11 @@ public class GameController {
      * in order to change the ower of the turn
      */
     public void finishTurn() {
-        if (turn % 4 == 0) {
+        if (turn % listOfPlayers.size() == 0) {
             chapter++;
         }
+        setSteps(0);
+        activatePanel(getOwner(),getOwner().getPanel());
         owner.addNormaLevelListener(NormaLevelnotification);
         setTurn(turn + 1);
 
@@ -297,7 +304,7 @@ public class GameController {
      */
     public void setTurn(int turn) {
         this.turn = turn;
-
+        actualUnit=getOwner();
     }
 
 
@@ -328,57 +335,22 @@ public class GameController {
         return dice;
     }
 
-    public void recover(){
-        int dice= dice();
-        if(dice>= chapter){
-            getOwner().setCurrentHP(getOwner().copy().getMaxHP());
-            phase.toStartPhase();
-
-        }
-        else {
-            finishTurn();
-        }
-    }
-    public void move(){
-        steps=dice();
-
-        owner.addAtHomePanelnotification(atHomePanelNotification);
-        owner.addAmountOfPlayerListener(moreTanOnePlayernotification);
-        owner.addMoreTanOnePathnotification(moreTanOnePathnotification);
-        movePlayer();
-    }
-
-    /**
-     * method that represent the move of
-     * a Player
-     * steps is the number of moves according to the dice
-     * at the end the if the player did not had to stop
-     * activates the power of the panel where it is.
-     */
-    public void movePlayer(){
-        getOwner().increaseStarsBy((int) (Math.floor(getChapter()/5)+1));
-
-        while (steps>0 && getOwner().getCanImove()) {
-            IPanel nextPanel = getNextPanels(getOwner().getPanel()).iterator().next();
-            setPlayerPanel(getOwner(),nextPanel);
-            owner.addAtHomePanelnotification(atHomePanelNotification);
-            owner.addAmountOfPlayerListener(moreTanOnePlayernotification);
-            owner.addMoreTanOnePathnotification(moreTanOnePathnotification);
-
-            steps -=1;
-        }
-        getOwner().getPanel().activateBy(getOwner());
-    }
 
     public void setSteps(int newValue){
         steps=newValue;
     }
 
-    public void setOponnent(Player oponnent) {
+    public void setOponnent(IUnit oponnent) {
         this.oponnent = oponnent;
     }
-    public Player getOponnent(){
+    public IUnit getOponnent(){
         return oponnent;
+    }
+    public void setActualUnit(IUnit unit){
+        this.actualUnit=unit;
+    }
+    public IUnit getActualUnit(){
+        return actualUnit;
     }
 
     /**
@@ -405,14 +377,7 @@ public class GameController {
         return phase;
     }
 
-    public void trytoMove(){
-        try {
-            phase.firstMove();
-        } catch (InvalidMovementException e) {
-            e.printStackTrace();
-        }
 
-    }
     public boolean itsK_O(){
         return getOwner().isK_O();
     }
@@ -421,15 +386,40 @@ public class GameController {
         return unit.attack();
     }
 
-    public void battle(IUnit attacker, IUnit victim) {
-        phase.toOpponentChoicePhase(attacker,victim);
 
-    }
-    public void evade(IUnit attacker,IUnit victim){
+
+    public void evade(IUnit attacker,IUnit victim) throws InvalidTransitionException {
         int attack=attack(attacker);
         victim.evade(attack);
-        if(!victim.isK_O()){
-            battle(victim,attacker);
+        if(!victim.isK_O()) {
+            counterattack(victim, attacker);
+        }
+        else{
+            phase.toMovingPhase();
+        }
+    }
+    public void defend(IUnit attacker, IUnit victim) throws InvalidTransitionException {
+        int attack=attack(attacker);
+        victim.defend(attack);
+        if(!victim.isK_O()) {
+            counterattack(victim, attacker);
+        }
+        else{
+            phase.toMovingPhase();
+        }
+    }
+    public void counterattack(IUnit attacker, IUnit victim){
+        if(!attacker.isK_O()){
+            try {
+
+                phase.toWaitFigthPhase(attacker,victim);
+            } catch (InvalidTransitionException e) {
+                e.printStackTrace();
+            }
+            tryToFight();
+        }
+        else{
+            tryToEndTurn();
         }
 
     }
@@ -439,39 +429,208 @@ public class GameController {
         getOwner().setCanImove(newValue);
     }
 
+    public void moreThanOnePlayer(){
+
+    }
 
 
-
-    public void onMoreThanOnePlayer(boolean newValue) {
-        setCanIMove(false);
-        phase.toWaitFigthPhase();
-        List<Player> opponents=getOwner().getPanel().getPlayers();
-        opponents.remove(getOwner());
-        for(Player player: opponents){
-            while (getOwner().itsK_O()) {
-                setOponnent(player);
-                phase.toWaitFigthPhase();
-            }
-
+    // Inicio del juego
+    //intento iniciar
+    public void tryToStart(){
+        try {
+            this.setActualUnit(getOwner());
+            phase.start();
+        } catch (InvalidMovementException | InvalidTransitionException e) {
+            e.printStackTrace();
         }
 
     }
 
-    public void onMoreThanOnePath(boolean newValue) {
+    public void tryToRecover(){
+        try {
+            phase.recover();
+        } catch (InvalidMovementException | InvalidTransitionException e) {
+            e.printStackTrace();
+        }
+    }
+    public void trydotheFirstMove(){
+        try {
+            phase.firstMove();
+        } catch (InvalidMovementException e) {
+            e.printStackTrace();
+        }
+    }
+    public void tryToMove(){
+        try {
+            phase.move();
+        } catch (InvalidMovementException e) {
+            e.printStackTrace();
+        }
+    }
+    public void tryToKeepMoving(){
+        try {
+            phase.keepMoving();
+        } catch (InvalidTransitionException | InvalidMovementException e) {
+            e.printStackTrace();
+        }
+
+    }
+    public void tryToStayAtHome(){
+        try {
+            phase.stayAtHome();
+        } catch (InvalidMovementException e) {
+            e.printStackTrace();
+        }
+    }
+    public void tryToFight(){
+        try {
+            phase.iAmGoingToFigth();
+        } catch (InvalidMovementException e) {
+            e.printStackTrace();
+        }
+    }
+    public void tryToevade(){
+        try{
+            phase.evade();
+        }catch (InvalidMovementException | InvalidTransitionException e){
+            e.printStackTrace();
+        }
+    }
+    public void tryToDefend(){
+        try{
+            phase.defend();
+        }catch (InvalidMovementException | InvalidTransitionException e){
+            e.printStackTrace();
+        }
+    }
+
+
+    public void tryToEndTurn(){
+        try {
+            phase.endTurn();
+        } catch (InvalidMovementException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void stopMoving(){
+        setSteps(0);
+
+    }
+
+
+    public void recover() throws  InvalidTransitionException {
+        int dice= dice();
+        if(dice>= chapter){
+            getOwner().setCurrentHP(getOwner().copy().getMaxHP());
+            phase.toStartPhase();
+
+        }
+        else {
+            phase.toEndTurnPhase();
+            tryToEndTurn();
+        }
+    }
+
+
+
+    public void move(){
+        steps=dice();
+
+        owner.addAtHomePanelnotification(atHomePanelNotification);
+        owner.addAmountOfPlayerListener(moreTanOnePlayernotification);
+        owner.addMoreTanOnePathnotification(moreTanOnePathnotification);
+        movePlayer();
+    }
+
+    /**
+     * method that represent the move of
+     * a Player
+     * steps is the number of moves according to the dice
+     * at the end the if the player did not had to stop
+     * activates the power of the panel where it is.
+     */
+    public void movePlayer(){
+        getOwner().increaseStarsBy((int) (Math.floor(getChapter()/5)+1));
+
+        while (steps>0 && getOwner().getCanImove()) {
+            IPanel nextPanel = getNextPanels(getOwner().getPanel()).iterator().next();
+            setPlayerPanel(getOwner(),nextPanel);
+
+            steps -=1;
+        }
+        activatePanel(getOwner(),getOwner().getPanel());
+
+    }
+
+    public void activatePanel(Player player, IPanel panel){
+        panel.activateBy(player);
+    }
+
+
+
+
+    public void onMoreThanOnePlayer(boolean newValue)  {
+        setCanIMove(!newValue);
+        List<Player> opponents= new ArrayList<>();
+        opponents.addAll(getOwner().getPanel().getPlayers());
+        opponents.remove(getOwner());
+        numberOfOpponents=opponents.size();
+        setOponnent(opponents.get(0));
+        try{
+            phase.toWaitFigthPhase(getOwner(),getOponnent());}
+        catch (InvalidTransitionException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+
+    }
+
+    public void onMoreThanOnePath(boolean newValue){
         if (newValue){
             setCanIMove(false);
-            phase.toWaitPathPhase();
+            try{
+            phase.toWaitPathPhase();}
+            catch (InvalidTransitionException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    public void onHomePanel(boolean atHome) {
+    public void onHomePanel(boolean atHome){
         setCanIMove(false);
-            phase.toWaitHomePhase();
+        try{
+            phase.toWaitHomePhase();}
+        catch (InvalidTransitionException e) {
+            e.printStackTrace();
+        }
 
     }
 
     public int getSteps() {
         return steps;
+    }
+    public int getNumberOfOpponents(){
+        return numberOfOpponents;
+    }
+
+    public void setNumberOfOpponents(int numberOfOpponents) {
+        this.numberOfOpponents = numberOfOpponents;
+    }
+
+    public void setiMakeADecision(boolean iMakeADecision) {
+        this.iMakeADecision = iMakeADecision;
+    }
+
+    public String getUnitName(IUnit unit){
+        return unit.getName();
+    }
+
+    public int getUnitHP(IUnit unit) {
+        return unit.getCurrentHP();
     }
 }
 

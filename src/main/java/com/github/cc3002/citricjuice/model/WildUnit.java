@@ -72,6 +72,8 @@ public class WildUnit extends AbstractUnit{
         bossUnit.increaseStarsBy((int) Math.floor(this.getStars()*0.5));
         this.reduceStarsBy((int) Math.ceil(this.getStars()*0.5));
     }
+
+
     /**
      * The loser (wildUnit) add the appropriate amount of stars to the winner
      * an reduce its starts appropriately

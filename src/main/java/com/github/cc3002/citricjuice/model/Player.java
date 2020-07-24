@@ -289,15 +289,7 @@ public class Player extends AbstractUnit implements IUnit {
     public boolean getCanImove(){
         return canImove;
     }
-    public boolean itsK_O(){
-        if(this.getCurrentHP()==0){
-            return true;
-        }
-        else{
-            return false;
-        }
 
-    }
 
 
     /**

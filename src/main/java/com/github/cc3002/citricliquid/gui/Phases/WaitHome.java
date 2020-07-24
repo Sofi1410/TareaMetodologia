@@ -5,7 +5,12 @@ public class WaitHome extends Phase{
         this.canIStart=false;
         this.canIMove=false;
         this.canFight=false;
-        this.canIStart=false;
+        this.recover=false;
+        this.stayAtHome=false;
+        this.canIfinish=false;
+        this.WaitAtHome=true;
+        this.WaitTOFigth=false;
+        this.WaitToPath=false;
     }
     @Override
     public String toString() {
@@ -13,9 +18,11 @@ public class WaitHome extends Phase{
     }
     @Override
     public void stayAtHome() {
-        controller.setSteps(0);
-        toMovingPhase();
+        toEndTurnPhase();
+        controller.tryToEndTurn();
     }
+
+
 
 
     @Override
@@ -23,4 +30,10 @@ public class WaitHome extends Phase{
         changePhase(new MovingPhase());
 
     }
+
+    @Override
+    public void toEndTurnPhase() {
+        changePhase(new EndTurn());
+    }
+
 }

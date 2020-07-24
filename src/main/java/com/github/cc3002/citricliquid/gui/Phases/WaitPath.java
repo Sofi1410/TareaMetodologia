@@ -6,6 +6,12 @@ public class WaitPath extends Phase{
         this.canIMove=false;
         this.canFight=false;
         this.recover=false;
+        this.stayAtHome=false;
+        this.canIfinish=false;
+        this.WaitAtHome=false;
+        this.WaitTOFigth=false;
+        this.WaitToPath=true;
+        this.Battle=false;
 
     }
 

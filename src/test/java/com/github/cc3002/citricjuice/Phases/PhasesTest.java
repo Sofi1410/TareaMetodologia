@@ -74,31 +74,31 @@ public class PhasesTest {
 
 
 
-
-
-
-    private IPanel testDropPanel;
+    private long seed;
     private GameController controller;
 
     private long testSeed;
     @BeforeEach
     public void setUp() {
+        seed= new Random().nextLong();
         controller= new GameController();
         HP1 = controller.addHomePanel(11);
         HP2 = controller.addHomePanel(12);
         HP3 = controller.addHomePanel(13);
         HP4 = controller.addHomePanel(14);
 
-        suguri = controller.addPlayer(PLAYER_NAME, 4, 1, -1, 2,HP1);
+        suguri = controller.addPlayer(PLAYER_NAME, 7, 3, -1, 6,HP1);
         polar = controller.addPlayer(PLAYER_NAME_3, 5, 3, -1, 1,HP2);
         panda = controller.addPlayer(PLAYER_NAME_2, 6, 5, -2, 4,HP3);
-        pardo = controller.addPlayer(PLAYER_NAME_4, 5, 6, 7, 8,HP4);
+        pardo = controller.addPlayer(PLAYER_NAME_4, 7, 4, 7, 5,HP4);
 
         NP1 =controller.addNeutralPanel(21);
         NP2 =controller.addNeutralPanel(22);
         NP3 =controller.addNeutralPanel(23);
         NP4 =controller.addNeutralPanel(24);
         NP5 =controller.addNeutralPanel(25);
+        NP6 =controller.addNeutralPanel(26);
+        NP7 =controller.addNeutralPanel(27);
 
         DropP1= controller.addDropPanel(31);
 
@@ -110,7 +110,7 @@ public class PhasesTest {
         listOfPlayers.add(pardo);
 
        // controller.setNextPanel(NP1,HP1);
-        /**controller.setNextPanel(HP1,NP2);
+        /*controller.setNextPanel(HP1,NP2);
         controller.setNextPanel(DropP1,NP1);
         controller.setNextPanel(NP3,DropP1);
         controller.setNextPanel(NP2,NP4);
@@ -142,102 +142,49 @@ public class PhasesTest {
     // conect the aproppiate panels, and make situaciones so we cant wait the players response
     @RepeatedTest(50)
     public void StartandRecoveryPhaseTest() throws InvalidMovementException {
+        controller.setNextPanel(HP1,DropP1);
+        controller.setNextPanel(DropP1,NP4);
+        controller.setNextPanel(NP4,NP5);
+        controller.setNextPanel(NP5,NP6);
+        controller.setNextPanel(NP6,NP7);
+        controller.setNextPanel(NP7,BonusP1);
         assertEquals("Start_Phase",controller.getCurrentPhase());
         assertEquals(controller.getOwner(),suguri);
         controller.getOwner().setCurrentHP(-20);
-        assertTrue(controller.getOwner().itsK_O());
-        controller.getPhase().start();
-        assertEquals("Recovery_Phase",controller.getCurrentPhase());
-        controller.getOwner().setSeed(21);
-        int dice= new Random(21).nextInt(6)+1;
+        assertTrue(controller.getOwner().isK_O());
 
-        controller.getPhase().tryToRecover();
+        controller.tryToStart();
+
+        controller.getOwner().setSeed(seed);
+        int dice = new Random(seed).nextInt(6) + 1;
         if (dice>=controller.getChapter()){
-            assertEquals("Start_Phase",controller.getCurrentPhase());
             assertEquals(suguri.getMaxHP(),suguri.getCurrentHP());
             assertEquals(suguri,controller.getOwner());
+            assertEquals("Start_Phase",controller.getCurrentPhase());
         }
         else{
-            assertEquals(polar,controller.getOwner());
             assertEquals("Start_Phase",controller.getCurrentPhase());
+            assertEquals(polar,controller.getOwner());
             assertEquals(0,suguri.getCurrentHP());
 
         }
 
     }
 
-    @Test
-    public void movingPhaseTest() throws InvalidMovementException {
-
-
-        assertEquals("Start_Phase",controller.getCurrentPhase());
-        assertEquals(controller.getOwner(),suguri);
-        assertEquals(suguri.getMaxHP(),suguri.getCurrentHP());
-        controller.getPhase().start();
-        assertNotEquals("Recovery_Phase",controller.getCurrentPhase());
-        assertEquals("Moving_Phase",controller.getCurrentPhase());
-
-    }
-    @Test
-    public void WaitPathTest() throws InvalidMovementException {
-        controller.setNextPanel(HP1,NP2);
-        controller.setNextPanel(DropP1,NP1);
-        controller.setNextPanel(NP2,NP4);
-        controller.setNextPanel(NP2,NP3);
-
-        assertEquals("Start_Phase",controller.getCurrentPhase());
-        assertEquals(controller.getOwner(),suguri);
-        assertEquals(suguri.getMaxHP(),suguri.getCurrentHP());
-        controller.getPhase().start();
-        assertNotEquals("Recovery_Phase",controller.getCurrentPhase());
-        assertEquals("Moving_Phase",controller.getCurrentPhase());
-        controller.getOwner().setSeed(21);
-        int dice= new Random(21).nextInt(6)+1;
-        controller.getPhase().firstMove();
-        assertEquals("WaitPath_Phase",controller.getCurrentPhase());
-
-    }
-    @RepeatedTest(200)
-    public void WaitFightTest() throws InvalidMovementException {
-        controller.setNextPanel(HP1,NP2);
-        controller.setNextPanel(DropP1,NP1);
-        controller.setNextPanel(NP2,NP4);
+    @RepeatedTest(50)
+    public void StartandPhaseTest() throws InvalidMovementException {
+        controller.setNextPanel(HP1,DropP1);
+        controller.setNextPanel(DropP1,NP4);
         controller.setNextPanel(NP4,NP5);
-        controller.setPlayerPanel(pardo,NP4);
-
+        controller.setNextPanel(NP5,NP6);
+        controller.setNextPanel(NP6,NP7);
+        controller.setNextPanel(NP7,BonusP1);
         assertEquals("Start_Phase",controller.getCurrentPhase());
         assertEquals(controller.getOwner(),suguri);
-        assertEquals(suguri.getMaxHP(),suguri.getCurrentHP());
-        controller.getPhase().start();
-        assertNotEquals("Recovery_Phase",controller.getCurrentPhase());
+        controller.tryToStart();
+        controller.getOwner().setSeed(seed);
+        int dice= new Random(seed).nextInt(6)+1;
         assertEquals("Moving_Phase",controller.getCurrentPhase());
-        controller.getOwner().setSeed(21);
-        int dice= new Random(21).nextInt(6)+1;
-        controller.getPhase().firstMove();
-        assertEquals("WaitFight_Phase",controller.getCurrentPhase());
-        assertEquals(NP4,controller.getOwner().getPanel());
-        controller.getPhase().iAmGoingToFigth();
-    }
-
-    @Test
-    public void figthPhase() throws InvalidMovementException {
-        controller.setNextPanel(HP1,NP2);
-        controller.setNextPanel(DropP1,NP1);
-        controller.setNextPanel(NP2,NP4);
-        controller.setNextPanel(NP4,NP5);
-        controller.setPlayerPanel(pardo,NP4);
-
-        assertEquals("Start_Phase",controller.getCurrentPhase());
-        assertEquals(controller.getOwner(),suguri);
-        assertEquals(suguri.getMaxHP(),suguri.getCurrentHP());
-        controller.getPhase().start();
-        controller.getOwner().setSeed(21);
-        int dice= new Random(21).nextInt(6)+1;
-        controller.getPhase().firstMove();
-        assertEquals("WaitFight_Phase",controller.getCurrentPhase());
-        assertEquals(NP4,controller.getOwner().getPanel());
-        controller.getPhase().iAmGoingToFigth();
-        assertEquals("OpponentChoice_Phase",controller.getCurrentPhase());
 
     }
 
@@ -252,12 +199,12 @@ public class PhasesTest {
         assertEquals("Start_Phase",controller.getCurrentPhase());
         assertEquals(controller.getOwner(),suguri);
         assertEquals(suguri.getMaxHP(),suguri.getCurrentHP());
-        controller.getPhase().start();
+        controller.tryToStart();
         assertNotEquals("Recovery_Phase",controller.getCurrentPhase());
-        assertEquals("Moving_Phase",controller.getCurrentPhase());
-        controller.getOwner().setSeed(21);
-        int dice= new Random(21).nextInt(6)+1;
-        controller.getPhase().firstMove();
+        assertNotEquals("Moving_Phase",controller.getCurrentPhase());
+        long seed= new Random().nextLong();
+        controller.getOwner().setSeed(seed);
+        int dice = new Random(seed).nextInt(6) + 1;
         assertEquals("WaitHome_Phase",controller.getCurrentPhase());
         assertEquals(HP1,controller.getOwner().getPanel());
     }
@@ -271,44 +218,197 @@ public class PhasesTest {
 
         assertEquals("Start_Phase",controller.getCurrentPhase());
         assertEquals(controller.getOwner(),suguri);
-        assertEquals(suguri.getMaxHP(),suguri.getCurrentHP());
-        controller.getPhase().start();
-        assertNotEquals("Recovery_Phase",controller.getCurrentPhase());
-        assertEquals("Moving_Phase",controller.getCurrentPhase());
-        controller.getOwner().setSeed(21);
-        int dice= new Random(21).nextInt(6)+1;
-        controller.getPhase().firstMove();
+        suguri.setCurrentHP(suguri.getMaxHP()-1);
+        assertNotEquals(suguri.getMaxHP(),controller.getOwner().getCurrentHP());
+        controller.tryToStart();
+        long seed= new Random().nextLong();
+        controller.getOwner().setSeed(seed);
+        int dice = new Random(seed).nextInt(6) + 1;
         assertEquals("WaitHome_Phase",controller.getCurrentPhase());
-        assertEquals(HP1,controller.getOwner().getPanel());
-        controller.getPhase().stayAtHome();
-        assertEquals(0,controller.getSteps());
+        assertEquals(HP1, controller.getOwner().getPanel());
+        controller.tryToStayAtHome();
+        assertEquals(0, controller.getSteps());
+        assertEquals(1,suguri.getStars());
+        assertEquals(suguri.getMaxHP(),suguri.getCurrentHP());
+        assertEquals(polar,controller.getOwner());
+
     }
 
     @RepeatedTest(100)
     public void keepMovingTest() throws InvalidMovementException {
-        controller.setNextPanel(HP1, NP2);
-        controller.setNextPanel(NP2, HP1);
-        controller.setPlayerPanel(suguri, NP2);
-
-        assertEquals("Start_Phase", controller.getCurrentPhase());
-        assertEquals(controller.getOwner(), suguri);
-        assertEquals(suguri.getMaxHP(), suguri.getCurrentHP());
-        controller.getPhase().start();
-        assertNotEquals("Recovery_Phase", controller.getCurrentPhase());
-        assertEquals("Moving_Phase", controller.getCurrentPhase());
+        controller.setNextPanel(HP1,NP4);
+        controller.setNextPanel(NP2,HP1);
+        controller.setNextPanel(NP4,NP5);
+        controller.setNextPanel(NP5,DropP1);
+        controller.setNextPanel(DropP1,NP1);
+        controller.setNextPanel(NP1,NP6);
+        controller.setPlayerPanel(suguri,NP2);
         long seed= new Random().nextLong();
         controller.getOwner().setSeed(seed);
         int dice = new Random(seed).nextInt(6) + 1;
-        controller.getPhase().firstMove();
+
+        assertEquals("Start_Phase", controller.getCurrentPhase());
+        assertEquals(controller.getOwner(), suguri);
+        suguri.setCurrentHP(suguri.getMaxHP()-1);
+        assertNotEquals(suguri.getMaxHP(),controller.getOwner().getCurrentHP());
+        controller.tryToStart();
+        assertNotEquals("Recovery_Phase", controller.getCurrentPhase());
+        assertNotEquals("Moving_Phase", controller.getCurrentPhase());
         assertEquals("WaitHome_Phase", controller.getCurrentPhase());
         assertEquals(HP1, controller.getOwner().getPanel());
         assertEquals(dice-1, controller.getSteps());
-        controller.getPhase().keepMoving();
-        if (dice > 2) {
-            assertEquals("WaitHome_Phase", controller.getCurrentPhase());
+        controller.tryToKeepMoving();
+        if (dice == 2) {
+            assertEquals(NP4, controller.getOwner().getPanel());
+        }
+        if(dice==1){
+            assertEquals(HP1, controller.getOwner().getPanel());
+        }
+
+
+
+
+
+    }
+
+    @RepeatedTest(50)
+    public void WaitPathTest() throws InvalidMovementException {
+        controller.setNextPanel(HP1,NP1);
+        controller.setNextPanel(NP1,NP2);
+        controller.setNextPanel(NP2,NP3);
+        controller.setNextPanel(NP3,NP4);
+        controller.setNextPanel(NP3,NP5);
+        controller.setNextPanel(NP5,NP6);
+        assertEquals(HP1,controller.getOwner().getPanel());
+
+        assertEquals("Start_Phase",controller.getCurrentPhase());
+        assertEquals(controller.getOwner(),suguri);
+        assertEquals(suguri.getMaxHP(),suguri.getCurrentHP());
+        controller.getOwner().setSeed(seed);
+        int dice = new Random(seed).nextInt(6) + 1;
+        controller.tryToStart();
+        if(dice>2) {
+            assertEquals("WaitPath_Phase", controller.getCurrentPhase());
+        }
+        else{
+            assertEquals("Moving_Phase",controller.getCurrentPhase());
+        }
+
+    }
+    @RepeatedTest(100)
+    public void WaitFightTest() throws InvalidMovementException {
+        controller.setNextPanel(HP1,NP2);
+        controller.setNextPanel(DropP1,NP1);
+        controller.setNextPanel(NP2,NP4);
+        controller.setNextPanel(NP4,NP5);
+        controller.setPlayerPanel(pardo,NP4);
+
+        controller.getOwner().setSeed(seed);
+        int dice = new Random(seed).nextInt(6) + 1;
+
+        assertEquals("Start_Phase",controller.getCurrentPhase());
+        assertEquals(controller.getOwner(),suguri);
+        assertEquals(suguri.getMaxHP(),suguri.getCurrentHP());
+        controller.tryToStart();
+        assertNotEquals("Recovery_Phase",controller.getCurrentPhase());
+        if(dice>1) {
+            assertEquals("WaitFight_Phase", controller.getCurrentPhase());
+            assertEquals(NP4, controller.getOwner().getPanel());
+        }
+        else{
+            assertEquals("Moving_Phase",controller.getCurrentPhase());
+        }
+    }
+
+    @RepeatedTest(100)
+    public void figthPhase() throws InvalidMovementException {
+        controller.setNextPanel(HP1,NP2);
+        controller.setNextPanel(DropP1,NP1);
+        controller.setNextPanel(NP2,NP4);
+        controller.setNextPanel(NP4,NP5);
+        controller.setPlayerPanel(pardo,NP4);
+        controller.getOwner().setSeed(seed);
+        int dice = new Random(seed).nextInt(6) + 1;
+        controller.tryToStart();
+        if(dice>1) {
+            assertEquals("WaitFight_Phase", controller.getCurrentPhase());
+            assertEquals(NP4, controller.getOwner().getPanel());
+            //owner ataca a opponent
+            controller.tryToFight();
+            assertEquals("WaitFight_Phase", controller.getCurrentPhase());
+            controller.getOwner().setSeed(seed+2);
+            int AttackRoll = new Random(seed+2).nextInt(6) + 1;
+            controller.getOponnent().setSeed(seed+1);
+            int EvdRoll = new Random(seed+1).nextInt(6) + 1;
+            // opponent evade y contra-ataca
+            controller.tryToevade();
+
+            if(AttackRoll-EvdRoll>1){
+                assertEquals(Math.max(0,7-AttackRoll-3),
+                        pardo.getCurrentHP());
+
+                if(pardo.isK_O()) {
+                    assertEquals("Moving_Phase", controller.getCurrentPhase());
+                }
+                else{
+                    assertEquals(suguri,controller.getOponnent());
+                    assertEquals("WaitFight_Phase", controller.getCurrentPhase());
+                    suguri.setSeed(seed+4);
+                    int AtkRoll2 = new Random(seed+4).nextInt(6) + 1;
+                    pardo.setSeed(seed+3);
+                    int DefRoll2 = new Random(seed+3).nextInt(6) + 1;
+                    //owner decide defender
+                    controller.tryToDefend();
+                    int damage=Math.max(7-Math.max(1,AtkRoll2+4-DefRoll2+1),0);
+                    assertEquals(damage,controller.getOwner().getCurrentHP());
+                    assertEquals(pardo,controller.getOponnent());
+                    if(controller.getOwner().isK_O()){
+                        assertEquals("Moving_Phase", controller.getCurrentPhase());
+                    }
+                    else{
+                        assertEquals("WaitFight_Phase", controller.getCurrentPhase());
+                    }
+                }
+            }
+            else{
+                assertEquals(7,
+                        controller.getOponnent().getCurrentHP());
+                assertEquals("WaitFight_Phase", controller.getCurrentPhase());
+            }
+
+
+
+        }
+        else{
+            assertEquals("Moving_Phase",controller.getCurrentPhase());
+        }
+
+    }
+    @RepeatedTest(50)
+    public void notfigthPhase() throws InvalidMovementException {
+        controller.setNextPanel(HP1,DropP1);
+        controller.setNextPanel(DropP1,NP4);
+        controller.setNextPanel(NP4,NP5);
+        controller.setNextPanel(NP5,NP6);
+        controller.setNextPanel(NP6,NP7);
+        controller.setNextPanel(NP7,BonusP1);
+        controller.setPlayerPanel(pardo,NP4);
+
+        controller.getOwner().setSeed(seed);
+        int dice = new Random(seed).nextInt(6) + 1;
+        controller.tryToStart();
+        if(dice>1) {
+            assertEquals("WaitFight_Phase", controller.getCurrentPhase());
+            assertEquals(NP4, controller.getOwner().getPanel());
+
+            //owner decide no pelear
+            controller.tryToKeepMoving();
+            assertEquals("Moving_Phase", controller.getCurrentPhase());
 
         }
     }
+
+
 
 
 }

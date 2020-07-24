@@ -3,14 +3,14 @@ package com.github.cc3002.citricliquid.gui.Phases;
 import com.github.cc3002.citricjuice.model.IUnit;
 
 public class BattlePhase extends Phase {
-    IUnit unit;
+    IUnit attacker;
     IUnit opponent;
-    public BattlePhase(IUnit unit, IUnit victim){
+    public BattlePhase(IUnit attacker,IUnit victim){
         this.canIStart=false;
         this.canIMove=false;
         this.canFight=true;
         this.canIStart=false;
-        this.unit=unit;
+        this.attacker=attacker;
         this.opponent=victim;
     }
 
@@ -20,15 +20,13 @@ public class BattlePhase extends Phase {
     }
 
     @Override
-    public void tryToattack() throws InvalidMovementException {
-        if (!canFight) {
-            throw new InvalidMovementException("You can't move now.");
-        }
-        controller.battle(unit,opponent);
+    public void attack(){
+        toWaitFigthPhase(attacker,opponent);
     }
 
+
     @Override
-    public void toOpponentChoicePhase(IUnit attacker, IUnit victim) {
-        changePhase(new OpponentChoicePhase(attacker,victim));
+    public void toWaitFigthPhase(IUnit attacker, IUnit victim) {
+        changePhase(new WaitFight(attacker,victim));
     }
 }

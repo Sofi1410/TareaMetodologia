@@ -30,4 +30,10 @@ public interface IUnit {
     void evade(int attack);
 
     boolean isK_O();
+
+    void defend(int attack);
+
+    void setSeed(long l);
+
+    int getCurrentHP();
 }
