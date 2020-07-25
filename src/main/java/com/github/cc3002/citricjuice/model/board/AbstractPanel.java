@@ -19,6 +19,10 @@ public abstract class AbstractPanel implements IPanel {
   private final int id;
   private final Set<IPanel> nextPanels;
   private final List<Player> Players;
+  private  IPanel left;
+  private  IPanel right;
+  private  IPanel up;
+  private  IPanel down;
 
 
 
@@ -31,6 +35,7 @@ public abstract class AbstractPanel implements IPanel {
     nextPanels = new HashSet<>();
     Players = new ArrayList<>();
     this.id = id;
+
   }
 
   public int getId() {
@@ -47,7 +52,7 @@ public abstract class AbstractPanel implements IPanel {
    * @return Set<IPanel>
    */
   public Set<IPanel> getNextPanels() {
-    return Set.copyOf(nextPanels);
+    return nextPanels;
   }
 
   /**
@@ -56,12 +61,10 @@ public abstract class AbstractPanel implements IPanel {
    * @param panel the panel to be added.
    */
   public void addNextPanel(IPanel panel) {
-    if (!this.equals(panel) ) {
+    if (this.getId()!=panel.getId() ) {
       nextPanels.add(panel);
 
     }
-
-
   }
 
 
@@ -137,11 +140,41 @@ public abstract class AbstractPanel implements IPanel {
 
 
 
-
   public List<Player> getPlayers() {
     return Players;
   }
 
+
+
+  public IPanel getLeft() {
+    return left;
+  }
+  public IPanel getRight() {
+    return right;
+  }
+  public IPanel getUp() {
+    return up;
+  }
+  public IPanel getDown() {
+    return down;
+  }
+
+
+  public void setLeft(IPanel left) {
+    this.left = left;
+  }
+
+  public void setRight(IPanel right) {
+    this.right = right;
+  }
+
+  public void setUp(IPanel up) {
+    this.up = up;
+  }
+
+  public void setDown(IPanel down) {
+    this.down = down;
+  }
 }
 
 

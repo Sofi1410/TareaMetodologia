@@ -19,4 +19,32 @@ public class WaitPath extends Phase{
     public String toString() {
         return "WaitPath_Phase";
     }
+    @Override
+    public void toMovingPhase(){
+        changePhase(new MovingPhase());
+    }
+
+    @Override
+    public void left() throws InvalidTransitionException {
+        controller.left();
+
+    }
+    @Override
+    public void right() throws InvalidTransitionException {
+        controller.right();
+
+    }
+    @Override
+    public void up() throws InvalidTransitionException {
+        controller.up();
+
+    }
+    @Override
+    public void down() throws InvalidTransitionException {
+        controller.down();
+
+    }
+
+
+
 }

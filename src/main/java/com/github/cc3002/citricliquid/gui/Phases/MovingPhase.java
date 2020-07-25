@@ -8,8 +8,12 @@ public class MovingPhase extends Phase{
         this.canIMove=true;
         this.canFight=false;
         this.recover=false;
-        this.canIfinish=false;
         this.stayAtHome=false;
+        this.canIfinish=false;
+        this.WaitAtHome=false;
+        this.WaitTOFigth=false;
+        this.WaitToPath=false;
+        this.Battle=false;
     }
 
 

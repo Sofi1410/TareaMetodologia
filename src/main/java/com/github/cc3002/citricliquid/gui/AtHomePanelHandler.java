@@ -1,13 +1,11 @@
 package com.github.cc3002.citricliquid.gui;
 import com.github.cc3002.citricjuice.model.GameController;
-import com.github.cc3002.citricjuice.model.board.IPanel;
 
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-public class AtHomePanelObserver implements PropertyChangeListener{
+public class AtHomePanelHandler implements IHandler{
     private final GameController controller;
 
-    public AtHomePanelObserver(GameController controler){
+    public AtHomePanelHandler(GameController controler){
         this.controller=controler;
     }
 

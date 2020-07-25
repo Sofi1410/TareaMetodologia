@@ -26,4 +26,11 @@ public interface IPanel {
 
     boolean equalNextPanels(int i);
 
-    }
+    IPanel getLeft();
+
+    IPanel getRight();
+
+    IPanel getUp();
+
+    IPanel getDown();
+}

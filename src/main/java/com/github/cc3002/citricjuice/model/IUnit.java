@@ -36,4 +36,8 @@ public interface IUnit {
     void setSeed(long l);
 
     int getCurrentHP();
+
+    void increaseStarsBy(IUnit victim);
+
+    void increaseVictoriesBy(IUnit victim);
 }

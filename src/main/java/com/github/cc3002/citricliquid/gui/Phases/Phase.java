@@ -76,6 +76,18 @@ public class Phase {
         toMovingPhase();
         controller.tryToMove();
     }
+    public void up() throws InvalidMovementException, InvalidTransitionException {
+        throw new InvalidMovementException("You can´t chooce Path at :"+ toString());
+    }
+    public void down() throws InvalidMovementException, InvalidTransitionException {
+        throw new InvalidMovementException("You can´t chooce Path at :"+ toString());
+    }
+    public void left() throws InvalidMovementException, InvalidTransitionException {
+        throw new InvalidMovementException("You can´t chooce Path at :"+ toString());
+    }
+    public void right() throws InvalidMovementException, InvalidTransitionException {
+        throw new InvalidMovementException("You can´t chooce Path at :"+ toString());
+    }
 
     public void endTurn() throws InvalidMovementException {
         if(!canIfinish){

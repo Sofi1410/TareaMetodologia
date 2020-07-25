@@ -23,9 +23,9 @@ public class GameController {
     int chapter;
     int steps;
     private final NormaLevelObserver NormaLevelnotification = new NormaLevelObserver(this);
-    private final MoreThan1playerObserver moreTanOnePlayernotification=  new MoreThan1playerObserver(this);
-    private final MoreThanOnePathObserver moreTanOnePathnotification=  new MoreThanOnePathObserver(this);
-    private final AtHomePanelObserver atHomePanelNotification=  new AtHomePanelObserver(this);
+    private final MoreThanOnePlayerHandler moreTanOnePlayernotification=  new MoreThanOnePlayerHandler(this);
+    private final MoreThanOnePathHandler moreTanOnePathnotification=  new MoreThanOnePathHandler(this);
+    private final AtHomePanelHandler atHomePanelNotification=  new AtHomePanelHandler(this);
 
     private Player winner= nullPLayer;
     private Phase phase;
@@ -68,6 +68,7 @@ public class GameController {
         panel.addPlayer(player);
         player.setHomePanel(panel);
         player.setActualPanel(panel);
+
 
 
         return player;
@@ -395,7 +396,11 @@ public class GameController {
             counterattack(victim, attacker);
         }
         else{
+            attacker.increaseStarsBy(victim);
+            attacker.increaseVictoriesBy(victim);
+            setOponnent(nullPLayer);
             phase.toMovingPhase();
+            phase.canIfinish=true;
         }
     }
     public void defend(IUnit attacker, IUnit victim) throws InvalidTransitionException {
@@ -405,23 +410,43 @@ public class GameController {
             counterattack(victim, attacker);
         }
         else{
+            attacker.increaseStarsBy(victim);
+            attacker.increaseVictoriesBy(victim);
+            setOponnent(nullPLayer);
             phase.toMovingPhase();
+            phase.canIfinish=true;
         }
     }
     public void counterattack(IUnit attacker, IUnit victim){
-        if(!attacker.isK_O()){
-            try {
-
-                phase.toWaitFigthPhase(attacker,victim);
-            } catch (InvalidTransitionException e) {
-                e.printStackTrace();
-            }
-            tryToFight();
+        try {
+            phase.toWaitFigthPhase(attacker,victim);
+        } catch (InvalidTransitionException e) {
+            e.printStackTrace();
         }
-        else{
-            tryToEndTurn();
-        }
+        tryToFight();
+    }
+    public void left() throws InvalidTransitionException {
+        setSteps(getSteps()-1);
+        phase.toMovingPhase();
+        setPlayerPanel(getOwner(),getOwner().getPanel().getLeft());
+    }
 
+    public void right() throws InvalidTransitionException {
+        setSteps(getSteps()-1);
+        setPlayerPanel(getOwner(),getOwner().getPanel().getRight());
+        phase.toMovingPhase();
+        tryToKeepMoving();
+    }
+    public void up() throws InvalidTransitionException {
+        setSteps(getSteps()-1);
+        setPlayerPanel(getOwner(),getOwner().getPanel().getUp());
+        phase.toMovingPhase();
+        tryToKeepMoving();
+    }
+    public void down() throws InvalidTransitionException {
+        setSteps(getSteps()-1);
+        phase.toMovingPhase();
+        setPlayerPanel(getOwner(),getOwner().getPanel().getDown());
     }
 
 
@@ -503,6 +528,34 @@ public class GameController {
             e.printStackTrace();
         }
     }
+    public void tryToGoLeft(){
+        try{
+            phase.left();
+        }catch (InvalidMovementException | InvalidTransitionException e){
+            e.printStackTrace();
+        }
+    }
+    public void tryToGoRight(){
+        try{
+            phase.right();
+        }catch (InvalidMovementException | InvalidTransitionException e){
+            e.printStackTrace();
+        }
+    }
+    public void tryToGoRUp(){
+        try{
+            phase.up();
+        }catch (InvalidMovementException | InvalidTransitionException e){
+            e.printStackTrace();
+        }
+    }
+    public void tryToGoDown(){
+        try{
+            phase.down();
+        }catch (InvalidMovementException | InvalidTransitionException e){
+            e.printStackTrace();
+        }
+    }
 
 
     public void tryToEndTurn(){
@@ -536,6 +589,7 @@ public class GameController {
 
     public void move(){
         steps=dice();
+        getOwner().increaseStarsBy((int) (Math.floor(getChapter()/5)+1));
 
         owner.addAtHomePanelnotification(atHomePanelNotification);
         owner.addAmountOfPlayerListener(moreTanOnePlayernotification);
@@ -551,7 +605,6 @@ public class GameController {
      * activates the power of the panel where it is.
      */
     public void movePlayer(){
-        getOwner().increaseStarsBy((int) (Math.floor(getChapter()/5)+1));
 
         while (steps>0 && getOwner().getCanImove()) {
             IPanel nextPanel = getNextPanels(getOwner().getPanel()).iterator().next();
@@ -559,7 +612,6 @@ public class GameController {
 
             steps -=1;
         }
-        activatePanel(getOwner(),getOwner().getPanel());
 
     }
 
@@ -632,5 +684,264 @@ public class GameController {
     public int getUnitHP(IUnit unit) {
         return unit.getCurrentHP();
     }
+
+    public int getOwnerVictories() {
+        return getOwner().getVictories();
+    }
+    public int getOwnerStars() {
+        return getOwner().getStars();
+    }
+    public NormaGoal getOwnerNormaGoal(){
+        return getOwner().getNormaGoal();
+    }
+
+    public void escenario(){
+        GameController controller=this;
+        String PLAYER_NAME = "NOM-NOM";
+        String PLAYER_NAME_2 = "PANDA";
+        String PLAYER_NAME_3 = "POLAR";
+        String PLAYER_NAME_4 = "PARDO";
+
+
+        //paneles en juego
+        // 4 HomePanel , one for each player
+        HomePanel HP1 = controller.addHomePanel(11);
+        HomePanel HP2 = controller.addHomePanel(12);
+        HomePanel HP3 = controller.addHomePanel(13);
+        HomePanel HP4 = controller.addHomePanel(14);
+
+        //3 DropPanel
+        DropPanel DropP1;
+        DropPanel DropP2;
+        DropPanel DropP3;
+        // 3 EncounterPanel
+        EncounterPanel EP1;
+        EncounterPanel EP2;
+        EncounterPanel EP3;
+
+        // 3 BossPanel
+        BossPanel BossP1;
+        BossPanel BossP2;
+        BossPanel BossP3;
+        // 4 BonusPanel
+        BonusPanel BonusP1;
+        BonusPanel BonusP2;
+        BonusPanel BonusP3;
+        BonusPanel BonusP4;
+
+
+        //12 NeutralPanel
+        NeutralPanel NP1;
+        NeutralPanel NP2;
+        NeutralPanel NP3;
+        NeutralPanel NP4;
+        NeutralPanel NP5;
+        NeutralPanel NP6;
+        NeutralPanel NP7;
+        NeutralPanel NP8;
+        NeutralPanel NP9;
+        NeutralPanel NP10;
+        NeutralPanel NP11;
+        NeutralPanel NP12;
+
+
+
+
+        DropP1=controller.addDropPanel(31);
+        DropP2=controller.addDropPanel(32);
+        DropP3=controller.addDropPanel(33);
+
+        EP1=controller.addEncounterPanel(41);
+        EP2=controller.addEncounterPanel(42);
+        EP3=controller.addEncounterPanel(44);
+
+        BossP1=controller.addBossPanel(51);
+        BossP2=controller.addBossPanel(52);
+        BossP3=controller.addBossPanel(53);
+
+        BonusP1=controller.addBonusPanel(61);
+        BonusP2=controller.addBonusPanel(62);
+        BonusP3=controller.addBonusPanel(63);
+        BonusP4=controller.addBonusPanel(64);
+
+
+        NP1 =controller.addNeutralPanel(71);
+        NP2 =controller.addNeutralPanel(72);
+        NP3 =controller.addNeutralPanel(73);
+        NP4 =controller.addNeutralPanel(74);
+        NP5 =controller.addNeutralPanel(75);
+        NP6 =controller.addNeutralPanel(76);
+        NP7 =controller.addNeutralPanel(77);
+        NP8 =controller.addNeutralPanel(78);
+        NP9 =controller.addNeutralPanel(79);
+        NP10 =controller.addNeutralPanel(80);
+        NP11 =controller.addNeutralPanel(81);
+        NP12 =controller.addNeutralPanel(82);
+
+
+        //columna 1
+        controller.setNextPanel(HP1,NP2);
+        controller.setNextPanel(HP1,NP1);
+        HP1.setRight(NP2);
+        HP1.setUp(NP1);
+
+        controller.setNextPanel(NP1,HP1);
+        controller.setNextPanel(NP1,DropP1);
+        NP1.setUp(DropP1);
+        NP1.setDown(HP1);
+
+        controller.setNextPanel(DropP1,NP3);
+        controller.setNextPanel(DropP1,NP1);
+        DropP1.setRight(NP3);
+        DropP1.setDown(NP1);
+
+        //columna 2
+        controller.setNextPanel(NP2,HP1);
+        controller.setNextPanel(NP2,NP4);
+        NP2.setRight(NP4);
+        NP2.setLeft(HP1);
+
+        controller.setNextPanel(NP3,DropP1);
+        controller.setNextPanel(NP3,BonusP1);
+        NP3.setRight(BonusP1);
+        NP3.setLeft(DropP1);
+
+        //columna 3
+        controller.setNextPanel(NP4,HP2);
+        controller.setNextPanel(NP4,NP5);
+        controller.setNextPanel(NP4,NP2);
+        NP4.setRight(HP2);
+        NP4.setLeft(NP2);
+        NP4.setUp(NP5);
+
+        controller.setNextPanel(NP5,NP4);
+        controller.setNextPanel(NP5,BonusP1);
+        NP5.setUp(BonusP1);
+        NP5.setDown(NP4);
+
+        controller.setNextPanel(BonusP1,NP6);
+        controller.setNextPanel(BonusP1,NP5);
+        controller.setNextPanel(BonusP1,NP3);
+        BonusP1.setLeft(NP3);
+        BonusP1.setDown(NP5);
+        BonusP1.setUp(NP6);
+
+        controller.setNextPanel(NP6,BonusP1);
+        controller.setNextPanel(NP6,BossP1);
+        NP6.setUp(BossP1);
+        NP6.setDown(BonusP1);
+
+        controller.setNextPanel(BossP1,BonusP2);
+        controller.setNextPanel(BossP1,NP6);
+        BossP1.setUp(BonusP2);
+        BossP1.setDown(NP6);
+
+        controller.setNextPanel(BonusP2,BossP1);
+        controller.setNextPanel(BonusP2,EP1);
+        BonusP2.setRight(EP1);
+        BonusP2.setDown(BossP1);
+
+        //Columna 4
+
+        controller.setNextPanel(HP2,EP2);
+        HP2.setRight(EP2);
+
+        controller.setNextPanel(EP1,NP7);
+        controller.setNextPanel(EP1,BonusP2);
+        EP1.setRight(NP7);
+        EP1.setLeft(BonusP2);
+
+        //Columna 5
+
+        controller.setNextPanel(EP2,BossP2);
+        controller.setNextPanel(EP2,HP2);
+        EP2.setRight(BossP2);
+        EP2.setLeft(HP2);
+
+        controller.setNextPanel(NP7,HP3);
+        controller.setNextPanel(NP7,HP1);
+        NP7.setRight(HP3);
+        NP7.setLeft(EP1);
+
+        //Columna 6
+        controller.setNextPanel(BossP2,NP9);
+        controller.setNextPanel(BossP2,EP2);
+        BossP2.setRight(NP9);
+        BossP2.setLeft(EP2);
+
+        controller.setNextPanel(DropP2,NP10);
+        controller.setNextPanel(DropP2,BossP3);
+        DropP2.setRight(NP10);
+        DropP2.setUp(BossP3);
+
+        controller.setNextPanel(BossP3,NP8);
+        controller.setNextPanel(BossP3,DropP2);
+        BossP3.setDown(DropP2);
+        BossP3.setUp(NP8);
+
+        controller.setNextPanel(NP8,BossP3);
+        controller.setNextPanel(NP8,HP3);
+        NP8.setUp(HP3);
+        NP8.setDown(BossP3);
+
+
+        controller.setNextPanel(HP3,NP7);
+        HP3.setLeft(NP7);
+
+        //columna 7
+        controller.setNextPanel(NP9,BossP2);
+        controller.setNextPanel(NP9,BonusP3);
+        NP9.setRight(BonusP3);
+        NP9.setLeft(BossP2);
+
+        controller.setNextPanel(NP10,NP11);
+        controller.setNextPanel(NP10,DropP2);
+        NP10.setRight(NP11);
+        NP10.setLeft(DropP2);
+
+        controller.setNextPanel(DropP3,BonusP4);
+        controller.setNextPanel(DropP3,HP3);
+        DropP3.setRight(BonusP4);
+        DropP3.setLeft(HP3);
+
+        //columna 8
+        controller.setNextPanel(BonusP3,NP9);
+        controller.setNextPanel(BonusP3,EP3);
+        BonusP3.setUp(EP3);
+        BonusP3.setLeft(NP9);
+
+        controller.setNextPanel(EP3,BonusP3);
+        controller.setNextPanel(EP3,NP11);
+        EP3.setUp(NP11);
+        EP3.setDown(BonusP3);
+
+        controller.setNextPanel(NP11,BossP3);
+        controller.setNextPanel(NP11,EP3);
+        controller.setNextPanel(NP11,NP10);
+        NP11.setUp(NP12);
+        NP11.setLeft(NP10);
+        NP11.setDown(EP3);
+
+        controller.setNextPanel(NP12,NP11);
+        controller.setNextPanel(NP12,HP4);
+        NP12.setUp(HP4);
+        NP12.setDown(NP11);
+
+        controller.setNextPanel(HP4,BonusP4);
+        HP4.setUp(BonusP4);
+
+        controller.setNextPanel(BonusP4,HP4);
+        controller.setNextPanel(BonusP4,DropP3);
+        BonusP4.setDown(HP4);
+        BonusP4.setLeft(DropP3);
+
+        controller.addPlayer(PLAYER_NAME, 4, 1, -1, 2,HP1);
+        controller.addPlayer(PLAYER_NAME_3, 5, 3, -1, 1,HP2);
+        controller.addPlayer(PLAYER_NAME_2, 6, 5, -2, 4,HP3);
+        controller.addPlayer(PLAYER_NAME_4, 5, 6, 7, 8,HP4);
+
+
+    }
+
 }
 

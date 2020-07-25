@@ -168,7 +168,6 @@ public abstract class AbstractUnit implements IUnit {
 
     /**
      * Increases this player's Victory´s count by an amount.
-     * @return
      */
     public abstract void   increaseVictoriesBy(IUnit IUnit);
     /**
