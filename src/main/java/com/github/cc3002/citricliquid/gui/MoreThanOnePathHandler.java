@@ -2,8 +2,7 @@ package com.github.cc3002.citricliquid.gui;
 import com.github.cc3002.citricjuice.model.GameController;
 
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-public class MoreThanOnePathObserver implements PropertyChangeListener{
+public class MoreThanOnePathObserver implements IHandler{
     private final GameController controller;
 
     public MoreThanOnePathObserver(GameController controler){
