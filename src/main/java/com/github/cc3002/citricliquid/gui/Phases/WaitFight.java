@@ -37,11 +37,7 @@ public class WaitFight extends Phase{
         controller.getPhase().attack();
     }
 
-    @Override
-    public void iAmNotGoingToFigth() {
-        controller.setiMakeADecision(true);
 
-    }
     @Override
     public void evade() throws InvalidTransitionException {
         controller.evade(attacker,opponent);

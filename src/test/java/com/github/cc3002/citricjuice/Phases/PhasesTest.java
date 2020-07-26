@@ -480,7 +480,7 @@ public class PhasesTest {
         }
     }
 
-    @RepeatedTest(50)
+    @RepeatedTest(10)
     public void figthPhase() throws InvalidMovementException {
         controller.setNextPanel(aHP1,NP1);
         controller.setNextPanel(NP1,aHP1);

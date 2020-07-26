@@ -36,6 +36,14 @@ public class Phase {
 
 
     //Methods Zone
+
+    /**
+     * metodo para empezar el turno
+     * a recover phase si el jugador esta KO
+     * a movePhase para qque este se mueva
+     * @throws InvalidMovementException para el movimiento
+     * @throws InvalidTransitionException para la transicion
+     */
     public void start() throws InvalidMovementException, InvalidTransitionException {
         if(!canIStart&& !controller.itsK_O()){
             throw new InvalidMovementException("You can't start at" + toString());
@@ -49,6 +57,11 @@ public class Phase {
             controller.trydotheFirstMove();
         }
     }
+    /**
+     * recupera al jugador
+     * @throws InvalidMovementException para el movimiento
+     * @throws InvalidTransitionException para la transicion
+     */
     public void recover() throws InvalidMovementException, InvalidTransitionException {
         if(!recover){
             throw new InvalidMovementException("You can't recover at" + toString());
@@ -56,18 +69,34 @@ public class Phase {
         controller.recover();
 
     }
-    public void firstMove() throws InvalidMovementException, InvalidTransitionException {
+
+    /**
+     * Realiza el primer movimiento (se tiran dados)
+     * @throws InvalidMovementException si no se puede realizar la acción
+     */
+    public void firstMove() throws InvalidMovementException{
         if (!canIMove) {
             throw new InvalidMovementException("You can't move at" + toString());
         }
         controller.move();
     }
+
+    /**
+     * Meetodo que mueve al jugador
+     * @throws InvalidMovementException si no se puede
+     */
     public void move() throws  InvalidMovementException{
         if (!canIMove) {
             throw new InvalidMovementException("You can't move now.");
         }
         controller.movePlayer();
     }
+
+    /**
+     * Metodo para seguir avazando
+     * @throws InvalidMovementException
+     * @throws InvalidTransitionException
+     */
     public void keepMoving() throws InvalidMovementException, InvalidTransitionException {
         if(!WaitAtHome &&!WaitTOFigth && !WaitToPath&&!canIMove){
             throw new InvalidMovementException("You can't keep moving at: "+toString());
@@ -75,19 +104,47 @@ public class Phase {
 
         controller.tryToMove();
     }
+
+    /**
+     * para subir
+     * @throws InvalidMovementException
+     * @throws InvalidTransitionException
+     */
     public void up() throws InvalidMovementException, InvalidTransitionException {
         throw new InvalidMovementException("You can´t chooce Path at :"+ toString());
     }
+
+    /**
+     * para bajar
+     * @throws InvalidMovementException
+     * @throws InvalidTransitionException
+     */
     public void down() throws InvalidMovementException, InvalidTransitionException {
         throw new InvalidMovementException("You can´t chooce Path at :"+ toString());
     }
+
+    /**
+     * para tomar el camino e la izquierda
+     * @throws InvalidMovementException
+     * @throws InvalidTransitionException
+     */
     public void left() throws InvalidMovementException, InvalidTransitionException {
         throw new InvalidMovementException("You can´t chooce Path at :"+ toString());
     }
+
+    /**
+     * para tomar el camino de la deerecha
+     * @throws InvalidMovementException
+     * @throws InvalidTransitionException
+     */
     public void right() throws InvalidMovementException, InvalidTransitionException {
         throw new InvalidMovementException("You can´t chooce Path at :"+ toString());
     }
 
+    /**
+     * cuando se desea terminar el turno
+     * @throws InvalidMovementException
+     */
     public void endTurn() throws InvalidMovementException {
         if(!canIfinish){
             throw new InvalidMovementException("Can't end turn on "
@@ -95,6 +152,11 @@ public class Phase {
         }
         controller.finishTurn();
     }
+
+    /**
+     * cuando se intenta quedarse en casa
+     * @throws InvalidMovementException
+     */
     public void stayAtHome() throws InvalidMovementException{
         if (!WaitAtHome) {
             throw new InvalidMovementException("You can't chooce to stay at home at" + toString());
@@ -103,28 +165,45 @@ public class Phase {
 
     }
 
-    //////ZONA MALA/////
 
-
+    /**
+     * metodo para atacar
+     * @throws InvalidMovementException
+     */
     public void attack() throws InvalidMovementException {
         if (!canFight) {
             throw new InvalidMovementException("You can't move now.");
         }
     }
 
+    /**
+     * cuando se decide pelear
+     * @throws InvalidMovementException
+     */
     public void iAmGoingToFigth() throws InvalidMovementException {
         if(controller.itsK_O()|!WaitTOFigth){
             throw new InvalidMovementException("You can't fight at: " + toString());
         }
 
     }
-    public void iAmNotGoingToFigth() throws InvalidMovementException {}
 
+
+    /**
+     * cuando se decide evadir
+     * @throws InvalidMovementException
+     * @throws InvalidTransitionException
+     */
     public void evade() throws InvalidMovementException, InvalidTransitionException {
         if(!WaitTOFigth){
             throw new InvalidMovementException("You can't evade at: " + toString());
         }
     }
+
+    /**
+     * se decide defender
+     * @throws InvalidMovementException
+     * @throws InvalidTransitionException
+     */
     public void defend() throws InvalidMovementException, InvalidTransitionException {
         if(!WaitTOFigth){
             throw new InvalidMovementException("You can't evade at: " + toString());
