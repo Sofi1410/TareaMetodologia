@@ -341,19 +341,47 @@ public class GameController {
     }
 
 
+    /**
+     * Setea los pasos del jugador actual
+     * @param newValue cantidad nueva de pasos
+     */
     public void setSteps(int newValue){
         steps=newValue;
     }
 
+    /**
+     * camba el opponente del juego
+     * en caso de que no sea etapa de combate este no tiene sentido
+     * para que lo tenga la label de la fase
+     * debe ser WaitFightPhase
+     * @param oponnent nuevo opponente
+     */
     public void setOponnent(IUnit oponnent) {
         this.oponnent = oponnent;
     }
+
+    /**
+     * Entrega el oponente del juego
+     * @return el oponente
+     */
     public IUnit getOponnent(){
         return oponnent;
     }
+
+    /**
+     * Entrega a quien está tomando una desición
+     * puede no ser el dueño del turno
+     * en caso de pelear
+     * @param unit nuevoa unidad eligiendo
+     */
     public void setActualUnit(IUnit unit){
         this.actualUnit=unit;
     }
+
+    /**
+     * entega la unidad que está tomando una decision
+     * @return la unidad
+     */
     public IUnit getActualUnit(){
         return actualUnit;
     }
@@ -370,39 +398,81 @@ public class GameController {
         }
     }
 
+    /**
+     * Cambia la phase en el controlador
+     * @param phase nueva phase
+     */
     public void setPhase(Phase phase) {
         this.phase = phase;
         phase.setController(this);
     }
 
+    /**
+     * delueve el nombre de la fase actual
+     * @return nombre
+     */
     public String getCurrentPhase(){
         return phase.toString();
     }
+
+    /**
+     * Entrega la phase actual
+     * @return phase actual
+     */
     public Phase getPhase(){
         return phase;
     }
 
 
+    /**
+     * determina si el juego del turno está muerto
+     * @return true esta muerto,false vivo
+     */
     public boolean itsK_O(){
         return getOwner().isK_O();
     }
 
+    /**
+     * calcula el ataque efectuado por la unidad
+     * @param unit Unidad que ataca
+     * @return cantidad e ataque
+     */
     public int attack(IUnit unit){
         return unit.attack();
     }
 
 
-
+    /**
+     * Metodo evadir, efectua la evasión de una unidad
+     * @param attacker quien atacó
+     * @param victim quien recibe el atque y decide evadir
+     * @throws InvalidTransitionException en caso de no hacer una transicion correcta
+     */
     public void evade(IUnit attacker,IUnit victim) throws InvalidTransitionException {
         int attack=attack(attacker);
         victim.evade(attack);
         afterEvadeOrDefend(attacker,victim);
     }
+
+    /**
+     * Metodo que efectua la efensa de una unidad
+     * @param attacker quien ataca
+     * @param victim quien decide defende
+     * @throws InvalidTransitionException en caso de na transición incorrecta
+     */
     public void defend(IUnit attacker, IUnit victim) throws InvalidTransitionException {
         int attack=attack(attacker);
         victim.defend(attack);
         afterEvadeOrDefend(attacker,victim);
     }
+
+    /**
+     * Luego de evadir o defender el oponente contrataca
+     * y el dueño del turno termina su turno
+     * @param attacker quien ataca
+     * @param victim quien recibe el ataque
+     * @throws InvalidTransitionException
+     */
     public void afterEvadeOrDefend(IUnit attacker, IUnit victim) throws InvalidTransitionException {
         if(victim.isK_O()){
             setActualUnit(getOwner());
@@ -416,6 +486,11 @@ public class GameController {
         }
     }
 
+    /**
+     * Se efectua el contrataque del oponente
+     * @param attacker quien decide contratacar
+     * @param victim el dueño del turno
+     */
     public void counterattack(IUnit attacker, IUnit victim){
         try {
             phase.toWaitFigthPhase(attacker,victim);
@@ -424,6 +499,13 @@ public class GameController {
         }
         tryToFight();
     }
+
+    /**
+     * efectua el movimiento decidido por
+     * el jugador si está en la fase correcta
+     * @throws InvalidTransitionException si no se pidio la acció
+     * en una fase correcta
+     */
     public void left() throws InvalidTransitionException {
         setSteps(getSteps()-1);
         phase.toMovingPhase();
@@ -434,7 +516,12 @@ public class GameController {
         }
 
     }
-
+    /**
+     * efectua el movimiento decidido por
+     * el jugador si está en la fase correcta
+     * @throws InvalidTransitionException si no se pidio la acció
+     * en una fase correcta
+     */
     public void right() throws InvalidTransitionException {
         setSteps(getSteps()-1);
         phase.toMovingPhase();
@@ -444,6 +531,12 @@ public class GameController {
             stopMoving();
         }
     }
+    /**
+     * efectua el movimiento decidido por
+     * el jugador si está en la fase correcta
+     * @throws InvalidTransitionException si no se pidio la acció
+     * en una fase correcta
+     */
     public void up() throws InvalidTransitionException {
         setSteps(getSteps()-1);
         phase.toMovingPhase();
@@ -454,6 +547,12 @@ public class GameController {
         }
 
     }
+    /**
+     * efectua el movimiento decidido por
+     * el jugador si está en la fase correcta
+     * @throws InvalidTransitionException si no se pidio la acció
+     * en una fase correcta
+     */
     public void down() throws InvalidTransitionException {
         setSteps(getSteps()-1);
         phase.toMovingPhase();
@@ -463,22 +562,35 @@ public class GameController {
             stopMoving();
         }
     }
+
+    /**
+     * cuando se acaban los pasos y ya no se puede
+     * seguir movimiento
+     * @throws InvalidTransitionException
+     */
     public void stopMoving() throws InvalidTransitionException {
         phase.toEndTurnPhase();
     }
 
 
+    /**
+     * setea la variable que perite al jgador moverse
+     * @param newValue nuevo booleano
+     */
     public void setCanIMove(boolean newValue){
         getOwner().setCanImove(newValue);
     }
 
-    public void moreThanOnePlayer(){
 
-    }
 
 
     // Inicio del juego
     //intento iniciar
+
+    /**
+     * Jugador intenta iniciar
+     * solo se efectuara si está en la fase apropiada
+     */
     public void tryToStart(){
         try {
             this.setActualUnit(getOwner());
@@ -488,7 +600,12 @@ public class GameController {
         }
 
     }
-
+    /**
+     * Por las condiciones se intenta recuperar al jugador
+     * se asevera de que esté en la función correcta
+     * y extensible a si esto se considerra una opción
+     * solo se efectuara si está en la fase apropiada
+     */
     public void tryToRecover(){
         try {
             phase.recover();
@@ -496,6 +613,12 @@ public class GameController {
             e.printStackTrace();
         }
     }
+    /**
+     * Jugador inicia el juego y con ello
+     * el primer movimiento
+     * solo se efectuara si está en la fase apropiada
+     * se diferencia de trytomove ya que en este caso se tiran los dados
+     */
     public void trydotheFirstMove(){
         try {
             phase.firstMove();
@@ -503,6 +626,11 @@ public class GameController {
             e.printStackTrace();
         }
     }
+
+    /**
+     * La fase intenta mover luego de haber tirado los dados
+     * o de haberse detenido
+     */
     public void tryToMove(){
         try {
             phase.move();
@@ -510,6 +638,11 @@ public class GameController {
             e.printStackTrace();
         }
     }
+
+    /**
+     * El jugador escoge sseguir moviendose luego de tomar una decisión
+     * ejemplo me quedo en casa o me sigo moviendo
+     */
     public void tryToKeepMoving(){
         try {
             phase.toMovingPhase();
@@ -519,6 +652,10 @@ public class GameController {
         }
 
     }
+
+    /**
+     * Jugador intenta decidir quedarse en casa
+     */
     public void tryToStayAtHome(){
         try {
             phase.stayAtHome();
@@ -526,6 +663,10 @@ public class GameController {
             e.printStackTrace();
         }
     }
+    /**
+     * Jugador decide quedarse a pelear
+     * solo se efectuara si está en la fase apropiada
+     */
     public void tryToFight(){
         try {
             phase.iAmGoingToFigth();
@@ -533,6 +674,10 @@ public class GameController {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Jugador intenta evadir el ataque
+     */
     public void tryToevade(){
         try{
             phase.evade();
@@ -540,6 +685,10 @@ public class GameController {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Usuario intenta defenderse del ataque
+     */
     public void tryToDefend(){
         try{
             phase.defend();
@@ -547,6 +696,10 @@ public class GameController {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Jugador decide ir por el camino izquierdo
+     */
     public void tryToGoLeft(){
         try{
             phase.left();
@@ -554,6 +707,10 @@ public class GameController {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Jugador decide ir por el camino a la derecha
+     */
     public void tryToGoRight(){
         try{
             phase.right();
@@ -561,6 +718,10 @@ public class GameController {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Jugador decide ir or el camino de arriba
+     */
     public void tryToGoRUp(){
         try{
             phase.up();
@@ -568,6 +729,10 @@ public class GameController {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Jugador decide bajar
+     */
     public void tryToGoDown(){
         try{
             phase.down();
@@ -577,6 +742,9 @@ public class GameController {
     }
 
 
+    /**
+     * Jugador intenta terminar su turno
+     */
     public void tryToEndTurn(){
         try {
             phase.endTurn();
@@ -586,8 +754,12 @@ public class GameController {
     }
 
 
-
-
+    /**
+     * Metodo para recuperar al jugador
+     * Solo si el dado lo permite
+     * @throws InvalidTransitionException si la transición
+     * es en una fase no apropiada
+     */
     public void recover() throws  InvalidTransitionException {
         int dice= dice();
         if(dice>= chapter){
@@ -602,7 +774,9 @@ public class GameController {
     }
 
 
-
+    /**
+     * El jugador se mueve al iniciar el turno
+     */
     public void move() {
         getOwner().increaseStarsBy((int) (Math.floor(getChapter()/5)+1));
         owner.addAtHomePanelnotification(atHomePanelNotification);
@@ -637,7 +811,7 @@ public class GameController {
 
     /**
      * method that represent the move of
-     * a Player
+     * a Player after rolling the dice
      * steps is the number of moves according to the dice
      * at the end the if the player did not had to stop
      * activates the power of the panel where it is.
@@ -663,14 +837,21 @@ public class GameController {
         }
 
 
-
+    /**
+     * Metodo que aciva el efecto de un panel
+     * @param player jugador en el panel
+     * @param  panel del jugador
+     */
     public void activatePanel(Player player, IPanel panel){
         panel.activateBy(player);
     }
 
 
-
-
+    /**
+     * Metodo del observer cuando hay un camino
+     * con mas de un jugador
+     * @param newValue lo que aroja el overser
+     */
     public void onMoreThanOnePlayer(boolean newValue)  {
         if(!newValue) {
             setCanIMove(false);
@@ -692,6 +873,10 @@ public class GameController {
 
     }
 
+    /**
+     * Metodo del observer cuando hay mas de un camino
+     * @param newValue
+     */
     public void onMoreThanOnePath(boolean newValue)  {
         if(!newValue) {
             setCanIMove(false);
@@ -705,6 +890,10 @@ public class GameController {
 
     }
 
+    /**
+     * Cuando esta en su home panel
+     * @param panel nuevo boleano
+     */
     public void onHomePanel(boolean panel){
         setCanIMove(false);
             try {
@@ -716,9 +905,15 @@ public class GameController {
 
     }
 
+    /**
+     * Retorna los pasos
+     * @return pasos
+     */
     public int getSteps() {
         return steps;
     }
+
+
     public int getNumberOfOpponents(){
         return numberOfOpponents;
     }
@@ -727,24 +922,47 @@ public class GameController {
         this.numberOfOpponents = numberOfOpponents;
     }
 
+
     public void setiMakeADecision(boolean iMakeADecision) {
         this.iMakeADecision = iMakeADecision;
     }
 
+    /**
+     * Retorna el nombre de una unidad
+     * @param unit la unidad consltada
+     * @return el nombre
+     */
     public String getUnitName(IUnit unit){
         return unit.getName();
     }
 
+    /**
+     * retorna el hp de una unidad
+     * @param unit consultad
+     * @return hp
+     */
     public int getUnitHP(IUnit unit) {
         return unit.getCurrentHP();
     }
 
+    /**
+     * retorna el hp de una unidad
+     * @return victorias
+     */
     public int getOwnerVictories() {
         return getOwner().getVictories();
     }
+    /**
+     * retorna el hp de una unidad
+     * @return las estrellas
+     */
     public int getOwnerStars() {
         return getOwner().getStars();
     }
+    /**
+     * retorna el hp de una unidad
+     * @return la norma goal
+     */
     public NormaGoal getOwnerNormaGoal(){
         return getOwner().getNormaGoal();
     }
