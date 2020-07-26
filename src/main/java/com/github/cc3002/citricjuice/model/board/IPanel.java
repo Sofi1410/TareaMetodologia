@@ -1,6 +1,6 @@
 package com.github.cc3002.citricjuice.model.board;
 
-import com.github.cc3002.citricjuice.model.Player;
+import com.github.cc3002.citricjuice.model.Unit.*;
 
 import java.util.List;
 import java.util.Set;
@@ -12,7 +12,7 @@ public interface IPanel {
 
     void addNextPanel(IPanel expectedIPanel1);
 
-    void activateBy(Player  player);
+    void activateBy(Player player);
 
     List<Player> getPlayers();
 
@@ -22,9 +22,7 @@ public interface IPanel {
 
     int getId();
 
-    int nextPanelsHash(int i);
 
-    boolean equalNextPanels(int i);
 
     IPanel getLeft();
 

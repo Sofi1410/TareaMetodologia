@@ -1,7 +1,7 @@
 package com.github.cc3002.citricliquid.gui.Phases;
 
-import com.github.cc3002.citricjuice.model.GameController;
-import com.github.cc3002.citricjuice.model.IUnit;
+import com.github.cc3002.citricliquid.gui.GameController;
+import com.github.cc3002.citricjuice.model.Unit.IUnit;
 
 public class Phase {
 
@@ -56,7 +56,7 @@ public class Phase {
         controller.recover();
 
     }
-    public void firstMove() throws InvalidMovementException {
+    public void firstMove() throws InvalidMovementException, InvalidTransitionException {
         if (!canIMove) {
             throw new InvalidMovementException("You can't move at" + toString());
         }
@@ -69,11 +69,10 @@ public class Phase {
         controller.movePlayer();
     }
     public void keepMoving() throws InvalidMovementException, InvalidTransitionException {
-        if(!WaitAtHome &&!WaitTOFigth){
+        if(!WaitAtHome &&!WaitTOFigth && !WaitToPath&&!canIMove){
             throw new InvalidMovementException("You can't keep moving at: "+toString());
         }
-        controller.setCanIMove(true);
-        toMovingPhase();
+
         controller.tryToMove();
     }
     public void up() throws InvalidMovementException, InvalidTransitionException {

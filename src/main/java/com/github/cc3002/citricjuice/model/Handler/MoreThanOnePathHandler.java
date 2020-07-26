@@ -1,8 +1,9 @@
-package com.github.cc3002.citricliquid.gui;
-import com.github.cc3002.citricjuice.model.GameController;
+package com.github.cc3002.citricjuice.model.Handler;
+import com.github.cc3002.citricliquid.gui.GameController;
 
 import java.beans.PropertyChangeEvent;
-public class MoreThanOnePathHandler implements IHandler{
+
+public class MoreThanOnePathHandler implements IHandler {
     private final GameController controller;
 
     public MoreThanOnePathHandler(final GameController controler){

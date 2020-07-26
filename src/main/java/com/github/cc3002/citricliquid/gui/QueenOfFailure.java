@@ -1,9 +1,4 @@
 package com.github.cc3002.citricliquid.gui;
-import com.github.cc3002.citricjuice.model.GameController;
-import com.github.cc3002.citricjuice.model.Player;
-import com.github.cc3002.citricjuice.model.board.HomePanel;
-import com.github.cc3002.citricjuice.model.board.NeutralPanel;
-import com.github.cc3002.citricliquid.gui.Phases.InvalidMovementException;
 import com.github.cc3002.citricliquid.gui.nodes.MovableNode;
 import com.github.cc3002.citricliquid.gui.nodes.MovableNodeBuilder;
 import javafx.animation.AnimationTimer;
@@ -148,26 +143,102 @@ public class QueenOfFailure extends Application {
         Button Up= new Button("Up");
         Up.setLayoutX(xU+N);
         Up.setLayoutY(yU);
-        Up.setOnAction(event -> upNomNom(nomnom,65));
+        Up.setOnAction(event -> goUp(nomnom,65));
         root.getChildren().add(Up);
 
         Button Down= new Button("Down");
         Down.setLayoutX(xD+N);
         Down.setLayoutY(yD);
-        Down.setOnAction(event -> downNomNom(nomnom,65));
+        Down.setOnAction(event -> goDown(nomnom,65));
         root.getChildren().add(Down);
 
         Button Left= new Button("Left");
         Left.setLayoutX(xL+N);
         Left.setLayoutY(yL);
-        Left.setOnAction(event -> leftNomNom(nomnom,70));
+        Left.setOnAction(event -> goLeft(nomnom,70));
         root.getChildren().add(Left);
 
         Button Right= new Button("Right");
         Right.setLayoutX(xR+N);
         Right.setLayoutY(yR);
-        Right.setOnAction(event -> rightNomNom(nomnom,70));
+        Right.setOnAction(event -> goRight(nomnom,70));
         root.getChildren().add(Right);
+        int PO=590;
+        //PolarButtons
+        Button UpPolar= new Button("Up");
+        UpPolar.setLayoutX(xU+PO);
+        UpPolar.setLayoutY(yU);
+        UpPolar.setOnAction(event -> goUp(polar,65));
+        root.getChildren().add(UpPolar);
+
+        Button DownPolar= new Button("Down");
+        DownPolar.setLayoutX(xD+PO);
+        DownPolar.setLayoutY(yD);
+        DownPolar.setOnAction(event -> goDown(polar,65));
+        root.getChildren().add(DownPolar);
+
+        Button LeftPolar= new Button("Left");
+        LeftPolar.setLayoutX(xL+PO);
+        LeftPolar.setLayoutY(yL);
+        LeftPolar.setOnAction(event -> goLeft(polar,70));
+        root.getChildren().add(LeftPolar);
+
+        Button RightPolar= new Button("Right");
+        RightPolar.setLayoutX(xR+PO);
+        RightPolar.setLayoutY(yR);
+        RightPolar.setOnAction(event -> goRight(polar,70));
+        root.getChildren().add(RightPolar);
+
+        //PandaButtons
+        int PA=200;
+        Button UpPanda= new Button("Up");
+        UpPanda.setLayoutX(xU+N);
+        UpPanda.setLayoutY(yU+PA);
+        UpPanda.setOnAction(event -> goUp(panda,65));
+        root.getChildren().add(UpPanda);
+
+        Button DownPanda= new Button("Down");
+        DownPanda.setLayoutX(xD+N);
+        DownPanda.setLayoutY(yD+PA);
+        DownPanda.setOnAction(event -> goDown(panda,65));
+        root.getChildren().add(DownPanda);
+
+        Button LeftPanda= new Button("Left");
+        LeftPanda.setLayoutX(xL+N);
+        LeftPanda.setLayoutY(yL+PA);
+        LeftPanda.setOnAction(event -> goLeft(panda,70));
+        root.getChildren().add(LeftPanda);
+
+        Button RightPanda= new Button("Right");
+        RightPanda.setLayoutX(xR+N);
+        RightPanda.setLayoutY(yR+PA);
+        RightPanda.setOnAction(event -> goRight(panda,70));
+        root.getChildren().add(RightPanda);
+
+        //PardoButtons
+        Button UpPardo= new Button("Up");
+        UpPardo.setLayoutX(xU+PO);
+        UpPardo.setLayoutY(yU+PA);
+        UpPardo.setOnAction(event -> goUp(pardo,65));
+        root.getChildren().add(UpPardo);
+
+        Button DownPardo= new Button("Down");
+        DownPardo.setLayoutX(xD+PO);
+        DownPardo.setLayoutY(yD+PA);
+        DownPardo.setOnAction(event -> goDown(pardo,65));
+        root.getChildren().add(DownPardo);
+
+        Button LeftPardo= new Button("Left");
+        LeftPardo.setLayoutX(xL+PO);
+        LeftPardo.setLayoutY(yL+PA);
+        LeftPardo.setOnAction(event -> goLeft(pardo,70));
+        root.getChildren().add(LeftPardo);
+
+        Button RightPardo= new Button("Right");
+        RightPardo.setLayoutX(xR+PO);
+        RightPardo.setLayoutY(yR+PA);
+        RightPardo.setOnAction(event -> goRight(pardo,70));
+        root.getChildren().add(RightPardo);
 
 
 
@@ -179,20 +250,20 @@ public class QueenOfFailure extends Application {
 
     }
 
-    private void rightNomNom(MovableNode u,int a) {
+    private void goRight(MovableNode u, int a) {
         controller.tryToGoRight();
         u.moveRight(a);
     }
-    private void leftNomNom(MovableNode u,int a){
+    private void goLeft(MovableNode u, int a){
         controller.tryToGoLeft();
         u.moveLeft(a);
     }
 
-    private void upNomNom(MovableNode u,int a) {
+    private void goUp(MovableNode u, int a) {
         controller.tryToGoRUp();
         u.moveUp(a);
     }
-    private void downNomNom(MovableNode u,int a) {
+    private void goDown(MovableNode u, int a) {
         controller.tryToGoDown();
         u.moveDown(a);
     }

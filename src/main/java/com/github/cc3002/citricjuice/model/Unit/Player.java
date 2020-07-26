@@ -1,4 +1,4 @@
-package com.github.cc3002.citricjuice.model;
+package com.github.cc3002.citricjuice.model.Unit;
 
 import com.github.cc3002.citricjuice.model.board.IPanel;
 import com.github.cc3002.citricliquid.gui.*;
@@ -35,7 +35,7 @@ public class Player extends AbstractUnit implements IUnit {
         normaLevel = 1;
         this.homePanel=null;
         this.normaGoal=NormaGoal.STARS;
-        this.canImove=true;
+        this.canImove=false;
 
     }
 
@@ -76,21 +76,18 @@ public class Player extends AbstractUnit implements IUnit {
     public void setActualPanel(IPanel newPanel){
         actualPanel=newPanel;
         if(this.getHomePanel().getId()==newPanel.getId()) {
-            atHomePanel.firePropertyChange("AM_I_at_Home", false, true);
+            atHomePanel.firePropertyChange("AM_I_at_Home", false,true);
         }
 
-
-        if(actualPanel.getNextPanels().size()>1) {
-            moreThanOnePath.firePropertyChange("More_than_one_path",false,true);
-        }
-        if(newPanel.getPlayers().size()>1) {
-            moreThanOnePlayer.firePropertyChange("More_than_one_player",false,true);
+        else if(newPanel.getPlayers().size()>1) {
+            moreThanOnePlayer.firePropertyChange("More_than_one_player",
+                    true,false);
         }
 
-
-
-
-
+        else if(newPanel.getNextPanels().size()>1) {
+            moreThanOnePath.firePropertyChange("More_than_one_path",
+                    true,false);
+        }
     }
     /**
      * updates the home panel

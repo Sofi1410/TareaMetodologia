@@ -1,9 +1,8 @@
-package com.github.cc3002.citricliquid.gui;
-import com.github.cc3002.citricjuice.model.GameController;
+package com.github.cc3002.citricjuice.model.Handler;
+import com.github.cc3002.citricliquid.gui.GameController;
 
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-public class NormaLevelObserver implements PropertyChangeListener{
+public class NormaLevelObserver implements IHandler {
     private GameController controller;
 
     public NormaLevelObserver(GameController controler){

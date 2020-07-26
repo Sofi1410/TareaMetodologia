@@ -31,6 +31,20 @@ of the copyTest(), cause if you change these Units you have to change the expect
 For the controllerTest you have to ve aware of the union between panels, if you run the test 
 all of them will pass but if you make changes you have to be very carefull.
 
+Para la interfaz, los jugadores y las imágenes se asocian en el orden como :
+
+NomNom-Koala
+
+Polar-Oso Blanco
+
+Panda-Oso Panda
+
+Pardo-Oso Café
+
+Por temas de tiempo no todo ha sido implementado sugiero , jugar recolectando puntos
+y escogiedo quedarse en casa. Los Encouter y Boss Panel no fueron implementados.
+
+
 **Project explanation**
 
 ***Panel***
@@ -55,6 +69,28 @@ respecting the singularityy function principle. Thats why when you create a pane
 using the controller, this one adds it to the list.
 The last examples aplys for Players, Enemy Units, and all the clases in the game.
 
+***Phases***
+Las fases representan las transiciones del juego son extremadamente útiles para lo que hará 
+el usuario, la idea al conectarlo con la interfaz gráfica sera asumir que las intrucciones del
+usuario pueden estar incorrectas por ello cuando se decide pelear, avanzar, etc el controllador
+tiene un metodo que intenta realizar la acción , esto lo hace asegurando que esté en una fase 
+correcta para tomar esa decisión, por ejemplo, no puedo pelear si estoy en WaitHome.
+
+***Interfaz***
+Utilizando el modelo Vista controlador se opera en la interfáz gráfica tal que esta 
+nunca llama al modelo, poor esta razon se creó el escenario en el controlador , como un
+método ( controller.escenario()). El inconveniente con la interfaz gráfica era mover a 
+los jugadores sin llamar al  modelo, por esa razon se utilizan la clase MovableNode
+que permite mover una imagen una cantidad específica de pixeles a el lado que se 
+le indique.Por esta razon se crean botones que activan las funciones en las que el 
+jugador decide moverlo a un lado y a la vez utiliza la clase previamente mencionada 
+para mover la imagen, de esta forma la imagen y el jugador o se relaciona directamente. 
+Para ejemplificar si presiono el botón Up en panda, la acción llamada será controller.tryToGoUp
+y luego panda.moveUp. Por lo anterior se conectan todos los paneles, tal que el jugador siempre 
+a qué lugar quiere ir, porque de otra forma(en este momento) no se podría mover el  jugador en
+ la interfaz gráfica. Pero de todas modas se deja el observer para que cuando se pueda hacer la 
+ relación el código sea extensible.
+ 
 **Logic**
 
 In the whole project the logic is to respect the Solid Principles:
@@ -74,3 +110,15 @@ When you need to watch a event like, when you have to see who came first in a ra
 and you can´t see it you ask someone to advice you, that is exactly what we do
 using Observer , when on of the players in the game raise his norma level , the observer notice
 and when one of them achieve normaLevel=6 that means that is the winner of the game.
+
+Es fundamental notar que las fases filtraran las decisiones del juego y le
+daran estabilidad a este mismo, sin las fases se hace muy complejo analizar las decisiones
+del usuario y si tienen coherencia con el juego.Es importante que cada botón sea processado como un
+intento en el controlador, que lo derive a la fase y si se encuentra en la fase correcta que efectue
+lo que se pide.
+
+El modelo vista controlador, debe ser constantemente analizado para el funcionamiento correcto
+de la interfaz.
+
+
+

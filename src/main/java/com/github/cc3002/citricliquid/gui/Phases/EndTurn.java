@@ -20,4 +20,14 @@ public class EndTurn extends Phase{
     public void toStartPhase(){
         changePhase(new StartPhase());
     }
+
+    /**
+     * Method that
+     *
+     * @return the name of the actual Phase
+     */
+    @Override
+    public String toString() {
+        return "EndTurn_Phase";
+    }
 }

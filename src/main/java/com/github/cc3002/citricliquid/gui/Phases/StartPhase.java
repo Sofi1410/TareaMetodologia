@@ -1,7 +1,5 @@
 package com.github.cc3002.citricliquid.gui.Phases;
 
-import com.github.cc3002.citricjuice.model.GameController;
-
 public class StartPhase extends Phase{
     public StartPhase(){
         this.canIStart=true;

@@ -1,6 +1,7 @@
-package com.github.cc3002.citricjuice.model;
+package com.github.cc3002.citricjuice.model.Unit;
 
-public class WildUnit extends AbstractUnit{
+
+public class WildUnit extends AbstractUnit {
     /**
      * Creates a new character.
      *

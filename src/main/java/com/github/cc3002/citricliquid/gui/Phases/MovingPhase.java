@@ -1,6 +1,6 @@
 package com.github.cc3002.citricliquid.gui.Phases;
 
-import com.github.cc3002.citricjuice.model.IUnit;
+import com.github.cc3002.citricjuice.model.Unit.IUnit;
 
 public class MovingPhase extends Phase{
     public MovingPhase(){

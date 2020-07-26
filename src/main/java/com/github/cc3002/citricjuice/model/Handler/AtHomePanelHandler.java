@@ -1,8 +1,8 @@
-package com.github.cc3002.citricliquid.gui;
-import com.github.cc3002.citricjuice.model.GameController;
+package com.github.cc3002.citricjuice.model.Handler;
+import com.github.cc3002.citricliquid.gui.GameController;
 
 import java.beans.PropertyChangeEvent;
-public class AtHomePanelHandler implements IHandler{
+public class AtHomePanelHandler implements IHandler {
     private final GameController controller;
 
     public AtHomePanelHandler(GameController controler){

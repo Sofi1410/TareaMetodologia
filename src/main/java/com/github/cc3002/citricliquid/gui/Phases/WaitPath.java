@@ -23,6 +23,18 @@ public class WaitPath extends Phase{
     public void toMovingPhase(){
         changePhase(new MovingPhase());
     }
+    @Override
+    public void toEndTurnPhase(){
+        changePhase(new EndTurn());
+    }
+    @Override
+    public void toWaitHomePhase(){
+        changePhase(new WaitHome());
+    }
+    @Override
+    public void toWaitPathPhase(){
+        changePhase(new WaitPath());
+    }
 
     @Override
     public void left() throws InvalidTransitionException {

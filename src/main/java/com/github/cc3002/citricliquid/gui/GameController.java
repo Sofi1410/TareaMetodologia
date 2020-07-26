@@ -1,7 +1,11 @@
-package com.github.cc3002.citricjuice.model;
+package com.github.cc3002.citricliquid.gui;
 
+import com.github.cc3002.citricjuice.model.Handler.AtHomePanelHandler;
+import com.github.cc3002.citricjuice.model.Handler.MoreThanOnePathHandler;
+import com.github.cc3002.citricjuice.model.Handler.MoreThanOnePlayerHandler;
+import com.github.cc3002.citricjuice.model.Handler.NormaLevelObserver;
+import com.github.cc3002.citricjuice.model.Unit.*;
 import com.github.cc3002.citricjuice.model.board.*;
-import com.github.cc3002.citricliquid.gui.*;
 import com.github.cc3002.citricliquid.gui.Phases.InvalidMovementException;
 import com.github.cc3002.citricliquid.gui.Phases.InvalidTransitionException;
 import com.github.cc3002.citricliquid.gui.Phases.Phase;
@@ -392,31 +396,26 @@ public class GameController {
     public void evade(IUnit attacker,IUnit victim) throws InvalidTransitionException {
         int attack=attack(attacker);
         victim.evade(attack);
-        if(!victim.isK_O()) {
-            counterattack(victim, attacker);
-        }
-        else{
-            attacker.increaseStarsBy(victim);
-            attacker.increaseVictoriesBy(victim);
-            setOponnent(nullPLayer);
-            phase.toMovingPhase();
-            phase.canIfinish=true;
-        }
+        afterEvadeOrDefend(attacker,victim);
     }
     public void defend(IUnit attacker, IUnit victim) throws InvalidTransitionException {
         int attack=attack(attacker);
         victim.defend(attack);
-        if(!victim.isK_O()) {
-            counterattack(victim, attacker);
-        }
-        else{
+        afterEvadeOrDefend(attacker,victim);
+    }
+    public void afterEvadeOrDefend(IUnit attacker, IUnit victim) throws InvalidTransitionException {
+        if(victim.isK_O()){
+            setActualUnit(getOwner());
+            setOponnent(nullPLayer);
             attacker.increaseStarsBy(victim);
             attacker.increaseVictoriesBy(victim);
-            setOponnent(nullPLayer);
             phase.toMovingPhase();
-            phase.canIfinish=true;
+        }
+        else if(!victim.equals(getOwner())){
+            counterattack(victim,attacker);
         }
     }
+
     public void counterattack(IUnit attacker, IUnit victim){
         try {
             phase.toWaitFigthPhase(attacker,victim);
@@ -428,25 +427,44 @@ public class GameController {
     public void left() throws InvalidTransitionException {
         setSteps(getSteps()-1);
         phase.toMovingPhase();
+        setCanIMove(true);
         setPlayerPanel(getOwner(),getOwner().getPanel().getLeft());
+        if(steps==0){
+            stopMoving();
+        }
+
     }
 
     public void right() throws InvalidTransitionException {
         setSteps(getSteps()-1);
-        setPlayerPanel(getOwner(),getOwner().getPanel().getRight());
         phase.toMovingPhase();
-        tryToKeepMoving();
+        setCanIMove(true);
+        setPlayerPanel(getOwner(),getOwner().getPanel().getRight());
+        if(steps==0){
+            stopMoving();
+        }
     }
     public void up() throws InvalidTransitionException {
         setSteps(getSteps()-1);
-        setPlayerPanel(getOwner(),getOwner().getPanel().getUp());
         phase.toMovingPhase();
-        tryToKeepMoving();
+        setCanIMove(true);
+        setPlayerPanel(getOwner(),getOwner().getPanel().getUp());
+        if(steps==0){
+            stopMoving();
+        }
+
     }
     public void down() throws InvalidTransitionException {
         setSteps(getSteps()-1);
         phase.toMovingPhase();
+        setCanIMove(true);
         setPlayerPanel(getOwner(),getOwner().getPanel().getDown());
+        if(steps==0){
+            stopMoving();
+        }
+    }
+    public void stopMoving() throws InvalidTransitionException {
+        phase.toEndTurnPhase();
     }
 
 
@@ -481,7 +499,7 @@ public class GameController {
     public void trydotheFirstMove(){
         try {
             phase.firstMove();
-        } catch (InvalidMovementException e) {
+        } catch (InvalidMovementException | InvalidTransitionException e) {
             e.printStackTrace();
         }
     }
@@ -494,6 +512,7 @@ public class GameController {
     }
     public void tryToKeepMoving(){
         try {
+            phase.toMovingPhase();
             phase.keepMoving();
         } catch (InvalidTransitionException | InvalidMovementException e) {
             e.printStackTrace();
@@ -566,10 +585,7 @@ public class GameController {
         }
     }
 
-    public void stopMoving(){
-        setSteps(0);
 
-    }
 
 
     public void recover() throws  InvalidTransitionException {
@@ -587,14 +603,36 @@ public class GameController {
 
 
 
-    public void move(){
-        steps=dice();
+    public void move() {
         getOwner().increaseStarsBy((int) (Math.floor(getChapter()/5)+1));
-
         owner.addAtHomePanelnotification(atHomePanelNotification);
         owner.addAmountOfPlayerListener(moreTanOnePlayernotification);
         owner.addMoreTanOnePathnotification(moreTanOnePathnotification);
-        movePlayer();
+
+
+        steps=dice();
+        if(!getOwner().getCanImove()&&steps>0){
+            try {
+                phase.toWaitPathPhase();
+            } catch (InvalidTransitionException e) {
+                e.printStackTrace();
+            }
+        }
+        if(steps<0){
+            try {
+                phase.toEndTurnPhase();
+            } catch (InvalidTransitionException e) {
+                e.printStackTrace();
+            }
+        }
+        else {
+            while (steps>0 && getOwner().getCanImove()){
+                IPanel nextPanel= getOwner().getPanel().getNextPanels().iterator().next();
+                setPlayerPanel(getOwner(),nextPanel);
+
+            }
+        }
+
     }
 
     /**
@@ -606,14 +644,25 @@ public class GameController {
      */
     public void movePlayer(){
 
-        while (steps>0 && getOwner().getCanImove()) {
-            IPanel nextPanel = getNextPanels(getOwner().getPanel()).iterator().next();
-            setPlayerPanel(getOwner(),nextPanel);
-
-            steps -=1;
+        if(!getOwner().getCanImove()& steps>0){
+            try {
+                phase.toWaitPathPhase();
+            } catch (InvalidTransitionException e) {
+                e.printStackTrace();
+            }
         }
 
-    }
+        else{
+            try {
+                phase.toEndTurnPhase();
+            } catch (InvalidTransitionException e) {
+                e.printStackTrace();
+            }
+
+        }
+        }
+
+
 
     public void activatePanel(Player player, IPanel panel){
         panel.activateBy(player);
@@ -623,16 +672,18 @@ public class GameController {
 
 
     public void onMoreThanOnePlayer(boolean newValue)  {
-        setCanIMove(!newValue);
-        List<Player> opponents= new ArrayList<>();
-        opponents.addAll(getOwner().getPanel().getPlayers());
-        opponents.remove(getOwner());
-        numberOfOpponents=opponents.size();
-        setOponnent(opponents.get(0));
-        try{
-            phase.toWaitFigthPhase(getOwner(),getOponnent());}
-        catch (InvalidTransitionException e) {
-            e.printStackTrace();
+        if(!newValue) {
+            setCanIMove(false);
+            List<Player> opponents = new ArrayList<>();
+            opponents.addAll(getOwner().getPanel().getPlayers());
+            opponents.remove(getOwner());
+            numberOfOpponents = opponents.size();
+            setOponnent(opponents.get(0));
+            try {
+                phase.toWaitFigthPhase(getOwner(), getOponnent());
+            } catch (InvalidTransitionException e) {
+                e.printStackTrace();
+            }
         }
 
 
@@ -641,8 +692,8 @@ public class GameController {
 
     }
 
-    public void onMoreThanOnePath(boolean newValue){
-        if (newValue){
+    public void onMoreThanOnePath(boolean newValue)  {
+        if(!newValue) {
             setCanIMove(false);
             try{
             phase.toWaitPathPhase();}
@@ -650,15 +701,18 @@ public class GameController {
                 e.printStackTrace();
             }
         }
+
+
     }
 
-    public void onHomePanel(boolean atHome){
+    public void onHomePanel(boolean panel){
         setCanIMove(false);
-        try{
-            phase.toWaitHomePhase();}
-        catch (InvalidTransitionException e) {
-            e.printStackTrace();
-        }
+            try {
+                phase.toWaitHomePhase();
+            } catch (InvalidTransitionException e) {
+                e.printStackTrace();
+            }
+
 
     }
 
@@ -844,7 +898,9 @@ public class GameController {
         //Columna 4
 
         controller.setNextPanel(HP2,EP2);
+        controller.setNextPanel(HP2,NP4);
         HP2.setRight(EP2);
+        HP2.setLeft(NP4);
 
         controller.setNextPanel(EP1,NP7);
         controller.setNextPanel(EP1,BonusP2);
@@ -886,7 +942,11 @@ public class GameController {
 
 
         controller.setNextPanel(HP3,NP7);
+        controller.setNextPanel(HP3,NP8);
+        controller.setNextPanel(HP3,DropP3);
         HP3.setLeft(NP7);
+        HP3.setDown(NP8);
+        HP3.setRight(DropP3);
 
         //columna 7
         controller.setNextPanel(NP9,BossP2);
@@ -928,7 +988,9 @@ public class GameController {
         NP12.setDown(NP11);
 
         controller.setNextPanel(HP4,BonusP4);
+        controller.setNextPanel(HP4,NP12);
         HP4.setUp(BonusP4);
+        HP4.setDown(NP12);
 
         controller.setNextPanel(BonusP4,HP4);
         controller.setNextPanel(BonusP4,DropP3);

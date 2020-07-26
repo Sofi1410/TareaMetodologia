@@ -1,6 +1,6 @@
 package com.github.cc3002.citricjuice.Phases;
 
-import com.github.cc3002.citricjuice.model.GameController;
+import com.github.cc3002.citricliquid.gui.GameController;
 import com.github.cc3002.citricliquid.gui.Phases.InvalidMovementException;
 import org.junit.jupiter.api.Test;
 

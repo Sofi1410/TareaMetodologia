@@ -1,10 +1,9 @@
 package com.github.cc3002.citricjuice.model.board;
 
-import com.github.cc3002.citricjuice.model.Player;
+
+import com.github.cc3002.citricjuice.model.Unit.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.util.*;
 
 /**
@@ -88,48 +87,23 @@ public abstract class AbstractPanel implements IPanel {
   }
 
 
-
-
-
   @Override
-  public boolean equals(final Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (!(o instanceof AbstractPanel)) {
-      return false;
-    }
-    final AbstractPanel that = (AbstractPanel) o;
-    boolean result = equalNextPanels(1);
-    result = result && id == that.id &&
-            Objects.equals(getPlayers(), that.getPlayers());
-    return result;
-  }
-
-  @Override
-  public boolean equalNextPanels(final int i) {
-    boolean result = true;
-    for (IPanel panel :
-            nextPanels) {
-      result = result && panel.equalNextPanels(i - 1);
-    }
-    return result;
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof AbstractPanel)) return false;
+    AbstractPanel that = (AbstractPanel) o;
+    return id == that.id &&
+            Objects.equals(nextPanels, that.nextPanels) &&
+            Objects.equals(Players, that.Players) &&
+            Objects.equals(left, that.left) &&
+            Objects.equals(right, that.right) &&
+            Objects.equals(up, that.up) &&
+            Objects.equals(down, that.down);
   }
 
   @Override
   public int hashCode() {
-    return 31 * Objects.hash(id, getPlayers()) + nextPanelsHash(1);
-  }
-
-  @Override
-  public int nextPanelsHash(int acc) {
-    int result = 1;
-    if (acc == 0) {
-      return result;
-    }
-    for (IPanel element : nextPanels)
-      result = 31 * result + (element == null ? 0 : element.nextPanelsHash(acc - 1));
-    return result;
+    return Objects.hash(id);
   }
 
   /**

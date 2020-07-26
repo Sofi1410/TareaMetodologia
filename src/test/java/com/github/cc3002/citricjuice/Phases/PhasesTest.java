@@ -1,9 +1,8 @@
 package com.github.cc3002.citricjuice.Phases;
 
-import com.github.cc3002.citricjuice.model.BossUnit;
-import com.github.cc3002.citricjuice.model.GameController;
-import com.github.cc3002.citricjuice.model.Player;
-import com.github.cc3002.citricjuice.model.WildUnit;
+import com.github.cc3002.citricjuice.model.Unit.BossUnit;
+import com.github.cc3002.citricliquid.gui.GameController;
+import com.github.cc3002.citricjuice.model.Unit.*;
 import com.github.cc3002.citricjuice.model.board.*;
 import com.github.cc3002.citricliquid.gui.Phases.InvalidMovementException;
 import org.junit.jupiter.api.BeforeEach;
@@ -142,12 +141,31 @@ public class PhasesTest {
     // conect the aproppiate panels, and make situaciones so we cant wait the players response
     @RepeatedTest(50)
     public void StartandRecoveryPhaseTest() throws InvalidMovementException {
-        controller.setNextPanel(aHP1,DropP1);
-        controller.setNextPanel(DropP1,NP4);
-        controller.setNextPanel(NP4,NP5);
-        controller.setNextPanel(NP5,NP6);
-        controller.setNextPanel(NP6,NP7);
-        controller.setNextPanel(NP7,BonusP1);
+        controller.setNextPanel(aHP1,NP4);
+        controller.setNextPanel(aHP1,NP1);
+        aHP1.setLeft(NP1);
+        aHP1.setUp(NP4);
+        controller.setNextPanel(NP4,aHP1);
+        controller.setNextPanel(NP4,DropP1);
+
+        NP4.setLeft(NP1);
+        NP4.setDown(aHP1);
+        controller.setNextPanel(DropP1,NP1);
+        controller.setNextPanel(DropP1, NP4);
+        DropP1.setRight(NP4);
+        DropP1.setDown(NP1);
+
+        controller.setNextPanel(NP1,DropP1);
+        controller.setNextPanel(NP1,aHP1);
+        NP1.setRight(aHP1);
+        NP1.setUp(DropP1);
+
+        //Fase de Inicio
+        //Caminos conectados de la forma
+        //DropP1 ------ NP4
+        //  |            |
+        // NP1  ------ aHP1
+
         assertEquals("Start_Phase",controller.getCurrentPhase());
         assertEquals(controller.getOwner(),suguri);
         controller.getOwner().setCurrentHP(-20);
@@ -173,85 +191,142 @@ public class PhasesTest {
 
 
     @RepeatedTest(50)
-    public void StartandPhaseTest() throws InvalidMovementException {
-        controller.setNextPanel(aHP1,DropP1);
-        controller.setNextPanel(DropP1,NP4);
-        controller.setNextPanel(NP4,NP5);
-        controller.setNextPanel(NP5,NP6);
-        controller.setNextPanel(NP6,NP7);
-        controller.setNextPanel(NP7,BonusP1);
+    public void StartTest() throws InvalidMovementException {
+        controller.setNextPanel(aHP1,NP4);
+        controller.setNextPanel(aHP1,NP1);
+        aHP1.setLeft(NP1);
+        aHP1.setUp(NP4);
+        controller.setNextPanel(NP4,aHP1);
+        controller.setNextPanel(NP4,DropP1);
+
+        NP4.setLeft(NP1);
+        NP4.setDown(aHP1);
+        controller.setNextPanel(DropP1,NP1);
+        controller.setNextPanel(DropP1, NP4);
+        DropP1.setRight(NP4);
+        DropP1.setDown(NP1);
+
+        controller.setNextPanel(NP1,DropP1);
+        controller.setNextPanel(NP1,aHP1);
+        NP1.setRight(aHP1);
+        NP1.setUp(DropP1);
+
+        //Fase de Inicio
+        //Caminos conectados de la forma
+        //DropP1 ------ NP4
+        //  |            |
+        // NP1  ------ aHP1
+
         assertEquals("Start_Phase",controller.getCurrentPhase());
         assertEquals(controller.getOwner(),suguri);
+        //Inicia y se encuentra con más de un camino
         controller.tryToStart();
         controller.getOwner().setSeed(seed);
         int dice= new Random(seed).nextInt(6)+1;
-        assertEquals("Moving_Phase",controller.getCurrentPhase());
+        assertEquals("WaitPath_Phase",controller.getCurrentPhase());
 
     }
 
-    @Test
-    public void WaitHomeTest() throws InvalidMovementException {
-        controller.setNextPanel(aHP1,NP2);
-        controller.setNextPanel(DropP1,NP1);
-        controller.setNextPanel(NP2, aHP1);
-        controller.setNextPanel(NP4,NP5);
-        controller.setPlayerPanel(suguri,NP2);
 
-        assertEquals("Start_Phase",controller.getCurrentPhase());
-        assertEquals(controller.getOwner(),suguri);
-        assertEquals(suguri.getMaxHP(),suguri.getCurrentHP());
-        controller.tryToStart();
-        assertNotEquals("Recovery_Phase",controller.getCurrentPhase());
-        assertNotEquals("Moving_Phase",controller.getCurrentPhase());
-        long seed= new Random().nextLong();
-        controller.getOwner().setSeed(seed);
-        int dice = new Random(seed).nextInt(6) + 1;
-        assertEquals("WaitHome_Phase",controller.getCurrentPhase());
-        assertEquals(aHP1,controller.getOwner().getPanel());
-    }
     @RepeatedTest(100)
     public void stayAtHomeTest() {
         controller.setNextPanel(aHP1,NP4);
+        controller.setNextPanel(aHP1,NP1);
+        aHP1.setLeft(NP1);
+        aHP1.setUp(NP4);
+        controller.setNextPanel(NP4,aHP1);
+        controller.setNextPanel(NP4,DropP1);
+
+        NP4.setLeft(NP1);
+        NP4.setDown(aHP1);
         controller.setNextPanel(DropP1,NP1);
-        controller.setNextPanel(NP2, aHP1);
-        controller.setNextPanel(NP4,NP5);
-        controller.setPlayerPanel(suguri,NP2);
+        controller.setNextPanel(DropP1, NP4);
+        DropP1.setRight(NP4);
+        DropP1.setDown(NP1);
+
+        controller.setNextPanel(NP1,DropP1);
+        controller.setNextPanel(NP1,aHP1);
+        NP1.setRight(aHP1);
+        NP1.setUp(DropP1);
+
+        //Fase de Inicio
+        //Caminos conectados de la forma
+        //DropP1 ------ NP4
+        //  |            |
+        // NP1  ------ aHP1
 
         assertEquals("Start_Phase",controller.getCurrentPhase());
         assertEquals(controller.getOwner(),suguri);
         suguri.setCurrentHP(suguri.getMaxHP()-1);
         assertNotEquals(suguri.getMaxHP(),controller.getOwner().getCurrentHP());
 
-
-        controller.tryToStart();
-
         long seed= new Random().nextLong();
-        controller.getOwner().setSeed(seed);
         int dice = new Random(seed).nextInt(6) + 1;
-        assertEquals("WaitHome_Phase",controller.getCurrentPhase());
+        controller.getOwner().setSeed(seed);
+
+        //Jugado decide iniciar el turno
+        controller.tryToStart();
         assertEquals(aHP1, controller.getOwner().getPanel());
+        assertEquals("WaitPath_Phase",controller.getCurrentPhase());
 
-        controller.tryToStayAtHome();
+        //Jugador decide ir a la izquierda llega a NP1
+        controller.tryToGoLeft();
+        assertEquals(NP1, controller.getOwner().getPanel());
+        if(dice>2){
+            assertEquals("WaitPath_Phase", controller.getCurrentPhase());
+            //TRATA de ir hacia la derecha y se encuentra con el panel de casa
+            controller.tryToGoRight();
+            assertEquals(aHP1, controller.getOwner().getPanel());
+            assertEquals("WaitHome_Phase", controller.getCurrentPhase());
 
-        assertEquals(0, controller.getSteps());
-        assertEquals(1,suguri.getStars());
-        assertEquals(suguri.getMaxHP(),suguri.getCurrentHP());
-        assertEquals(polar,controller.getOwner());
+            //Se queda en casa y por ello se termina el turno
+            controller.tryToStayAtHome();
+            assertEquals(aHP1, suguri.getPanel());
+            assertEquals(0, controller.getSteps());
+            //estrellas del turno
+            assertEquals(1,suguri.getStars());
+            //se rellena su HP por el homePanel
+            assertEquals(suguri.getMaxHP(),suguri.getCurrentHP());
+            assertEquals(suguri.getMaxHP(),suguri.getCurrentHP());
+            assertEquals(polar,controller.getOwner());
+
+        }
+
+
 
     }
 
     @RepeatedTest(100)
     public void keepMovingTest() throws InvalidMovementException {
         controller.setNextPanel(aHP1,NP4);
-        controller.setNextPanel(NP2, aHP1);
-        controller.setNextPanel(NP4,NP5);
-        controller.setNextPanel(NP5,DropP1);
+        controller.setNextPanel(aHP1,NP1);
+        aHP1.setLeft(NP1);
+        aHP1.setUp(NP4);
+        controller.setNextPanel(NP4,aHP1);
+        controller.setNextPanel(NP4,DropP1);
+
+        NP4.setLeft(NP1);
+        NP4.setDown(aHP1);
         controller.setNextPanel(DropP1,NP1);
-        controller.setNextPanel(NP1,NP6);
-        controller.setPlayerPanel(suguri,NP2);
+        controller.setNextPanel(DropP1, NP4);
+        DropP1.setRight(NP4);
+        DropP1.setDown(NP1);
+
+        controller.setNextPanel(NP1,DropP1);
+        controller.setNextPanel(NP1,aHP1);
+        NP1.setRight(aHP1);
+        NP1.setUp(DropP1);
+
+        //Fase de Inicio
+        //Caminos conectados de la forma
+        //DropP1 ------ NP4
+        //  |            |
+        // NP1  ------ aHP1
+
         long seed= new Random().nextLong();
         controller.getOwner().setSeed(seed);
         int dice = new Random(seed).nextInt(6) + 1;
+        controller.setPlayerPanel(suguri,NP4);
 
         assertEquals("Start_Phase", controller.getCurrentPhase());
         assertEquals(controller.getOwner(), suguri);
@@ -259,19 +334,32 @@ public class PhasesTest {
         assertNotEquals(suguri.getMaxHP(),controller.getOwner().getCurrentHP());
 
         controller.tryToStart();
-        assertNotEquals("Recovery_Phase", controller.getCurrentPhase());
-        assertNotEquals("Moving_Phase", controller.getCurrentPhase());
-        assertEquals("WaitHome_Phase", controller.getCurrentPhase());
-        assertEquals(aHP1, controller.getOwner().getPanel());
-        assertEquals(dice-1, controller.getSteps());
+        assertEquals("WaitPath_Phase", controller.getCurrentPhase());
+        assertEquals(NP4, controller.getOwner().getPanel());
 
-        controller.tryToKeepMoving();
-        if (dice == 2) {
-            assertEquals(NP4, controller.getOwner().getPanel());
+        controller.tryToGoDown();
+        assertEquals(aHP1, controller.getOwner().getPanel());
+
+        if(dice>2) {
+            assertEquals("WaitHome_Phase", controller.getCurrentPhase());
+            controller.tryToKeepMoving();
+            assertEquals("WaitPath_Phase", controller.getCurrentPhase());
+            controller.tryToGoLeft();
+            assertEquals(NP1, controller.getOwner().getPanel());
+            assertEquals("WaitPath_Phase", controller.getCurrentPhase());
+        }
+        if(dice==2){
+            assertEquals("WaitHome_Phase", controller.getCurrentPhase());
+            controller.tryToKeepMoving();
+            assertEquals("WaitPath_Phase", controller.getCurrentPhase());
+            controller.tryToGoLeft();
+            assertEquals(NP1, controller.getOwner().getPanel());
+            assertEquals("EndTurn_Phase", controller.getCurrentPhase());
         }
         if(dice==1){
-            assertEquals(aHP1, controller.getOwner().getPanel());
+            assertEquals("EndTurn_Phase", controller.getCurrentPhase());
         }
+
 
 
 
@@ -281,16 +369,26 @@ public class PhasesTest {
 
     @RepeatedTest(50)
     public void WaitPathTest() throws InvalidMovementException {
-        NP1.setLeft(NP2);
-        NP1.setRight(aHP1);
+
         controller.setNextPanel(aHP1,NP1);
-        controller.setNextPanel(NP1,NP2);
+        controller.setNextPanel(NP1,aHP1);
         controller.setNextPanel(NP1,NP3);
 
         controller.setNextPanel(NP3,NP4);
         controller.setNextPanel(NP3,NP5);
-        controller.setNextPanel(NP5,NP6);
-        controller.setPlayerPanel(panda,NP2);
+
+        controller.setNextPanel(aHP1,NP3);
+        NP1.setLeft(aHP1);
+        NP1.setUp(NP3);
+        aHP1.setUp(NP3);
+        aHP1.setRight(NP1);
+        controller.setPlayerPanel(panda,NP3);
+
+        //conexión
+        //      NP3
+        //    /    \
+        //  aHP1---NP1
+
         assertEquals(aHP1,controller.getOwner().getPanel());
 
         assertEquals("Start_Phase",controller.getCurrentPhase());
@@ -299,12 +397,40 @@ public class PhasesTest {
         controller.getOwner().setSeed(seed);
         int dice = new Random(seed).nextInt(6) + 1;
         controller.tryToStart();
+        assertEquals(aHP1,controller.getOwner().getPanel());
         assertEquals("WaitPath_Phase", controller.getCurrentPhase());
-        controller.tryToGoLeft();
-        assertEquals(NP2,controller.getOwner().getPanel());
-        //Como decide ir a la izq al panel NP2 debe llegar a la
-        //fase de esperar a pelear
-        assertEquals("WaitFight_Phase", controller.getCurrentPhase());
+        //decide ir a la der
+        controller.tryToGoRight();
+        assertEquals(dice-1,controller.getSteps());
+        assertEquals(NP1,controller.getOwner().getPanel());
+        if(dice>2) {
+
+            assertEquals("WaitPath_Phase", controller.getCurrentPhase());
+
+            controller.tryToGoRUp();
+            assertEquals(dice - 2, controller.getSteps());
+            assertEquals(NP3, controller.getOwner().getPanel());
+            //Como NP3 no tiene mas conexiones se queda en la fase de escoger
+            //camino porque aun le quedan pasos
+            assertEquals("WaitFight_Phase", controller.getCurrentPhase());
+        }
+        if(dice==2) {
+            //solo da dos pasos, por ello al llegar a np3 DECIDE TERMINAR EL TURNO
+            controller.tryToGoRUp();
+            assertEquals(dice - 2, controller.getSteps());
+            assertEquals(NP3, controller.getOwner().getPanel());
+            //Como NP3 no tiene mas conexiones se queda en la fase de movimiento
+            assertEquals("EndTurn_Phase", controller.getCurrentPhase());
+        }
+        if(dice==1){
+            //Al tener un unico movimiento , se va a la fase de termino
+            assertEquals("EndTurn_Phase", controller.getCurrentPhase());
+        }
+
+
+
+
+
 
 
 
@@ -313,11 +439,24 @@ public class PhasesTest {
     }
     @RepeatedTest(100)
     public void WaitFightTest() throws InvalidMovementException {
-        controller.setNextPanel(aHP1,NP2);
-        controller.setNextPanel(DropP1,NP1);
-        controller.setNextPanel(NP2,NP4);
-        controller.setNextPanel(NP4,NP5);
-        controller.setPlayerPanel(pardo,NP4);
+        controller.setNextPanel(aHP1,NP1);
+        controller.setNextPanel(NP1,aHP1);
+        controller.setNextPanel(NP1,NP3);
+
+        controller.setNextPanel(NP3,NP4);
+        controller.setNextPanel(NP3,NP5);
+
+        controller.setNextPanel(aHP1,NP3);
+        NP1.setLeft(aHP1);
+        NP1.setUp(NP3);
+        aHP1.setUp(NP3);
+        aHP1.setRight(NP1);
+        controller.setPlayerPanel(panda,NP3);
+
+        //conexión
+        //      NP3
+        //    /    \
+        //  aHP1---NP1
 
         controller.getOwner().setSeed(seed);
         int dice = new Random(seed).nextInt(6) + 1;
@@ -326,30 +465,50 @@ public class PhasesTest {
         assertEquals(controller.getOwner(),suguri);
         assertEquals(suguri.getMaxHP(),suguri.getCurrentHP());
         controller.tryToStart();
-        assertNotEquals("Recovery_Phase",controller.getCurrentPhase());
+        assertEquals("WaitPath_Phase",controller.getCurrentPhase());
+        controller.tryToGoRUp();
+        assertEquals(dice-1,controller.getSteps());
+        assertEquals(NP3, controller.getOwner().getPanel());
         if(dice>1) {
             assertEquals("WaitFight_Phase", controller.getCurrentPhase());
-            assertEquals(NP4, controller.getOwner().getPanel());
+            controller.tryToKeepMoving();
+            assertEquals(NP3,controller.getOwner().getPanel());
+            assertEquals("WaitPath_Phase",controller.getCurrentPhase());
         }
         else{
-            assertEquals("Moving_Phase",controller.getCurrentPhase());
+            assertEquals(0,controller.getSteps());
         }
     }
 
-    @RepeatedTest(100)
+    @RepeatedTest(50)
     public void figthPhase() throws InvalidMovementException {
-        controller.setNextPanel(aHP1,NP2);
-        controller.setNextPanel(DropP1,NP1);
-        controller.setNextPanel(NP2,NP4);
-        controller.setNextPanel(NP4,NP5);
-        controller.setPlayerPanel(pardo,NP4);
+        controller.setNextPanel(aHP1,NP1);
+        controller.setNextPanel(NP1,aHP1);
+        controller.setNextPanel(NP1,NP3);
+
+        controller.setNextPanel(NP3,NP4);
+        controller.setNextPanel(NP3,NP5);
+
+        controller.setNextPanel(aHP1,NP3);
+        NP1.setLeft(aHP1);
+        NP1.setUp(NP3);
+        aHP1.setUp(NP3);
+        aHP1.setRight(NP1);
+        controller.setPlayerPanel(pardo,NP3);
+
+        //conexión
+        //      NP3(Panda)
+        //    /    \
+        //  aHP1---NP1
+
         controller.getOwner().setSeed(seed);
         int dice = new Random(seed).nextInt(6) + 1;
         controller.tryToStart();
+        controller.tryToGoRUp();
         if(dice>1) {
             assertEquals("WaitFight_Phase", controller.getCurrentPhase());
-            assertEquals(NP4, controller.getOwner().getPanel());
-            //owner ataca a opponent
+            assertEquals(NP3, controller.getOwner().getPanel());
+            //owner ataca a opponent(pardo)
 
             controller.tryToFight();
             assertEquals("WaitFight_Phase", controller.getCurrentPhase());
@@ -378,7 +537,7 @@ public class PhasesTest {
                     int AtkRoll2 = new Random(seed+4).nextInt(6) + 1;
                     pardo.setSeed(seed+3);
                     int DefRoll2 = new Random(seed+3).nextInt(6) + 1;
-                    //owner decide defender
+                    //owner decide defender y se termina la pelea
                     controller.tryToDefend();
                     int damage=Math.max(7-Math.max(1,AtkRoll2+4-DefRoll2+1),0);
                     assertEquals(damage,controller.getOwner().getCurrentHP());
@@ -405,30 +564,43 @@ public class PhasesTest {
 
         }
         else{
-            assertEquals("Moving_Phase",controller.getCurrentPhase());
+            //en este caso no le quedan pasos , por ello
+            //se va al END TURN phase
+            assertEquals("EndTurn_Phase",controller.getCurrentPhase());
         }
 
     }
     @RepeatedTest(50)
     public void notfigthPhase() throws InvalidMovementException {
-        controller.setNextPanel(aHP1,DropP1);
-        controller.setNextPanel(DropP1,NP4);
-        controller.setNextPanel(NP4,NP5);
-        controller.setNextPanel(NP5,NP6);
-        controller.setNextPanel(NP6,NP7);
-        controller.setNextPanel(NP7,BonusP1);
-        controller.setPlayerPanel(pardo,NP4);
+        controller.setNextPanel(aHP1,NP1);
+        controller.setNextPanel(NP1,aHP1);
+        controller.setNextPanel(NP1,NP3);
+
+        controller.setNextPanel(NP3,NP4);
+        controller.setNextPanel(NP3,NP5);
+
+        controller.setNextPanel(aHP1,NP3);
+        NP1.setLeft(aHP1);
+        NP1.setUp(NP3);
+        aHP1.setUp(NP3);
+        aHP1.setRight(NP1);
+        controller.setPlayerPanel(pardo,NP3);
+
+        //conexión
+        //      NP3(Panda)
+        //    /    \
+        //  aHP1---NP1
 
         controller.getOwner().setSeed(seed);
         int dice = new Random(seed).nextInt(6) + 1;
         controller.tryToStart();
+        controller.tryToGoRUp();
         if(dice>1) {
             assertEquals("WaitFight_Phase", controller.getCurrentPhase());
-            assertEquals(NP4, controller.getOwner().getPanel());
-
+            assertEquals(NP3, controller.getOwner().getPanel());
             //owner decide no pelear
             controller.tryToKeepMoving();
-            assertEquals("Moving_Phase", controller.getCurrentPhase());
+            assertEquals("WaitPath_Phase", controller.getCurrentPhase());
 
         }
     }

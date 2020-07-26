@@ -1,4 +1,4 @@
-package com.github.cc3002.citricjuice.model;
+package com.github.cc3002.citricjuice.model.Unit;
 
 public interface IUnit {
     void increaseVictoriesByPlayer(Player player);
