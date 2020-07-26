@@ -1,6 +1,7 @@
 package com.github.cc3002.citricjuice.model.board;
 
-import com.github.cc3002.citricjuice.model.Player;
+
+import com.github.cc3002.citricjuice.model.Unit.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -17,6 +18,13 @@ public abstract class AbstractPanel implements IPanel {
   private final int id;
   private final Set<IPanel> nextPanels;
   private final List<Player> Players;
+  private  IPanel left;
+  private  IPanel right;
+  private  IPanel up;
+  private  IPanel down;
+
+
+
   /**
    * Creates a new panel.
    *
@@ -26,6 +34,7 @@ public abstract class AbstractPanel implements IPanel {
     nextPanels = new HashSet<>();
     Players = new ArrayList<>();
     this.id = id;
+
   }
 
   public int getId() {
@@ -42,7 +51,7 @@ public abstract class AbstractPanel implements IPanel {
    * @return Set<IPanel>
    */
   public Set<IPanel> getNextPanels() {
-    return Set.copyOf(nextPanels);
+    return nextPanels;
   }
 
   /**
@@ -51,10 +60,13 @@ public abstract class AbstractPanel implements IPanel {
    * @param panel the panel to be added.
    */
   public void addNextPanel(IPanel panel) {
-    if (!this.equals(panel) ) {
+    if (this.getId()!=panel.getId() ) {
       nextPanels.add(panel);
+
     }
   }
+
+
 
   /**
    * Adds a new player in the panel
@@ -63,6 +75,7 @@ public abstract class AbstractPanel implements IPanel {
    */
   public void addPlayer(Player player) {
     Players.add(player);
+
   }
   /**
    * Removes a player in the panel
@@ -73,45 +86,24 @@ public abstract class AbstractPanel implements IPanel {
     Players.remove(player);
   }
 
-  @Override
-  public boolean equals(final Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (!(o instanceof AbstractPanel)) {
-      return false;
-    }
-    final AbstractPanel that = (AbstractPanel) o;
-    boolean result = equalNextPanels(1);
-    result = result && id == that.id &&
-            Objects.equals(Players, that.Players);
-    return result;
-  }
 
   @Override
-  public boolean equalNextPanels(final int i) {
-    boolean result = true;
-    for (IPanel panel :
-            nextPanels) {
-      result = result && panel.equalNextPanels(i - 1);
-    }
-    return result;
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof AbstractPanel)) return false;
+    AbstractPanel that = (AbstractPanel) o;
+    return id == that.id &&
+            Objects.equals(nextPanels, that.nextPanels) &&
+            Objects.equals(Players, that.Players) &&
+            Objects.equals(left, that.left) &&
+            Objects.equals(right, that.right) &&
+            Objects.equals(up, that.up) &&
+            Objects.equals(down, that.down);
   }
 
   @Override
   public int hashCode() {
-    return 31 * Objects.hash(id, Players) + nextPanelsHash(1);
-  }
-
-
-  public int nextPanelsHash(int acc) {
-    int result = 1;
-    if (acc == 0) {
-      return result;
-    }
-    for (IPanel element : nextPanels)
-      result = 31 * result + (element == null ? 0 : element.nextPanelsHash(acc - 1));
-    return result;
+    return Objects.hash(id);
   }
 
   /**
@@ -121,10 +113,42 @@ public abstract class AbstractPanel implements IPanel {
   public abstract void activateBy(final @NotNull Player player);
 
 
+
   public List<Player> getPlayers() {
     return Players;
   }
 
+
+
+  public IPanel getLeft() {
+    return left;
+  }
+  public IPanel getRight() {
+    return right;
+  }
+  public IPanel getUp() {
+    return up;
+  }
+  public IPanel getDown() {
+    return down;
+  }
+
+
+  public void setLeft(IPanel left) {
+    this.left = left;
+  }
+
+  public void setRight(IPanel right) {
+    this.right = right;
+  }
+
+  public void setUp(IPanel up) {
+    this.up = up;
+  }
+
+  public void setDown(IPanel down) {
+    this.down = down;
+  }
 }
 
 

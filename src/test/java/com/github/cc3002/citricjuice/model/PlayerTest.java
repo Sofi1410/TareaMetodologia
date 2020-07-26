@@ -1,4 +1,5 @@
 package com.github.cc3002.citricjuice.model;
+import com.github.cc3002.citricjuice.model.Unit.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -59,7 +60,7 @@ public class PlayerTest {
     int suguriHP= suguri.getCurrentHP();
     int atk=chicken.attack();
     int evd=suguri.getEvd()+r;
-    suguri.avoid(atk);
+    suguri.evade(atk);
     if(atk >= evd){
 
       int expectedHP=Math.max(0,(suguriHP-atk));

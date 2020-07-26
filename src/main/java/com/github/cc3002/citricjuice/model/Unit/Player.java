@@ -1,7 +1,7 @@
-package com.github.cc3002.citricjuice.model;
+package com.github.cc3002.citricjuice.model.Unit;
 
 import com.github.cc3002.citricjuice.model.board.IPanel;
-import com.github.cc3002.citricliquid.gui.NormaGoal;
+import com.github.cc3002.citricliquid.gui.*;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -12,7 +12,11 @@ public class Player extends AbstractUnit implements IUnit {
     private NormaGoal normaGoal;
     private int normaLevel;
     private IPanel homePanel;
-    private PropertyChangeSupport normaLevelnotification= new PropertyChangeSupport(this);
+    private boolean canImove;
+    private final PropertyChangeSupport normaLevelnotification= new PropertyChangeSupport(this);
+    private final PropertyChangeSupport atHomePanel= new PropertyChangeSupport(this);
+    private final PropertyChangeSupport moreThanOnePlayer= new PropertyChangeSupport(this);
+    private final PropertyChangeSupport moreThanOnePath= new PropertyChangeSupport(this);
 
 
     /**
@@ -22,7 +26,7 @@ public class Player extends AbstractUnit implements IUnit {
      * @param hp   the initial (and max) hit points of the character.
      * @param atk  the base damage the character does.
      * @param def  the base defense of the character.
-     * @param evd
+     * @param evd the points to avoid the attack
      */
 
     public Player( String name, int hp, int atk, int def, int evd) {
@@ -31,6 +35,7 @@ public class Player extends AbstractUnit implements IUnit {
         normaLevel = 1;
         this.homePanel=null;
         this.normaGoal=NormaGoal.STARS;
+        this.canImove=false;
 
     }
 
@@ -70,7 +75,19 @@ public class Player extends AbstractUnit implements IUnit {
      */
     public void setActualPanel(IPanel newPanel){
         actualPanel=newPanel;
+        if(this.getHomePanel().getId()==newPanel.getId()) {
+            atHomePanel.firePropertyChange("AM_I_at_Home", false,true);
+        }
 
+        else if(newPanel.getPlayers().size()>1) {
+            moreThanOnePlayer.firePropertyChange("More_than_one_player",
+                    true,false);
+        }
+
+        else if(newPanel.getNextPanels().size()>1) {
+            moreThanOnePath.firePropertyChange("More_than_one_path",
+                    true,false);
+        }
     }
     /**
      * updates the home panel
@@ -94,7 +111,8 @@ public class Player extends AbstractUnit implements IUnit {
      */
     public void normaClear() {
         normaLevel++;
-        normaLevelnotification.firePropertyChange("New_Normalevel",normaLevel-1,normaLevel);
+        normaLevelnotification.firePropertyChange("New_Normalevel",
+                normaLevel-1,normaLevel);
     }
 
 
@@ -224,6 +242,8 @@ public class Player extends AbstractUnit implements IUnit {
         this.reduceStarsBy((int) Math.ceil(this.getStars()*0.5));
     }
 
+
+
     /**
      * The loser (Player) add the appropriate amount of stars to the winner
      * an reduce it appropriately
@@ -241,6 +261,32 @@ public class Player extends AbstractUnit implements IUnit {
     public void addNormaLevelListener(PropertyChangeListener Listener){
         normaLevelnotification.addPropertyChangeListener(Listener);
     }
+    /**
+     * Method that adss a listener in the unit
+     * @param Listener new Listener
+     */
+
+    public void addAtHomePanelnotification(PropertyChangeListener Listener){
+        atHomePanel.addPropertyChangeListener(Listener);
+    }
+
+
+    public void addAmountOfPlayerListener(PropertyChangeListener Listener){
+        moreThanOnePlayer.addPropertyChangeListener(Listener);
+    }
+
+
+    public void addMoreTanOnePathnotification(PropertyChangeListener Listener){
+        moreThanOnePath.addPropertyChangeListener(Listener);
+    }
+
+    public void setCanImove(boolean a){
+        this.canImove=a;
+    }
+    public boolean getCanImove(){
+        return canImove;
+    }
+
 
 
     /**

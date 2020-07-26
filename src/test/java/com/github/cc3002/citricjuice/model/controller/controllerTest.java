@@ -1,10 +1,9 @@
 package com.github.cc3002.citricjuice.model.controller;
 
-import com.github.cc3002.citricjuice.model.BossUnit;
-import com.github.cc3002.citricjuice.model.Player;
-import com.github.cc3002.citricjuice.model.WildUnit;
+import com.github.cc3002.citricjuice.model.Unit.BossUnit;
+import com.github.cc3002.citricjuice.model.Unit.*;
 import com.github.cc3002.citricjuice.model.board.*;
-import com.github.cc3002.citricjuice.model.GameController;
+import com.github.cc3002.citricliquid.gui.GameController;
 import com.github.cc3002.citricliquid.gui.NormaGoal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
@@ -180,8 +179,12 @@ public class controllerTest {
         controller.getOwner().getPanel().removePlayer(controller.getOwner());
         controller.getOwner().setActualPanel(testBonusPanel);
         controller.setNextPanel(testHomePanel,testBonusPanel);
+        controller.setNextPanel(testBonusPanel,testBonusPanel2);
         controller.setNextPanel(testBonusPanel,testHomePanel);
-        controller.movePlayer();
+        testBonusPanel.setLeft(testHomePanel);
+
+        controller.tryToStart();
+        controller.tryToGoLeft();
         assertTrue(testHomePanel.getPlayers().contains(controller.getOwner()));
         controller.finishTurn();
         //El jugador en turno polar está en su home panel
@@ -197,21 +200,7 @@ public class controllerTest {
 
 
 
-    @Test
-    public void winnerTest(){
-        controller.setNextPanel(testHomePanel,testBonusPanel);
-        controller.setNextPanel(testBonusPanel,testHomePanel);
-        controller.setNextPanel(testHomePanel2,testHomePanel3);
-        controller.setNextPanel(testHomePanel3,testHomePanel4);
-        controller.setNextPanel(testHomePanel4,testBonusPanel4);
-        controller.setNextPanel(testBonusPanel4,testHomePanel4);
-        while (controller.getWinner()==null) {
-            controller.movePlayer();
-            controller.finishTurn();
-        }
-        assertEquals(controller.getOwner(),controller.getWinner());
 
-    }
 
 
 

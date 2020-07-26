@@ -1,4 +1,4 @@
-package com.github.cc3002.citricjuice.model;
+package com.github.cc3002.citricjuice.model.Unit;
 
 import java.util.Random;
 
@@ -168,7 +168,6 @@ public abstract class AbstractUnit implements IUnit {
 
     /**
      * Increases this player's Victory´s count by an amount.
-     * @return
      */
     public abstract void   increaseVictoriesBy(IUnit IUnit);
     /**
@@ -198,7 +197,9 @@ public abstract class AbstractUnit implements IUnit {
      * @param attack made by the opponent
      */
     public void defend(int attack) {
-      this.setCurrentHP(this.getCurrentHP()-Math.max(1, attack - (this.roll() + this.getDef())));
+      int def=(this.getDef() + this.roll());
+      int damage=Math.max(1, attack - def);
+      this.setCurrentHP(this.getCurrentHP()-damage);
     }
 
     /**
@@ -206,11 +207,15 @@ public abstract class AbstractUnit implements IUnit {
     * if he attack is bigger than evd reduce its HP
     * @param attack made by the opponent
     */
-    public void avoid(int attack) {
+    public void evade(int attack) {
     int evd=(this.getEvd() + this.roll());
     int HP=this.getCurrentHP();
-    int actual = Math.max(((evd > attack)? HP:HP-attack),0);
-    this.setCurrentHP(actual);
+    if(attack>=evd){
+      int actual = Math.max((HP-attack),0);
+      this.setCurrentHP(actual);
+    }
+
+
     }
 
   /**

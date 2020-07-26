@@ -1,4 +1,5 @@
 package com.github.cc3002.citricjuice.model;
+import com.github.cc3002.citricjuice.model.Unit.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -51,7 +52,7 @@ public class WildUnitTest {
         suguri.setSeed(seed);
         int chickenHp= chicken.getCurrentHP();
         int atk=suguri.attack();
-        chicken.avoid(atk);
+        chicken.evade(atk);
         if(atk>(chicken.getEvd()+r)){
             int expectedHP=Math.max(0,chickenHp-atk);
             assertEquals(expectedHP,chicken.getCurrentHP());}

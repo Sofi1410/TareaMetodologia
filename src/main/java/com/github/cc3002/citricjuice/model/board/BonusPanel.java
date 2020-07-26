@@ -1,7 +1,7 @@
 package com.github.cc3002.citricjuice.model.board;
 
 
-import com.github.cc3002.citricjuice.model.Player;
+import com.github.cc3002.citricjuice.model.Unit.*;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -28,5 +28,7 @@ public class BonusPanel extends AbstractPanel {
   public void activateBy(@NotNull Player player) {
     player.increaseStarsBy(player.roll() * Math.min(player.getNormaLevel(), 3));
   }
+
+
 
 }
