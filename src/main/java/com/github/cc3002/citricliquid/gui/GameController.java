@@ -622,7 +622,7 @@ public class GameController {
     public void trydotheFirstMove(){
         try {
             phase.firstMove();
-        } catch (InvalidMovementException | InvalidTransitionException e) {
+        } catch (InvalidMovementException e) {
             e.printStackTrace();
         }
     }
